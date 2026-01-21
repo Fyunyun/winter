@@ -57,7 +57,7 @@ public class BuildingService {
         player.setWood(player.getWood() - costWood);
         DataService.updateResourceInRedis(player); // 之前写的更新资源方法
 
-        // E. 【执行升级】 (更新 Redis 中的建筑状态)
+        // E. 【执行升级】 (更新 Redis 中的建筑状态
         build.setStatus(1); // 标记为升级中
         // 假设升级耗时 60秒 (实际配置应从策划表读取)
         long durationMs = 60 * 1000L; 
