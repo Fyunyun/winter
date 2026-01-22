@@ -132,6 +132,14 @@ private static final long serialVersionUID = 0L;
      * <code>BUILDING_COMPLETE = 8;</code>
      */
     BUILDING_COMPLETE(8),
+    /**
+     * <pre>
+     * 采集木材消息
+     * </pre>
+     *
+     * <code>WOOD = 9;</code>
+     */
+    WOOD(9),
     UNRECOGNIZED(-1),
     ;
 
@@ -207,6 +215,14 @@ private static final long serialVersionUID = 0L;
      * <code>BUILDING_COMPLETE = 8;</code>
      */
     public static final int BUILDING_COMPLETE_VALUE = 8;
+    /**
+     * <pre>
+     * 采集木材消息
+     * </pre>
+     *
+     * <code>WOOD = 9;</code>
+     */
+    public static final int WOOD_VALUE = 9;
 
 
     public final int getNumber() {
@@ -242,6 +258,7 @@ private static final long serialVersionUID = 0L;
         case 6: return COAL;
         case 7: return BUILDING_UPGRADE;
         case 8: return BUILDING_COMPLETE;
+        case 9: return WOOD;
         default: return null;
       }
     }

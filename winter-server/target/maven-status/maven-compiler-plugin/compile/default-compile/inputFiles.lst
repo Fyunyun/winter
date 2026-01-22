@@ -4,10 +4,13 @@ e:\Code\WinterServer\winter-server\src\main\java\com\winter\model\PlayerModel.ja
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\service\BuildingService.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\db\DbManager.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\service\LoginService.java
+e:\Code\WinterServer\winter-server\target\generated-sources\protobuf\java\com\winter\protocol\GamePacketOrBuilder.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\model\AccountModel.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\core\IdleDisconnectHandler.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\core\GameServer.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\core\WorldManager.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\core\ServerHandler.java
+e:\Code\WinterServer\winter-server\target\generated-sources\protobuf\java\com\winter\protocol\WinterProtocol.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\util\SessionUtil.java
 e:\Code\WinterServer\winter-server\src\main\java\com\winter\core\AuthenticationHandler.java
+e:\Code\WinterServer\winter-server\target\generated-sources\protobuf\java\com\winter\protocol\GamePacket.java

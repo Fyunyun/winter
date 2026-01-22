@@ -19,6 +19,7 @@ message GamePacket { // 通用消息包定义（Envelope）
         COAL = 6; // 采集煤炭消息
         BUILDING_UPGRADE = 7; // 升级建筑消息
         BUILDING_COMPLETE = 8; // 建筑完成消息
+        WOOD = 9; // 采集木材消息
     } // 枚举定义结束
 
     Type type = 1; // 字段1：消息类型（决定如何解释后续内容）

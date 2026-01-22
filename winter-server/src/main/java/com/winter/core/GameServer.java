@@ -63,7 +63,7 @@ public class GameServer {
 
                             // 1. 添加心跳检测 (放在最前面或编解码器之后)
                             // 参数分别代表：读空闲时间、写空闲时间、读写空闲时间、时间单位
-                            // 这里设置为：如果 10 秒钟没有收到客户端发来的数据，就触发一次“读空闲”事件
+                            // 这里设置为：如果 120 秒钟没有收到客户端发来的数据，就触发一次“读空闲”事件
                             ch.pipeline().addLast(new IdleStateHandler(120, 0, 0, TimeUnit.SECONDS));
                             ch.pipeline().addLast(new IdleDisconnectHandler());
 

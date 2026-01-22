@@ -149,7 +149,10 @@ public class GameClientTest {
             System.out.println("4. 采集食物: food                     (直接输入 food)");
             System.out.println("5. 采集煤炭: coal                     (直接输入 coal)");
             System.out.println("6. 心跳: heartbeat                    (直接输入 heartbeat)");
-            System.out.println("7. 退出: quit");
+            System.out.println("7. 采集木头: wood                     (直接输入 wood)");
+            System.out.println("8. 建筑升级: building_upgrade [buildingType]  (例如: building_upgrade 1)");
+            System.out.println("9. 完成建筑升级: building_complete [buildingType]  (例如: building_complete 1)");
+            System.out.println("10. 退出: quit");
             System.out.println("===================================================");
             System.out.print("请输入指令 > ");
 
@@ -252,6 +255,44 @@ public class GameClientTest {
                         builder.setType(GamePacket.Type.HEARTBEAT);
                         builder.setContent("心跳");
                         System.out.println("[发送] 心跳");
+                    }else if (command.equals("building_upgrade")) {
+                        // 参数不足时提示正确格式
+                        if (parts.length < 2) {
+                            System.out.println("格式错误，请使用: building_upgrade [buildingType]");
+                            continue;
+                        }
+
+                        int buildingType = Integer.parseInt(parts[1]);
+
+                        // 设置建筑升级消息
+                        builder.setType(GamePacket.Type.BUILDING_UPGRADE);
+                        builder.setBuildingType(buildingType);
+                        builder.setContent("请求建筑升级");
+
+                        // 本地打印发送日志
+                        System.out.println("[发送] 建筑升级请求 BuildingType:" + buildingType);
+
+                    } else if (command.equals("building_complete")) {
+                        // 参数不足时提示正确格式
+                        if (parts.length < 2) {
+                            System.out.println("格式错误，请使用: building_complete [buildingType]");
+                            continue;
+                        }
+
+                        int buildingType = Integer.parseInt(parts[1]);
+
+                        // 设置完成建筑升级消息
+                        builder.setType(GamePacket.Type.BUILDING_COMPLETE);
+                        builder.setBuildingType(buildingType);
+                        builder.setContent("请求完成建筑升级");
+
+                        // 本地打印发送日志
+                        System.out.println("[发送] 完成建筑升级请求 BuildingType:" + buildingType);
+
+                    }else if (command.equals("wood")) {
+                        builder.setType(GamePacket.Type.WOOD);
+                        builder.setContent("请求采集木材");
+                        System.out.println("[发送] 正在采集木材...");
                     }
                     // 其它未知命令：当做普通消息发给服务器
                     else {

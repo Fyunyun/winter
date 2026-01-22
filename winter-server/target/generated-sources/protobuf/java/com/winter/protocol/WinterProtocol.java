@@ -28,16 +28,16 @@ public final class WinterProtocol {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rGameMsg.proto\022\023com.winter.protocol\"\271\002\n" +
+      "\n\rGameMsg.proto\022\023com.winter.protocol\"\303\002\n" +
       "\nGamePacket\0222\n\004type\030\001 \001(\0162$.com.winter.p" +
       "rotocol.GamePacket.Type\022\020\n\010playerid\030\002 \001(" +
       "\003\022\t\n\001x\030\003 \001(\002\022\t\n\001y\030\004 \001(\002\022\017\n\007content\030\005 \001(\t" +
       "\022\020\n\010username\030\006 \001(\t\022\020\n\010password\030\007 \001(\t\022\025\n\r" +
-      "building_type\030\010 \001(\005\"\202\001\n\004Type\022\013\n\007UNKNOWN\020" +
+      "building_type\030\010 \001(\005\"\214\001\n\004Type\022\013\n\007UNKNOWN\020" +
       "\000\022\t\n\005LOGIN\020\001\022\010\n\004MOVE\020\002\022\010\n\004FIRE\020\003\022\r\n\tHEAR" +
       "TBEAT\020\004\022\010\n\004FOOD\020\005\022\010\n\004COAL\020\006\022\024\n\020BUILDING_" +
-      "UPGRADE\020\007\022\025\n\021BUILDING_COMPLETE\020\010B\022B\016Wint" +
-      "erProtocolP\001b\006proto3"
+      "UPGRADE\020\007\022\025\n\021BUILDING_COMPLETE\020\010\022\010\n\004WOOD" +
+      "\020\tB\022B\016WinterProtocolP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

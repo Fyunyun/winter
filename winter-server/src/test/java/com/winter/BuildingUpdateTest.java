@@ -29,7 +29,7 @@ public class BuildingUpdateTest {
         System.out.println("\n=== 2. 点击升级 ===");
         // 注意：这里我们为了测试，去 BuildingService 把升级耗时改成 3000 毫秒 (3秒)，别用 60秒了，太久
         // 请去 BuildingService.upgradeBuilding 方法里把 durationMs 临时改成 3000L
-        String result = BuildingService.upgradeBuilding(player, 1);
+        Integer result = BuildingService.upgradeBuilding(player, 1);
         System.out.println("操作结果: " + result);
 
         System.out.println("\n=== 3. 立即尝试结算 (应该失败) ===");

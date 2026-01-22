@@ -103,7 +103,24 @@ public class ServerHandler extends SimpleChannelInboundHandler<GamePacket> {
             ctx.writeAndFlush(response);
 
         }else if(msg.getType() == GamePacket.Type.BUILDING_UPGRADE){
-            BuildingService.upgradeBuilding(player, msg.getBuildingType());        
+            Integer result = BuildingService.upgradeBuilding(player, msg.getBuildingType());
+            String content;
+            if (result == -1) {
+                content = "错误：建筑正在升级中，请稍后再试";
+            } else if (result == -2) {
+                content = "错误：木材不足，无法升级建筑";
+            } else {
+                content = "成功：建筑开始升级！";
+            }
+            
+            GamePacket response = GamePacket.newBuilder()
+                    .setType(GamePacket.Type.BUILDING_UPGRADE)
+                    .setPlayerid(playerId)
+                    .setContent(content)
+                    .build();
+
+            ctx.writeAndFlush(response);
+
         }else if(msg.getType() == GamePacket.Type.BUILDING_COMPLETE){
             boolean success = BuildingService.completeBuildingUpgrade(playerId, msg.getBuildingType());;
             if (success) {
@@ -122,6 +139,17 @@ public class ServerHandler extends SimpleChannelInboundHandler<GamePacket> {
                     .build();
             ctx.writeAndFlush(response);
             }
+        }else if(msg.getType() == GamePacket.Type.WOOD){ // 采集木材
+            player.setWood(player.getWood() + 100);
+            DataService.updateResourceInRedis(player);
+
+            GamePacket response = GamePacket.newBuilder()
+                    .setType(GamePacket.Type.WOOD)
+                    .setPlayerid(playerId)
+                    .setContent("成功采集了100单位木材，当前木材总量: " + player.getWood())
+                    .build();
+
+            ctx.writeAndFlush(response);
         }
         else {
             // 提示客户端输入有效指令

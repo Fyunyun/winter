@@ -47,19 +47,19 @@ public class BuildingService {
     }
 
     // --- 2. 升级建筑 (核心事务逻辑) ---
-    public static String upgradeBuilding(PlayerModel player, int type) {
+    public static Integer upgradeBuilding(PlayerModel player, int type) {
         // A. 获取建筑数据
         BuildingModel build = getBuilding(player.getPlayerId(), type);
         
         // B. 各种检查
         if (build.isUpgrading()) {
-            return "错误：建筑正在升级中，请稍后再试";
+            return -1;
         }
         
         // C. 检查资源 (假设升级需要：等级 * 100 木头)
         long costWood = (build.getLevel() + 1) * 100L;
         if (player.getWood() < costWood) {
-            return "错误：木材不足！需要 " + costWood;
+            return -2;
         }
 
         // D. 【执行扣费】 (更新 Redis 中的玩家资源)
@@ -69,8 +69,8 @@ public class BuildingService {
 
         // E. 【执行升级】 (更新 Redis 中的建筑状态
         build.setStatus(1); // 标记为升级中
-        // 假设升级耗时 durationMs = (等级 + 1) * 1000 毫秒
-        long durationMs = (build.getLevel() + 1) * 1000L; 
+        // 假设升级耗时 durationMs = (等级 + 1) * 10000 毫秒
+        long durationMs = (build.getLevel() + 1) * 10000L; 
         build.setFinishTime(System.currentTimeMillis() + durationMs);
 
         // F. 保存建筑数据到 Redis
@@ -80,7 +80,7 @@ public class BuildingService {
         // 在实际项目中，这里通常是丢给 Log线程或者定时任务
         saveBuildingToMysql(player.getPlayerId(), build);
 
-        return "成功：建筑开始升级！消耗木材 " + costWood + "，将在" + (build.getLevel() + 1) + "秒后完成。";
+        return 0;
     }
 
     // --- 3. 完成建筑升级 并存入redis和MySQL ---

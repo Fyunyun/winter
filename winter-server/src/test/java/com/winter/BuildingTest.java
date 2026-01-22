@@ -23,7 +23,7 @@ public class BuildingTest {
 
         // 3. 尝试升级
         System.out.println("\n[操作] 点击升级按钮...");
-        String result = BuildingService.upgradeBuilding(player, 1);
+        Integer result = BuildingService.upgradeBuilding(player, 1);
         System.out.println("服务器返回: " + result);
 
         // 4. 再次查看状态
