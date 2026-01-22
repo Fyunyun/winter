@@ -115,4 +115,14 @@ public interface GamePacketOrBuilder extends
    */
   com.google.protobuf.ByteString
       getPasswordBytes();
+
+  /**
+   * <pre>
+   * 字段8：建筑类型（升级/完成用，32位整数）
+   * </pre>
+   *
+   * <code>int32 building_type = 8;</code>
+   * @return The buildingType.
+   */
+  int getBuildingType();
 }

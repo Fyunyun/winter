@@ -28,14 +28,16 @@ public final class WinterProtocol {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rGameMsg.proto\022\023com.winter.protocol\"\364\001\n" +
+      "\n\rGameMsg.proto\022\023com.winter.protocol\"\271\002\n" +
       "\nGamePacket\0222\n\004type\030\001 \001(\0162$.com.winter.p" +
       "rotocol.GamePacket.Type\022\020\n\010playerid\030\002 \001(" +
       "\003\022\t\n\001x\030\003 \001(\002\022\t\n\001y\030\004 \001(\002\022\017\n\007content\030\005 \001(\t" +
-      "\022\020\n\010username\030\006 \001(\t\022\020\n\010password\030\007 \001(\t\"U\n\004" +
-      "Type\022\013\n\007UNKNOWN\020\000\022\t\n\005LOGIN\020\001\022\010\n\004MOVE\020\002\022\010" +
-      "\n\004FIRE\020\003\022\r\n\tHEARTBEAT\020\004\022\010\n\004FOOD\020\005\022\010\n\004COA" +
-      "L\020\006B\022B\016WinterProtocolP\001b\006proto3"
+      "\022\020\n\010username\030\006 \001(\t\022\020\n\010password\030\007 \001(\t\022\025\n\r" +
+      "building_type\030\010 \001(\005\"\202\001\n\004Type\022\013\n\007UNKNOWN\020" +
+      "\000\022\t\n\005LOGIN\020\001\022\010\n\004MOVE\020\002\022\010\n\004FIRE\020\003\022\r\n\tHEAR" +
+      "TBEAT\020\004\022\010\n\004FOOD\020\005\022\010\n\004COAL\020\006\022\024\n\020BUILDING_" +
+      "UPGRADE\020\007\022\025\n\021BUILDING_COMPLETE\020\010B\022B\016Wint" +
+      "erProtocolP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -46,7 +48,7 @@ public final class WinterProtocol {
     internal_static_com_winter_protocol_GamePacket_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_protocol_GamePacket_descriptor,
-        new java.lang.String[] { "Type", "Playerid", "X", "Y", "Content", "Username", "Password", });
+        new java.lang.String[] { "Type", "Playerid", "X", "Y", "Content", "Username", "Password", "BuildingType", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

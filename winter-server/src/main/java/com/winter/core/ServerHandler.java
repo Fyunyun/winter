@@ -5,6 +5,7 @@ import io.netty.channel.SimpleChannelInboundHandler; // 导入Netty的SimpleChan
 
 import com.winter.model.PlayerModel;
 import com.winter.protocol.GamePacket; // 导入自定义的GamePacket类（未使用）
+import com.winter.service.BuildingService;
 import com.winter.util.SessionUtil;
 import com.winter.db.DataService;
 
@@ -101,7 +102,28 @@ public class ServerHandler extends SimpleChannelInboundHandler<GamePacket> {
 
             ctx.writeAndFlush(response);
 
-        } else {
+        }else if(msg.getType() == GamePacket.Type.BUILDING_UPGRADE){
+            BuildingService.upgradeBuilding(player, msg.getBuildingType());        
+        }else if(msg.getType() == GamePacket.Type.BUILDING_COMPLETE){
+            boolean success = BuildingService.completeBuildingUpgrade(playerId, msg.getBuildingType());;
+            if (success) {
+                  GamePacket response = GamePacket.newBuilder()
+                    .setType(GamePacket.Type.BUILDING_COMPLETE)
+                    .setPlayerid(playerId)
+                    .setContent("成功完成建筑升级，建筑类型: " + msg.getBuildingType())
+                    .build();
+
+            ctx.writeAndFlush(response);
+            }else{
+                GamePacket response = GamePacket.newBuilder()
+                    .setType(GamePacket.Type.BUILDING_COMPLETE)
+                    .setPlayerid(playerId)
+                    .setContent("建筑升级未完成或不在升级中，建筑类型: " + msg.getBuildingType())
+                    .build();
+            ctx.writeAndFlush(response);
+            }
+        }
+        else {
             // 提示客户端输入有效指令
             GamePacket response = GamePacket.newBuilder()
                     .setType(GamePacket.Type.UNKNOWN)

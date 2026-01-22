@@ -6,6 +6,7 @@ import com.winter.model.BuildingModel;
 import com.winter.model.PlayerModel;
 import redis.clients.jedis.Jedis;
 import com.winter.db.DataService;
+import com.winter.core.WorldManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,6 +34,14 @@ public class BuildingService {
                 dbModel = new BuildingModel(type, 0); 
                 redis.hset(key, String.valueOf(type), JSON.toJSONString(dbModel));
             }
+
+            if(dbModel.getStatus() == 1 && System.currentTimeMillis() >= dbModel.getFinishTime()){
+                completeBuildingUpgrade(playerId, type);
+                dbModel.setLevel(dbModel.getLevel() + 1);
+                dbModel.setStatus(0);
+                dbModel.setFinishTime(0);
+            }
+
             return dbModel;
         }
     }
@@ -55,22 +64,51 @@ public class BuildingService {
 
         // D. 【执行扣费】 (更新 Redis 中的玩家资源)
         player.setWood(player.getWood() - costWood);
+        WorldManager.onlinePlayers.put(player.getPlayerId(), player); // 更新在线玩家表
         DataService.updateResourceInRedis(player); // 之前写的更新资源方法
 
         // E. 【执行升级】 (更新 Redis 中的建筑状态
         build.setStatus(1); // 标记为升级中
-        // 假设升级耗时 60秒 (实际配置应从策划表读取)
-        long durationMs = 60 * 1000L; 
+        // 假设升级耗时 durationMs = (等级 + 1) * 1000 毫秒
+        long durationMs = (build.getLevel() + 1) * 1000L; 
         build.setFinishTime(System.currentTimeMillis() + durationMs);
 
         // F. 保存建筑数据到 Redis
         saveBuildingToRedis(player.getPlayerId(), build);
         
         // G. 异步/同步保存到 MySQL (防止回档)
-        // 在实际项目中，这里通常是丢给 Log 线程或者定时任务
+        // 在实际项目中，这里通常是丢给 Log线程或者定时任务
         saveBuildingToMysql(player.getPlayerId(), build);
 
-        return "成功：建筑开始升级！消耗木材 " + costWood + "，将在60秒后完成。";
+        return "成功：建筑开始升级！消耗木材 " + costWood + "，将在" + (build.getLevel() + 1) + "秒后完成。";
+    }
+
+    // --- 3. 完成建筑升级 并存入redis和MySQL ---
+    public static boolean completeBuildingUpgrade(long playerId, int type){
+        BuildingModel building = getBuilding(playerId,type);
+
+        // 不在升级中
+        if(building.getStatus() != 1){
+            return false;
+        }
+
+        // 升级时间未到
+        long now = System.currentTimeMillis();
+        if(building.getFinishTime() > now){
+            return false;
+        }
+
+        int currentLevel = building.getLevel();
+        building.setLevel(currentLevel + 1);
+        building.setStatus(0);
+        building.setFinishTime(0);
+        System.out.println("玩家 " + playerId + " 的建筑类型 " + type + " 升级到等级 " + building.getLevel()
+         + " 完成！");
+
+        saveBuildingToRedis(playerId, building);
+        saveBuildingToMysql(playerId, building);
+
+         return true;
     }
 
     // --- 辅助方法 ---

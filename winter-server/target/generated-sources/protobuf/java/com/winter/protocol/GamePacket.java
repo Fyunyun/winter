@@ -116,6 +116,22 @@ private static final long serialVersionUID = 0L;
      * <code>COAL = 6;</code>
      */
     COAL(6),
+    /**
+     * <pre>
+     * 升级建筑消息
+     * </pre>
+     *
+     * <code>BUILDING_UPGRADE = 7;</code>
+     */
+    BUILDING_UPGRADE(7),
+    /**
+     * <pre>
+     * 建筑完成消息
+     * </pre>
+     *
+     * <code>BUILDING_COMPLETE = 8;</code>
+     */
+    BUILDING_COMPLETE(8),
     UNRECOGNIZED(-1),
     ;
 
@@ -175,6 +191,22 @@ private static final long serialVersionUID = 0L;
      * <code>COAL = 6;</code>
      */
     public static final int COAL_VALUE = 6;
+    /**
+     * <pre>
+     * 升级建筑消息
+     * </pre>
+     *
+     * <code>BUILDING_UPGRADE = 7;</code>
+     */
+    public static final int BUILDING_UPGRADE_VALUE = 7;
+    /**
+     * <pre>
+     * 建筑完成消息
+     * </pre>
+     *
+     * <code>BUILDING_COMPLETE = 8;</code>
+     */
+    public static final int BUILDING_COMPLETE_VALUE = 8;
 
 
     public final int getNumber() {
@@ -208,6 +240,8 @@ private static final long serialVersionUID = 0L;
         case 4: return HEARTBEAT;
         case 5: return FOOD;
         case 6: return COAL;
+        case 7: return BUILDING_UPGRADE;
+        case 8: return BUILDING_COMPLETE;
         default: return null;
       }
     }
@@ -474,6 +508,21 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int BUILDING_TYPE_FIELD_NUMBER = 8;
+  private int buildingType_;
+  /**
+   * <pre>
+   * 字段8：建筑类型（升级/完成用，32位整数）
+   * </pre>
+   *
+   * <code>int32 building_type = 8;</code>
+   * @return The buildingType.
+   */
+  @java.lang.Override
+  public int getBuildingType() {
+    return buildingType_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -509,6 +558,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(password_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 7, password_);
     }
+    if (buildingType_ != 0) {
+      output.writeInt32(8, buildingType_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -543,6 +595,10 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(password_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, password_);
     }
+    if (buildingType_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(8, buildingType_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -573,6 +629,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getUsername())) return false;
     if (!getPassword()
         .equals(other.getPassword())) return false;
+    if (getBuildingType()
+        != other.getBuildingType()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -601,6 +659,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getUsername().hashCode();
     hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
     hash = (53 * hash) + getPassword().hashCode();
+    hash = (37 * hash) + BUILDING_TYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getBuildingType();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -747,6 +807,8 @@ private static final long serialVersionUID = 0L;
 
       password_ = "";
 
+      buildingType_ = 0;
+
       return this;
     }
 
@@ -780,6 +842,7 @@ private static final long serialVersionUID = 0L;
       result.content_ = content_;
       result.username_ = username_;
       result.password_ = password_;
+      result.buildingType_ = buildingType_;
       onBuilt();
       return result;
     }
@@ -852,6 +915,9 @@ private static final long serialVersionUID = 0L;
         password_ = other.password_;
         onChanged();
       }
+      if (other.getBuildingType() != 0) {
+        setBuildingType(other.getBuildingType());
+      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -913,6 +979,11 @@ private static final long serialVersionUID = 0L;
 
               break;
             } // case 58
+            case 64: {
+              buildingType_ = input.readInt32();
+
+              break;
+            } // case 64
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1416,6 +1487,49 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       password_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int buildingType_ ;
+    /**
+     * <pre>
+     * 字段8：建筑类型（升级/完成用，32位整数）
+     * </pre>
+     *
+     * <code>int32 building_type = 8;</code>
+     * @return The buildingType.
+     */
+    @java.lang.Override
+    public int getBuildingType() {
+      return buildingType_;
+    }
+    /**
+     * <pre>
+     * 字段8：建筑类型（升级/完成用，32位整数）
+     * </pre>
+     *
+     * <code>int32 building_type = 8;</code>
+     * @param value The buildingType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setBuildingType(int value) {
+      
+      buildingType_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * 字段8：建筑类型（升级/完成用，32位整数）
+     * </pre>
+     *
+     * <code>int32 building_type = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearBuildingType() {
+      
+      buildingType_ = 0;
       onChanged();
       return this;
     }
