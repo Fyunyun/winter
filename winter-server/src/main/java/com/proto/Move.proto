@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "MoveMsg";
+
+message ReqMove {
+  float x = 1; // 目标x坐标
+  float y = 2; // 目标y坐标
+}
+
+message RespMove {
+  int32 code = 1; // 响应码 0表示成功 1表示失败
+  string msg = 2; // 响应消息 失败时的错误消息
+  float x = 3; // 新的x坐标
+  float y = 4; // 新的y坐标
+}

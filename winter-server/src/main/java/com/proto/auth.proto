@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "AuthMsg";
+
+message ReqLogin {
+    string username = 1; //用户名
+    string password = 2; //密码
+}
+
+message RespLogin {
+
+   int32 code = 1; //响应码 0表示成功 1表示失败
+   string msg = 2; //响应消息 登录失败时的错误消息
+   int64 playerid = 3; //玩家ID 登录成功后服务器分配的唯一玩家ID
+   
+}

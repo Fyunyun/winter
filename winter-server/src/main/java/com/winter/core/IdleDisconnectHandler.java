@@ -1,6 +1,6 @@
 package com.winter.core;
 
-import com.winter.util.SessionUtil;
+import com.winter.core.util.SessionUtil;
 
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;

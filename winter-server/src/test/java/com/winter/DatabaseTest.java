@@ -1,8 +1,9 @@
 package com.winter;
 
-import com.winter.db.DbManager;
-import com.winter.db.DataService; // 确保引入了你写的 DataService
-import com.winter.model.PlayerModel;
+import com.winter.common.model.PlayerModel;
+import com.winter.core.db.DataService;
+import com.winter.core.db.DbManager;
+
 import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;

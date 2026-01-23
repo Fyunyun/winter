@@ -1,7 +1,7 @@
 package com.winter;
 
-import com.winter.db.DataService;
-import com.winter.model.PlayerModel;
+import com.winter.common.model.PlayerModel;
+import com.winter.core.db.DataService;
 
 public class LoginTest {
     public static void main(String[] args) {

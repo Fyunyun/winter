@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "MsgId";
+
+enum CmdId {
+  CMD_NONE = 0;
+  
+    //登录模块
+    REQ_LOGIN = 1001;
+    RESP_LOGIN = 1002;
+
+    // 建筑升级
+    REQ_BUILDING_UPGRADE = 2001; // 请求建筑升级
+    RESP_BUILDING_UPGRADE = 2002; // 升级结果
+    PUSH_BUILDING_UPGRADE = 2003; // 推送建筑升级状态
+
+    // 建筑创建
+    REQ_BUILDING_CREATE = 2004; // 请求建筑创建
+    RESP_BUILDING_CREATE = 2005; // 创建结果
+
+    // 采集木材
+    REQ_COLLECT_WOOD = 3001; // 请求采集木材
+    RESP_COLLECT_WOOD = 3002; // 采集木材结果
+
+    // 采集食物
+    REQ_COLLECT_FOOD = 3003; // 请求采集食物
+    RESP_COLLECT_FOOD = 3004; // 采集食物结果
+
+    // 采集煤炭
+    REQ_COLLECT_COAL = 3005; // 请求采集煤炭
+    RESP_COLLECT_COAL = 3006; // 采集煤炭结果
+
+    // 聊天
+    REQ_CHAT_SEND = 4001; // 发送聊天消息
+    RESP_CHAT_MSG = 4002; // 聊天消息推送
+
+    // 心跳
+    REQ_HEARTBEAT = 5001; // 心跳请求
+    RESP_HEARTBEAT = 5002; // 心跳响应
+
+    // 移动
+    REQ_MOVE = 6001; // 移动请求
+    RESP_MOVE = 6002; // 移动响应
+
+    
+
+}

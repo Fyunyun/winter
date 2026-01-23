@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.winter.proto;
+import "id.proto";
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "PacketMsg";
+
+message GamePacket {
+
+    CmdId cmd = 1; //消息体类型 告诉服务器这是哪种消息
+    bytes content = 2; //消息体内容 具体的消息内容 是序列化的二进制流
+    int64 timestamp = 3; //时间戳 客户端发送消息的时间戳
+}
+
