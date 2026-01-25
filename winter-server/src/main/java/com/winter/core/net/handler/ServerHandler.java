@@ -1,4 +1,4 @@
-package com.winter.core; // 定义包名
+package com.winter.core.net.handler; // 定义包名
 
 import io.netty.channel.ChannelHandlerContext; // 导入Netty的ChannelHandlerContext类，用于处理通道上下文
 import io.netty.channel.SimpleChannelInboundHandler; // 导入Netty的SimpleChannelInboundHandler类，用于处理入站消息

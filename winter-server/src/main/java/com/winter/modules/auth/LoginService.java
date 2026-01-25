@@ -32,6 +32,9 @@ public class LoginService {
             return null;
         }
 
+        // 每次登录都刷新一下缓存中的数据
+        DataService.updateResourceInRedis(player);
+
         // 步骤 4: 后置处理 (比如更新 'last_login_time')
         // updateLoginTime(player);
 

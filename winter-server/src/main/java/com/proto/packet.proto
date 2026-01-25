@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package com.winter.proto;
-import "winter-server\src\main\java\com\proto\id.proto"
+import "id.proto";
 
 option java_package = "com.winter.msg";
 option java_outer_classname = "PacketMsg";

@@ -154,8 +154,8 @@
                 <!-- protobuf-maven-plugin 期望格式：groupId:artifactId:version:exe:classifier -->
                 <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${protoc.classifier}</protocArtifact>
 
-                <!-- .proto 当前放在 src/main/java/com/winter/common/proto 下 -->
-                <protoSourceRoot>${project.basedir}/src/main/java/com/winter/common/proto</protoSourceRoot>
+                <!-- .proto 当前放在 src/main/java/com/proto 下 -->
+                <protoSourceRoot>${project.basedir}/src/main/java/com/proto</protoSourceRoot>
             </configuration>
             <executions>
                 <execution>

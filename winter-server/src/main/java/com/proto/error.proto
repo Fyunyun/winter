@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "ErrorMsg";
+
+enum ErrorCode {
+  ERROR_NONE            = 0; // 无错误
+  ERROR_UNKNOWN         = 1; // 未知错误
+  ERROR_INVALID_REQUEST = 2; // 无效请求
+
+  // 登录相关错误码 100-199
+  LOGIN_USER_NOT_EXISTS = 100; // 用户不存在
+  LOGIN_PWD_USERNAME_INCORRECT   = 101; // 账号或密码错误
+  LOGIN_ALREADY_LOGGED_IN = 102; // 用户已登录
+  LOGIN_USER_NOT_LOGGED_IN = 103; // 用户未登录
+
+}
