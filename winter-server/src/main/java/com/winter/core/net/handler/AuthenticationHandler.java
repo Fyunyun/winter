@@ -6,7 +6,7 @@ import com.winter.msg.AuthMsg.RespLogin;
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.ErrorMsg.ErrorCode;
 import com.winter.msg.PacketMsg.GamePacket;
-import com.winter.modules.auth.LoginService;
+import com.winter.modules.auth.LoginController;
 import com.winter.core.util.SessionUtil;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,7 +39,8 @@ public class AuthenticationHandler extends SimpleChannelInboundHandler<GamePacke
         ReqLogin loginReq = ReqLogin.parseFrom(msg.getContent());
         String username = loginReq.getUsername();
         String password = loginReq.getPassword();
-        PlayerModel player = LoginService.handleLogin(username, password);
+        LoginController loginController = new LoginController();
+        PlayerModel player = loginController.login(username, password);
         if (player != null) {
             RespLogin loginMsg = RespLogin.newBuilder()
                     .setCode(ErrorCode.LOGIN_USER_NOT_EXISTS.getNumber())

@@ -5,16 +5,18 @@ import com.winter.core.db.DataService;
 
 public class LoginService {
 
+    LoginDao loginDao = new LoginDao();
+
     /**
      * 统一的登录入口
      * 
      * @return 登录成功返回 PlayerModel，失败返回 null (或者抛出异常)
      */
-    public static PlayerModel handleLogin(String username, String password) {
+    public PlayerModel handleLogin(String username, String password) {
         System.out.println("用户正在尝试登录: " + username);
 
         // 步骤 1: 验证身份 (这一步走 MySQL)
-        long pid = DataService.LOGIN_VERIFY(username, password);
+        long pid = loginDao.LOGIN_VERIFY(username, password);
 
         if (pid <= 0) {
             System.out.println("登录失败：账号或密码错误");
@@ -25,7 +27,7 @@ public class LoginService {
         // if (BanManager.isBanned(pid)) { ... }
 
         // 步骤 3: 加载数据 (这一步优先走 Redis)
-        PlayerModel player = DataService.loadPlayer(pid);
+        PlayerModel player = loginDao.loadPlayer(pid);
 
         if (player == null) {
             System.out.println("严重错误：账号存在但角色数据丢失！PID: " + pid);

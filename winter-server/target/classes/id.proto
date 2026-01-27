@@ -45,6 +45,7 @@ enum CmdId {
     REQ_MOVE = 6001; // 移动请求
     RESP_MOVE = 6002; // 移动响应
 
-    
-
+    // 注册
+    REQ_REGISTER = 7001; // 注册请求
+    RESP_REGISTER = 7002; // 注册响应
 }

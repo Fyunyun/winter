@@ -171,6 +171,22 @@ public final class MsgId {
      * <code>RESP_MOVE = 6002;</code>
      */
     RESP_MOVE(6002),
+    /**
+     * <pre>
+     * 注册
+     * </pre>
+     *
+     * <code>REQ_REGISTER = 7001;</code>
+     */
+    REQ_REGISTER(7001),
+    /**
+     * <pre>
+     * 注册响应
+     * </pre>
+     *
+     * <code>RESP_REGISTER = 7002;</code>
+     */
+    RESP_REGISTER(7002),
     UNRECOGNIZED(-1),
     ;
 
@@ -326,6 +342,22 @@ public final class MsgId {
      * <code>RESP_MOVE = 6002;</code>
      */
     public static final int RESP_MOVE_VALUE = 6002;
+    /**
+     * <pre>
+     * 注册
+     * </pre>
+     *
+     * <code>REQ_REGISTER = 7001;</code>
+     */
+    public static final int REQ_REGISTER_VALUE = 7001;
+    /**
+     * <pre>
+     * 注册响应
+     * </pre>
+     *
+     * <code>RESP_REGISTER = 7002;</code>
+     */
+    public static final int RESP_REGISTER_VALUE = 7002;
 
 
     public final int getNumber() {
@@ -372,6 +404,8 @@ public final class MsgId {
         case 5002: return RESP_HEARTBEAT;
         case 6001: return REQ_MOVE;
         case 6002: return RESP_MOVE;
+        case 7001: return REQ_REGISTER;
+        case 7002: return RESP_REGISTER;
         default: return null;
       }
     }
@@ -437,7 +471,7 @@ public final class MsgId {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\010id.proto\022\020com.winter.proto*\273\003\n\005CmdId\022\014" +
+      "\n\010id.proto\022\020com.winter.proto*\342\003\n\005CmdId\022\014" +
       "\n\010CMD_NONE\020\000\022\016\n\tREQ_LOGIN\020\351\007\022\017\n\nRESP_LOG" +
       "IN\020\352\007\022\031\n\024REQ_BUILDING_UPGRADE\020\321\017\022\032\n\025RESP" +
       "_BUILDING_UPGRADE\020\322\017\022\032\n\025PUSH_BUILDING_UP" +
@@ -448,8 +482,9 @@ public final class MsgId {
       "EQ_COLLECT_COAL\020\275\027\022\026\n\021RESP_COLLECT_COAL\020" +
       "\276\027\022\022\n\rREQ_CHAT_SEND\020\241\037\022\022\n\rRESP_CHAT_MSG\020" +
       "\242\037\022\022\n\rREQ_HEARTBEAT\020\211\'\022\023\n\016RESP_HEARTBEAT" +
-      "\020\212\'\022\r\n\010REQ_MOVE\020\361.\022\016\n\tRESP_MOVE\020\362.B\027\n\016co" +
-      "m.winter.msgB\005MsgIdb\006proto3"
+      "\020\212\'\022\r\n\010REQ_MOVE\020\361.\022\016\n\tRESP_MOVE\020\362.\022\021\n\014RE" +
+      "Q_REGISTER\020\3316\022\022\n\rRESP_REGISTER\020\3326B\027\n\016com" +
+      ".winter.msgB\005MsgIdb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
