@@ -6,8 +6,9 @@ import com.winter.msg.AuthMsg.RespLogin;
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.ErrorMsg.ErrorCode;
 import com.winter.msg.PacketMsg.GamePacket;
-import com.winter.modules.auth.LoginController;
 import com.winter.core.util.SessionUtil;
+import com.winter.modules.login.LoginController;
+
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

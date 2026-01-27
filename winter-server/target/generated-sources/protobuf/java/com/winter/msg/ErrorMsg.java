@@ -75,6 +75,22 @@ public final class ErrorMsg {
      * <code>LOGIN_USER_NOT_LOGGED_IN = 103;</code>
      */
     LOGIN_USER_NOT_LOGGED_IN(103),
+    /**
+     * <pre>
+     * 注册相关错误码 200-299
+     * </pre>
+     *
+     * <code>REGISTER_USER_ALREADY_EXISTS = 200;</code>
+     */
+    REGISTER_USER_ALREADY_EXISTS(200),
+    /**
+     * <pre>
+     * 账号或密码为空
+     * </pre>
+     *
+     * <code>REGISTER_USERNAME_OR_PASSWORD_EMPTY = 201;</code>
+     */
+    REGISTER_USERNAME_OR_PASSWORD_EMPTY(201),
     UNRECOGNIZED(-1),
     ;
 
@@ -134,6 +150,22 @@ public final class ErrorMsg {
      * <code>LOGIN_USER_NOT_LOGGED_IN = 103;</code>
      */
     public static final int LOGIN_USER_NOT_LOGGED_IN_VALUE = 103;
+    /**
+     * <pre>
+     * 注册相关错误码 200-299
+     * </pre>
+     *
+     * <code>REGISTER_USER_ALREADY_EXISTS = 200;</code>
+     */
+    public static final int REGISTER_USER_ALREADY_EXISTS_VALUE = 200;
+    /**
+     * <pre>
+     * 账号或密码为空
+     * </pre>
+     *
+     * <code>REGISTER_USERNAME_OR_PASSWORD_EMPTY = 201;</code>
+     */
+    public static final int REGISTER_USERNAME_OR_PASSWORD_EMPTY_VALUE = 201;
 
 
     public final int getNumber() {
@@ -167,6 +199,8 @@ public final class ErrorMsg {
         case 101: return LOGIN_PWD_USERNAME_INCORRECT;
         case 102: return LOGIN_ALREADY_LOGGED_IN;
         case 103: return LOGIN_USER_NOT_LOGGED_IN;
+        case 200: return REGISTER_USER_ALREADY_EXISTS;
+        case 201: return REGISTER_USERNAME_OR_PASSWORD_EMPTY;
         default: return null;
       }
     }
@@ -232,13 +266,15 @@ public final class ErrorMsg {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013error.proto\022\020com.winter.proto*\301\001\n\tErro" +
+      "\n\013error.proto\022\020com.winter.proto*\216\002\n\tErro" +
       "rCode\022\016\n\nERROR_NONE\020\000\022\021\n\rERROR_UNKNOWN\020\001" +
       "\022\031\n\025ERROR_INVALID_REQUEST\020\002\022\031\n\025LOGIN_USE" +
       "R_NOT_EXISTS\020d\022 \n\034LOGIN_PWD_USERNAME_INC" +
       "ORRECT\020e\022\033\n\027LOGIN_ALREADY_LOGGED_IN\020f\022\034\n" +
-      "\030LOGIN_USER_NOT_LOGGED_IN\020gB\032\n\016com.winte" +
-      "r.msgB\010ErrorMsgb\006proto3"
+      "\030LOGIN_USER_NOT_LOGGED_IN\020g\022!\n\034REGISTER_" +
+      "USER_ALREADY_EXISTS\020\310\001\022(\n#REGISTER_USERN" +
+      "AME_OR_PASSWORD_EMPTY\020\311\001B\032\n\016com.winter.m" +
+      "sgB\010ErrorMsgb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -16,4 +16,8 @@ enum ErrorCode {
   LOGIN_ALREADY_LOGGED_IN = 102; // 用户已登录
   LOGIN_USER_NOT_LOGGED_IN = 103; // 用户未登录
 
+  // 注册相关错误码 200-299
+  REGISTER_USER_ALREADY_EXISTS = 200; // 用户已存在
+  REGISTER_USERNAME_OR_PASSWORD_EMPTY = 201; // 账号或密码为空
+
 }

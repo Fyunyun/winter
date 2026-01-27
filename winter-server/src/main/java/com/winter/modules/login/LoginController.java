@@ -1,4 +1,4 @@
-package com.winter.modules.auth;
+package com.winter.modules.login;
 
 import com.winter.common.model.PlayerModel;
 import com.winter.core.router.GameHandler;

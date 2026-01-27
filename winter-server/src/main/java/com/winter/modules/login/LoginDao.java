@@ -1,4 +1,4 @@
-package com.winter.modules.auth;
+package com.winter.modules.login;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

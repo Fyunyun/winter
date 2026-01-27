@@ -3,6 +3,9 @@ package com.winter.core.router;
 import com.winter.common.model.PlayerModel;
 import com.winter.modules.building.BuildingController;
 import com.winter.modules.move.MoveController;
+import com.winter.modules.login.LoginController;
+
+
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.PacketMsg.GamePacket;
 import io.netty.channel.ChannelHandlerContext;
@@ -37,7 +40,7 @@ public class MessageDispatcher {
         register(new BuildingController());
         
         // === 注册登录模块 ===
-        // register(new AuthController()); 
+        register(new LoginController()); 
 
         // == 注册移动模块 ==
         register(new MoveController());

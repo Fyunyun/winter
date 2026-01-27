@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "SuccessMsg";
+
+enum SuccessCode {
+  SUCCESS_NONE = 0;
+
+  LOGIN_SUCCESS = 104; // 用户登录成功
+    REGISTER_SUCCESS = 105; // 用户注册成功
+    
+}
