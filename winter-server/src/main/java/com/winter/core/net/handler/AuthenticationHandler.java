@@ -1,15 +1,11 @@
 package com.winter.core.net.handler;// 定义包名
 
-import com.winter.common.model.PlayerModel;
-import com.winter.msg.AuthMsg.ReqLogin;
 import com.winter.msg.AuthMsg.RespLogin;
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.ErrorMsg.ErrorCode;
 import com.winter.msg.PacketMsg.GamePacket;
 import com.winter.core.util.SessionUtil;
-import com.winter.modules.login.LoginController;
 
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -34,42 +30,6 @@ public class AuthenticationHandler extends SimpleChannelInboundHandler<GamePacke
                 return;
             }
             ctx.fireChannelRead(msg);
-            return;
-        }
-
-        ReqLogin loginReq = ReqLogin.parseFrom(msg.getContent());
-        String username = loginReq.getUsername();
-        String password = loginReq.getPassword();
-        LoginController loginController = new LoginController();
-        PlayerModel player = loginController.login(username, password);
-        if (player != null) {
-            RespLogin loginMsg = RespLogin.newBuilder()
-                    .setCode(ErrorCode.LOGIN_USER_NOT_EXISTS.getNumber())
-                    .setMsg("玩家不存在")
-                    .build();
-
-            GamePacket resp = GamePacket.newBuilder()
-                    .setCmd(CmdId.RESP_LOGIN)
-                    .setContent(loginMsg.toByteString())
-                    .build();
-
-            ctx.writeAndFlush(resp);
-
-            SessionUtil.bindPlayerId(ctx.channel(), player.getPlayerId());
-            
-            // 可选：登录成功后移除认证 handler，避免每条消息都判断一次
-            ctx.pipeline().remove(this);
-        } else {
-            RespLogin loginMsg = RespLogin.newBuilder()
-                    .setCode(ErrorCode.LOGIN_PWD_USERNAME_INCORRECT.getNumber())
-                    .setMsg("登录失败，账号或密码错误")
-                    .build();
-
-            GamePacket resp = GamePacket.newBuilder()
-                    .setCmd(CmdId.RESP_LOGIN)
-                    .setContent(loginMsg.toByteString())
-                    .build();
-            ctx.writeAndFlush(resp).addListener(ChannelFutureListener.CLOSE);
             return;
         }
     }

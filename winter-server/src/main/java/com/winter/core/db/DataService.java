@@ -11,8 +11,8 @@ import com.winter.common.model.PlayerModel;
 
 public class DataService {
     private static final String REDIS_KEY_PREFIX = "p:data:";
-        
-        // 2. 实时更新 Redis (比如砍树加木材)
+
+    // 2. 实时更新 Redis (比如砍树加木材)
     public static void updateResourceInRedis(PlayerModel model) {
         try (Jedis redis = DbManager.getJedis()) {
             String key = REDIS_KEY_PREFIX + model.getPlayerId();

@@ -15,23 +15,37 @@ import redis.clients.jedis.Jedis;
 public class LoginDao {
     private static final String REDIS_KEY_PREFIX = "p:data:";
 
-    // 登录验证
-    public long LOGIN_VERIFY(String username, String password) {
-        String sql = "SELECT password, player_id FROM account WHERE username=?";
+    // 验证用户是否存在
+    public long LOGIN_VERIFY(String username) {
+        String sql = "SELECT player_id FROM account WHERE username=?";
+        try (Connection conn = DbManager.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getLong("player_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1L;
+    }
+
+    //验证密码
+    public boolean VERIFY_PASSWORD(String username, String password) {
+        String sql = "SELECT password FROM account WHERE username=?";
         try (Connection conn = DbManager.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
-                if (storedPassword.equals(password)) {
-                    return rs.getLong("player_id");
-                }
+                return storedPassword.equals(password);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1L;
+        return false;
     }
 
     // 登录加载
@@ -74,9 +88,10 @@ public class LoginDao {
                 redis.expire(key, 3600);
             }
             return model;
-        }      
+        }
     }
-       // Redis 没有命中时，从 MySQL 加载玩家主数据
+
+    // Redis 没有命中时，从 MySQL 加载玩家主数据
     /**
      * 从 MySQL 的 {@code player_main} 表中按玩家 ID 加载玩家基础数据并构建 {@link PlayerModel}。
      * <p>
@@ -88,7 +103,7 @@ public class LoginDao {
      * @return 读取到的 {@link PlayerModel}；若不存在该玩家或发生 {@link SQLException} 则返回
      *         {@code null}
      */
-    private  PlayerModel loadPlayerFromMysql(long pid) { // 从 MySQL 加载指定 pid 的玩家数据并返回 PlayerModel
+    private PlayerModel loadPlayerFromMysql(long pid) { // 从 MySQL 加载指定 pid 的玩家数据并返回 PlayerModel
         String sql = "SELECT id, name, wood, coal, level, x, y FROM player_main WHERE id=?"; // 定义查询 SQL：按 id 查询玩家基础字段
         try (Connection conn = DbManager.getConnection(); // 获取数据库连接（try-with-resources 自动关闭）
                 PreparedStatement ps = conn.prepareStatement(sql)) { // 预编译 SQL，防止注入并提升性能

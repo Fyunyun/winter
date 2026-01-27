@@ -4,6 +4,7 @@ import com.winter.common.model.PlayerModel;
 import com.winter.modules.building.BuildingController;
 import com.winter.modules.move.MoveController;
 import com.winter.modules.login.LoginController;
+import com.winter.modules.register.RegisterController;
 
 
 import com.winter.msg.MsgId.CmdId;
@@ -41,6 +42,9 @@ public class MessageDispatcher {
         
         // === 注册登录模块 ===
         register(new LoginController()); 
+
+        // === 注册注册模块 ===
+        register(new RegisterController());
 
         // == 注册移动模块 ==
         register(new MoveController());
