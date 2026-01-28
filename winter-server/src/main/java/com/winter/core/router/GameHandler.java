@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME) // 运行时保留，方便反射读取
 public @interface GameHandler {
     // 对应 id.proto 里的枚举
-    CmdId cmd();
+    CmdId[] cmd();
 }

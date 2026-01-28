@@ -5,7 +5,7 @@ import com.winter.modules.building.BuildingController;
 import com.winter.modules.move.MoveController;
 import com.winter.modules.login.LoginController;
 import com.winter.modules.register.RegisterController;
-
+import com.winter.modules.collect.CollectController;
 
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.PacketMsg.GamePacket;
@@ -24,7 +24,7 @@ public class MessageDispatcher {
     // 内部类，定义一个处理器包括什么
     private static class HandlerDef {
         Object controller; // 控制器实例 (如 BuildingController)
-        Method method;     // 处理方法 (如 upgrade)
+        Method method; // 处理方法 (如 upgrade)
 
         public HandlerDef(Object controller, Method method) {
             this.controller = controller;
@@ -39,16 +39,19 @@ public class MessageDispatcher {
     public static void init() {
         // === 注册建筑模块 ===
         register(new BuildingController());
-        
+
         // === 注册登录模块 ===
-        register(new LoginController()); 
+        register(new LoginController());
 
         // === 注册注册模块 ===
         register(new RegisterController());
 
-        // == 注册移动模块 ==
+        // === 注册移动模块 ===
         register(new MoveController());
-        
+
+        // === 注册采集模块 ===
+        register(new CollectController());
+
         System.out.println("消息分发器初始化完成，注册了 " + HANDLER_MAP.size() + " 个路由。");
     }
 
@@ -60,10 +63,12 @@ public class MessageDispatcher {
             // 如果方法上有 @GameHandler 注解
             if (m.isAnnotationPresent(GameHandler.class)) {
                 GameHandler annotation = m.getAnnotation(GameHandler.class);
-                CmdId cmd = annotation.cmd();
-                
-                HANDLER_MAP.put(cmd, new HandlerDef(controller, m));
-                System.out.println("路由注册: " + cmd + " -> " + controller.getClass().getSimpleName() + "." + m.getName());
+                for (CmdId cmd : annotation.cmd()) {
+                    HANDLER_MAP.put(cmd, new HandlerDef(controller, m));
+                    // System.out.println(
+                    // "路由注册: " + cmd + " -> " + controller.getClass().getSimpleName() + "." +
+                    // m.getName());
+                }
             }
         }
     }
@@ -74,21 +79,25 @@ public class MessageDispatcher {
     public static void dispatch(ChannelHandlerContext ctx, GamePacket packet) {
         CmdId cmd = packet.getCmd();
         HandlerDef def = HANDLER_MAP.get(cmd);
-
         if (def == null) {
             System.err.println("错误：未找到处理 CmdId=" + cmd + " 的方法");
             return;
         }
-
         try {
             // 获取当前玩家 (在登录时绑定的)
             // 如果是 REQ_LOGIN 这种不需要登录的包，player 可能为 null，Controller 里要判空
             PlayerModel player = (PlayerModel) ctx.channel().attr(AttributeKey.valueOf("PLAYER")).get();
 
-            // === 核心反射调用 ===
-            // 对应 BuildingController.upgrade(ctx, player, byte[])
-            def.method.invoke(def.controller, ctx, player, packet.getContent().toByteArray());
-
+            if (def.method.getParameterCount() == 3) {
+                // === 核心反射调用 ===
+                // 对应 CollectController.collectResource(ctx, player, byte[])
+                def.method.invoke(def.controller, ctx, player, packet.getContent().toByteArray());
+                return;
+            } else if (def.method.getParameterCount() == 4) {
+                // === 核心反射调用 ===
+                // 对应 BuildingController.upgrade(ctx, player, byte[], CmdId)
+                def.method.invoke(def.controller, ctx, player, packet.getContent().toByteArray(), cmd);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("业务逻辑执行出错: " + cmd);

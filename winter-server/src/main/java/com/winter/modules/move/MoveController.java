@@ -36,5 +36,4 @@ public class MoveController {
             e.printStackTrace();
         }
     }
-
 }
