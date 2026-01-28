@@ -67,6 +67,17 @@ public class LoginService {
 
             if (loadplayer == null) {
                 System.out.println("严重错误：账号存在但角色数据丢失！PID: " + pid);
+                RespLogin loginMsg = RespLogin.newBuilder()
+                    .setCode(ErrorCode.ERROR_UNKNOWN.getNumber())
+                    .setMsg("登录失败：玩家数据不存在")
+                    .build();
+
+                GamePacket resp = GamePacket.newBuilder()
+                    .setCmd(CmdId.RESP_LOGIN)
+                    .setContent(loginMsg.toByteString())
+                    .build();
+
+                ctx.writeAndFlush(resp);
                 return null;
             }
 
@@ -77,6 +88,21 @@ public class LoginService {
 
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                RespLogin loginMsg = RespLogin.newBuilder()
+                        .setCode(ErrorCode.ERROR_UNKNOWN.getNumber())
+                        .setMsg("登录失败：服务异常")
+                        .build();
+
+                GamePacket resp = GamePacket.newBuilder()
+                        .setCmd(CmdId.RESP_LOGIN)
+                        .setContent(loginMsg.toByteString())
+                        .build();
+
+                ctx.writeAndFlush(resp);
+            } catch (Exception inner) {
+                inner.printStackTrace();
+            }
         }
         return null;
     }

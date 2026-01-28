@@ -10,8 +10,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-// import io.netty.handler.codec.string.StringDecoder;
-// import io.netty.handler.codec.string.StringEncoder;
+
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.codec.protobuf.*;
 
@@ -22,6 +21,7 @@ import com.winter.core.net.handler.IdleDisconnectHandler;
 import com.winter.core.net.handler.ServerHandler;
 import com.winter.core.router.MessageDispatcher;
 import com.winter.msg.PacketMsg.GamePacket;
+import com.winter.core.net.handler.AuthenticationHandler;
 
 // 使用 Telnet 测试服务器：telnet localhost 8088
 
@@ -83,7 +83,7 @@ public class GameServer {
                             ch.pipeline().addLast(new ProtobufEncoder());
 
                             // 添加认证处理器
-                            // ch.pipeline().addLast(new AuthenticationHandler());
+                            ch.pipeline().addLast(new AuthenticationHandler());
                             // 添加游戏逻辑的业务处理器
                             ch.pipeline().addLast(new ServerHandler());
                         }

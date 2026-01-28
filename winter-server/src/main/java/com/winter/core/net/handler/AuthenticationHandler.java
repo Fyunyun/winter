@@ -14,23 +14,26 @@ public class AuthenticationHandler extends SimpleChannelInboundHandler<GamePacke
     // 重写channelRead方法，用于处理接收到的消息
     @Override
     public void channelRead0(ChannelHandlerContext ctx, GamePacket msg) throws Exception {
-        if (msg.getCmd() != CmdId.REQ_LOGIN) {
-            if (!SessionUtil.hasLogin(ctx.channel())) {
-
-                RespLogin loginMsg = RespLogin.newBuilder()
-                        .setCode(ErrorCode.LOGIN_USER_NOT_LOGGED_IN.getNumber())
-                        .setMsg("账号未登录，请先登录")
-                        .build();
-
-                GamePacket resp = GamePacket.newBuilder()
-                        .setCmd(CmdId.RESP_LOGIN)
-                        .setContent(loginMsg.toByteString())
-                        .build();
-                ctx.writeAndFlush(resp);
-                return;
-            }
+        if (msg.getCmd() == CmdId.REQ_LOGIN) {
+            // 放行登录请求给后续业务处理器
             ctx.fireChannelRead(msg);
             return;
         }
+
+        if (!SessionUtil.hasLogin(ctx.channel())) {
+            RespLogin loginMsg = RespLogin.newBuilder()
+                    .setCode(ErrorCode.LOGIN_USER_NOT_LOGGED_IN.getNumber())
+                    .setMsg("账号未登录，请先登录")
+                    .build();
+
+            GamePacket resp = GamePacket.newBuilder()
+                    .setCmd(CmdId.RESP_LOGIN)
+                    .setContent(loginMsg.toByteString())
+                    .build();
+            ctx.writeAndFlush(resp);
+            return;
+        }
+
+        ctx.fireChannelRead(msg);
     }
 }

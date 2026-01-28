@@ -78,6 +78,7 @@ public class MessageDispatcher {
      */
     public static void dispatch(ChannelHandlerContext ctx, GamePacket packet) {
         CmdId cmd = packet.getCmd();
+        System.out.println("[路由] 收到请求 cmd=" + cmd);
         HandlerDef def = HANDLER_MAP.get(cmd);
         if (def == null) {
             System.err.println("错误：未找到处理 CmdId=" + cmd + " 的方法");

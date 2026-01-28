@@ -12,6 +12,42 @@ import com.winter.common.model.PlayerModel;
 public class DataService {
     private static final String REDIS_KEY_PREFIX = "p:data:";
 
+
+    // 1. 从Redis加载玩家数据
+    public static PlayerModel loadPlayerFromRedis(Long playerId) {
+        PlayerModel model = null;
+        try (Jedis redis = DbManager.getJedis()) {
+            String key = REDIS_KEY_PREFIX + playerId;
+            Map<String, String> map = redis.hgetAll(key);// 使用 hgetAll 获取玩家所有属性
+            if (map != null && !map.isEmpty()) {
+                model = new PlayerModel(playerId);
+                model.setName(map.get("name"));
+                model.setWood(Long.parseLong(map.getOrDefault("wood", "0")));
+                model.setCoal(Long.parseLong(map.getOrDefault("coal", "0")));
+                model.setLevel(Integer.parseInt(map.getOrDefault("level", "1")));
+                model.setX(Float.parseFloat(map.getOrDefault("x", "0")));
+                model.setY(Float.parseFloat(map.getOrDefault("y", "0")));
+            }
+        }
+        return model;
+    }
+
+    // 清理 Redis 中的玩家数据
+    public static boolean clearPlayerDataInRedis(Long playerId) {
+        try (Jedis redis = DbManager.getJedis()) {
+            String key = REDIS_KEY_PREFIX + playerId;
+            try {
+                redis.del(key);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // 2. 实时更新 Redis (比如砍树加木材)
     public static void updateResourceInRedis(PlayerModel model) {
         try (Jedis redis = DbManager.getJedis()) {

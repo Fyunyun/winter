@@ -1,8 +1,7 @@
-com\winter\core\db\DataService.class
-com\winter\modules\auth\LoginService.class
 com\winter\core\net\handler\IdleDisconnectHandler.class
 com\winter\common\model\AccountModel.class
 com\winter\common\model\BuildingModel.class
+com\winter\core\db\DataService.class
 com\winter\core\util\SessionUtil.class
 com\winter\core\WorldManager.class
 com\winter\modules\move\MoveDao.class
