@@ -78,6 +78,7 @@ public class DataService {
             Map<String, String> map = new HashMap<>();
             map.put("wood", String.valueOf(model.getWood()));
             map.put("coal", String.valueOf(model.getCoal()));
+            map.put("food", String.valueOf(model.getFood()));
             map.put("level", String.valueOf(model.getLevel()));
             map.put("x", String.valueOf(model.getX()));
             map.put("y", String.valueOf(model.getY()));

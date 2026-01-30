@@ -59,6 +59,7 @@ public class LoginDao {
                     PlayerModel model = new PlayerModel(pid);
                     model.setWood(parseLong(data.get("wood")));
                     model.setCoal(parseLong(data.get("coal")));
+                    model.setFood(parseLong(data.get("food")));
                     model.setLevel(parseInt(data.get("level")));
                     model.setName(data.get("name"));
                     model.setX(parseFloat(data.get("x")));
@@ -74,6 +75,7 @@ public class LoginDao {
                 Map<String, String> hashData = new HashMap<>();
                 hashData.put("wood", String.valueOf(model.getWood()));
                 hashData.put("coal", String.valueOf(model.getCoal()));
+                hashData.put("food", String.valueOf(model.getFood()));
                 hashData.put("level", String.valueOf(model.getLevel()));
                 if (model.getName() != null) {
                     hashData.put("name", model.getName());
@@ -104,7 +106,7 @@ public class LoginDao {
      *         {@code null}
      */
     private PlayerModel loadPlayerFromMysql(long pid) { // 从 MySQL 加载指定 pid 的玩家数据并返回 PlayerModel
-        String sql = "SELECT id, name, wood, coal, level, x, y FROM player_main WHERE id=?"; // 定义查询 SQL：按 id 查询玩家基础字段
+        String sql = "SELECT id, name, wood, coal, food, level, x, y FROM player_main WHERE id=?"; // 定义查询 SQL：按 id 查询玩家基础字段
         try (Connection conn = DbManager.getConnection(); // 获取数据库连接（try-with-resources 自动关闭）
                 PreparedStatement ps = conn.prepareStatement(sql)) { // 预编译 SQL，防止注入并提升性能
 
@@ -119,6 +121,7 @@ public class LoginDao {
                 model.setWood(rs.getLong("wood")); // 从结果集中读取 wood 并设置到模型
                 model.setCoal(rs.getLong("coal")); // 从结果集中读取 coal 并设置到模型
                 model.setLevel(rs.getInt("level")); // 从结果集中读取 level 并设置到模型
+                model.setFood(rs.getLong("food"));
                 model.setX(rs.getFloat("x")); // 从结果集中读取 x 坐标并设置到模型
                 model.setY(rs.getFloat("y")); // 从结果集中读取 y 坐标并设置到模型
                 model.setDirty(false); // 标记为非脏数据：与数据库一致

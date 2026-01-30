@@ -1,6 +1,8 @@
 package com.winter.core.net.handler;
 
+import com.winter.common.model.PlayerModel;
 import com.winter.core.util.SessionUtil;
+import com.winter.core.db.DataService;
 
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,18 +16,21 @@ public class IdleDisconnectHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 
         Long playerId = SessionUtil.getPlayerId(ctx.channel());
+        // PlayerModel player = DataService.loadPlayerFromRedis(playerId);
         if (evt instanceof IdleStateEvent) {
-        IdleStateEvent event = (IdleStateEvent) evt;
-        
-        // 如果是“读空闲”（Reader Idle），说明好久没收到玩家的数据了
-        if (event.state() == IdleState.READER_IDLE) {
-            
-            // 处理心跳消息
-            ctx.close().addListener((ChannelFutureListener) future -> {
-                System.out.println("[系统] 玩家ID: " + playerId + " 已因长时间未响应被断开连接。");
-            });
+            IdleStateEvent event = (IdleStateEvent) evt;
+
+            // 如果是“读空闲”（Reader Idle），说明好久没收到玩家的数据了
+            if (event.state() == IdleState.READER_IDLE) {
+
+                // 处理心跳消息
+                ctx.close().addListener((ChannelFutureListener) future -> {
+                    // DataService.flushToMysql(player);
+                    // DataService.clearPlayerDataInRedis(playerId);
+                    System.out.println("[系统] 玩家ID: " + playerId + " 已因长时间未响应被断开连接。");
+                });
+            }
         }
         super.userEventTriggered(ctx, evt);
-    }
     }
 }

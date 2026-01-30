@@ -56,18 +56,13 @@ public class MessageDispatcher {
     }
 
     // 辅助方法：解析 Controller 里的注解
-    private static void register(Object controller) {
-        // 反射获取该类所有方法
-        Method[] methods = controller.getClass().getDeclaredMethods();
-        for (Method m : methods) {
-            // 如果方法上有 @GameHandler 注解
-            if (m.isAnnotationPresent(GameHandler.class)) {
-                GameHandler annotation = m.getAnnotation(GameHandler.class);
-                for (CmdId cmd : annotation.cmd()) {
-                    HANDLER_MAP.put(cmd, new HandlerDef(controller, m));
-                    // System.out.println(
-                    // "路由注册: " + cmd + " -> " + controller.getClass().getSimpleName() + "." +
-                    // m.getName());
+    private static void register(Object controller) { // 定义注册方法：把一个 controller 中标注了 @GameHandler 的方法注册到路由表
+        Method[] methods = controller.getClass().getDeclaredMethods(); // 通过反射获取该 controller 类中声明的所有方法（不包含父类方法）
+        for (Method m : methods) { // 遍历每一个方法
+            if (m.isAnnotationPresent(GameHandler.class)) { // 判断该方法上是否标注了 @GameHandler 注解
+                GameHandler annotation = m.getAnnotation(GameHandler.class); // 获取该方法上的 @GameHandler 注解实例
+                for (CmdId cmd : annotation.cmd()) { // 遍历注解中声明的所有 CmdId（一个方法可绑定多个消息号）
+                    HANDLER_MAP.put(cmd, new HandlerDef(controller, m)); // 将 CmdId 映射到 {controller实例, method}，用于后续分发时反射调用
                 }
             }
         }

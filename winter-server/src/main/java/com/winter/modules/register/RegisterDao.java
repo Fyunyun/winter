@@ -16,7 +16,7 @@ public class RegisterDao {
         long newPlayerId = System.currentTimeMillis();
 
         String sqlAccount = "Insert INTO account (username, password, player_id) VALUES (?, ?, ?)";
-        String sqlPlayer = "Insert INTO player_main (id, name, wood, coal, level, x, y) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sqlPlayer = "Insert INTO player_main (id, name, wood, coal, food, level, x, y) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         String sqlBuilding = "Insert INTO player_building (player_id, building_type, level, status, finish_time) VALUES (?, ?, ?, ?, ?)";
 
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
@@ -40,9 +40,10 @@ public class RegisterDao {
                     psPlayer.setString(2, username); // 默认角色名为用户名
                     psPlayer.setLong(3, 100); // 初始木材
                     psPlayer.setLong(4, 100); // 初始煤炭
-                    psPlayer.setInt(5, 1); // 初始等级
-                    psPlayer.setFloat(6, 0f); // 初始X坐标
-                    psPlayer.setFloat(7, 0f); // 初始Y坐标
+                    psPlayer.setLong(5, 100); // 初始食物
+                    psPlayer.setInt(6, 1); // 初始等级
+                    psPlayer.setFloat(7, 0f); // 初始X坐标
+                    psPlayer.setFloat(8, 0f); // 初始Y坐标
                     psPlayer.executeUpdate();
 
                     // 插入初始建筑数据 (熔炉, 兵营, 伐木场)
