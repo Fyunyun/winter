@@ -6,7 +6,6 @@ import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.PacketMsg.GamePacket;
 import com.winter.msg.CollectMsg.ReqCollect;
 import com.winter.msg.CollectMsg.RespCollect;
-
 import io.netty.channel.ChannelHandlerContext;
 
 public class CollectController {
@@ -59,6 +58,5 @@ public class CollectController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

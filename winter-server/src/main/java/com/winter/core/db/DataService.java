@@ -24,6 +24,7 @@ public class DataService {
                 model.setName(map.get("name"));
                 model.setWood(Long.parseLong(map.getOrDefault("wood", "0")));
                 model.setCoal(Long.parseLong(map.getOrDefault("coal", "0")));
+                model.setFood(Long.parseLong(map.getOrDefault("food", "0")));
                 model.setLevel(Integer.parseInt(map.getOrDefault("level", "1")));
                 model.setX(Float.parseFloat(map.getOrDefault("x", "0")));
                 model.setY(Float.parseFloat(map.getOrDefault("y", "0")));
@@ -45,6 +46,7 @@ public class DataService {
                     model.setName(map.get("name"));
                     model.setWood(Long.parseLong(map.getOrDefault("wood", "0")));
                     model.setCoal(Long.parseLong(map.getOrDefault("coal", "0")));
+                    model.setFood(Long.parseLong(map.getOrDefault("food", "0")));
                     model.setLevel(Integer.parseInt(map.getOrDefault("level", "1")));
                     model.setX(Float.parseFloat(map.getOrDefault("x", "0")));
                     model.setY(Float.parseFloat(map.getOrDefault("y", "0")));
@@ -91,15 +93,16 @@ public class DataService {
 
     // 3. 定时/离线落库 (MySQL)
     public static void flushToMysql(PlayerModel model) {
-        String sql = "UPDATE player_main SET wood=?, coal=?, level=?, x=?, y=? WHERE id=?";
+        String sql = "UPDATE player_main SET wood=?, coal=?, food=?, level=?, x=?, y=? WHERE id=?";
         try (Connection conn = DbManager.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, model.getWood());
             ps.setLong(2, model.getCoal());
-            ps.setInt(3, model.getLevel());
-            ps.setFloat(4, model.getX());
-            ps.setFloat(5, model.getY());
-            ps.setLong(6, model.getPlayerId());
+            ps.setLong(3, model.getFood());
+            ps.setInt(4, model.getLevel());
+            ps.setFloat(5, model.getX());
+            ps.setFloat(6, model.getY());
+            ps.setLong(7, model.getPlayerId());
             ps.executeUpdate();
             System.out.println("[MySQL] 玩家数据落库成功: " + model.getPlayerId());
         } catch (SQLException e) {

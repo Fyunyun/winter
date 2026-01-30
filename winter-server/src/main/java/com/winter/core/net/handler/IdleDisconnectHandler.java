@@ -1,8 +1,6 @@
 package com.winter.core.net.handler;
 
-import com.winter.common.model.PlayerModel;
 import com.winter.core.util.SessionUtil;
-import com.winter.core.db.DataService;
 
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,7 +14,6 @@ public class IdleDisconnectHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 
         Long playerId = SessionUtil.getPlayerId(ctx.channel());
-        // PlayerModel player = DataService.loadPlayerFromRedis(playerId);
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent event = (IdleStateEvent) evt;
 
@@ -25,8 +22,6 @@ public class IdleDisconnectHandler extends ChannelInboundHandlerAdapter {
 
                 // 处理心跳消息
                 ctx.close().addListener((ChannelFutureListener) future -> {
-                    // DataService.flushToMysql(player);
-                    // DataService.clearPlayerDataInRedis(playerId);
                     System.out.println("[系统] 玩家ID: " + playerId + " 已因长时间未响应被断开连接。");
                 });
             }

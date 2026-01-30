@@ -11,7 +11,6 @@ import com.winter.msg.PacketMsg.GamePacket;
 
 import com.winter.core.router.MessageDispatcher;
 
-
 // 定义一个继承SimpleChannelInboundHandler的类，用于处理String类型的入站消息
 public class ServerHandler extends SimpleChannelInboundHandler<GamePacket> {
 
