@@ -13,7 +13,7 @@ public class DataService {
     private static final String REDIS_KEY_PREFIX = "p:data:";
 
 
-    // 1. 从Redis加载玩家数据
+    // 1. 从Redis加载某个玩家数据
     public static PlayerModel loadPlayerFromRedis(Long playerId) {
         PlayerModel model = null;
         try (Jedis redis = DbManager.getJedis()) {
@@ -30,6 +30,29 @@ public class DataService {
             }
         }
         return model;
+    }
+
+    //redis中加载全部玩家
+    public static Map<Long, PlayerModel> loadAllPlayersFromRedis() {
+        Map<Long, PlayerModel> players = new HashMap<>();
+        try (Jedis redis = DbManager.getJedis()) {
+            // 获取所有以 "p:data:" 开头的键
+            for (String key : redis.keys(REDIS_KEY_PREFIX + "*")) {
+                Long playerId = Long.parseLong(key.substring(REDIS_KEY_PREFIX.length()));
+                Map<String, String> map = redis.hgetAll(key);
+                if (map != null && !map.isEmpty()) {
+                    PlayerModel model = new PlayerModel(playerId);
+                    model.setName(map.get("name"));
+                    model.setWood(Long.parseLong(map.getOrDefault("wood", "0")));
+                    model.setCoal(Long.parseLong(map.getOrDefault("coal", "0")));
+                    model.setLevel(Integer.parseInt(map.getOrDefault("level", "1")));
+                    model.setX(Float.parseFloat(map.getOrDefault("x", "0")));
+                    model.setY(Float.parseFloat(map.getOrDefault("y", "0")));
+                    players.put(playerId, model);
+                }
+            }
+        }
+        return players;
     }
 
     // 清理 Redis 中的玩家数据

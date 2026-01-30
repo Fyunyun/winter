@@ -3,8 +3,11 @@ package com.winter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.crypto.Data;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -110,11 +113,11 @@ public class GameServer {
 
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             System.out.println(">>> 执行全服数据存盘...");
-            for (PlayerModel player : WorldManager.onlinePlayers.values()) {
+            for (PlayerModel player : DataService.loadAllPlayersFromRedis().values()) {
                 // 将 Redis/内存中的数据持久化到 MySQL
                 DataService.flushToMysql(player);
             }
-        }, 5, 5, TimeUnit.MINUTES); // 每5分钟存一次
+        }, 5, 5, TimeUnit.MINUTES); // 每10000毫秒存一次
 
         MessageDispatcher.init(); // 初始化消息分发器
 
