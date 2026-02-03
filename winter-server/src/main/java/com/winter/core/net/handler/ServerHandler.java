@@ -4,7 +4,8 @@ import io.netty.channel.ChannelHandlerContext; // 导入Netty的ChannelHandlerCo
 import io.netty.channel.SimpleChannelInboundHandler; // 导入Netty的SimpleChannelInboundHandler类，用于处理入站消息
 import com.winter.core.db.DataService;
 import com.winter.core.util.SessionUtil;
-
+import com.winter.modules.player.PlayerManager;
+import com.winter.modules.scene.AoiService;
 import com.winter.common.model.PlayerModel;
 
 import com.winter.msg.PacketMsg.GamePacket;
@@ -36,6 +37,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<GamePacket> {
         if (playerId != null && playerId > 0) {
             // 玩家断线处理 从redis获取玩家
             PlayerModel player = DataService.loadPlayerFromRedis(playerId);
+            PlayerManager.removePlayer(playerId);
+            // 移除玩家坐标信息
+            AoiService.removePlayer(playerId);
             if (player != null) {
                 // 断线落库（或只标记脏数据，交给定时任务统一落库）
                 DataService.flushToMysql(player);

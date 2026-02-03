@@ -17,16 +17,10 @@ public class MoveDao {
             try (Jedis redis = DbManager.getJedis()) {
                 // 更新缓存
                 DataService.updateResourceInRedis(player);
-
-                // 更新位置索引
-                redis.geoadd("world:map:pos", x, y, String.valueOf(player.getPlayerId()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-
-         //TODO 广播给周围的人 (AOI)
         return true;
-
     }
 }

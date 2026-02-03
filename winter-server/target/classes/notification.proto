@@ -1,0 +1,12 @@
+syntax = "proto3";
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "NotificationMsg";
+
+// 服务器主动推送：玩家移动广播
+message BrdPlayerMove {
+  int64 player_id = 1;
+  float x         = 2;
+  float y         = 3;
+}

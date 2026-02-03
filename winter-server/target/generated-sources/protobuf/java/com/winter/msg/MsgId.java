@@ -187,6 +187,14 @@ public final class MsgId {
      * <code>RESP_REGISTER = 7002;</code>
      */
     RESP_REGISTER(7002),
+    /**
+     * <pre>
+     * 广播玩家位置信息
+     * </pre>
+     *
+     * <code>PUSH_PLAYER_POSITION = 8001;</code>
+     */
+    PUSH_PLAYER_POSITION(8001),
     UNRECOGNIZED(-1),
     ;
 
@@ -358,6 +366,14 @@ public final class MsgId {
      * <code>RESP_REGISTER = 7002;</code>
      */
     public static final int RESP_REGISTER_VALUE = 7002;
+    /**
+     * <pre>
+     * 广播玩家位置信息
+     * </pre>
+     *
+     * <code>PUSH_PLAYER_POSITION = 8001;</code>
+     */
+    public static final int PUSH_PLAYER_POSITION_VALUE = 8001;
 
 
     public final int getNumber() {
@@ -406,6 +422,7 @@ public final class MsgId {
         case 6002: return RESP_MOVE;
         case 7001: return REQ_REGISTER;
         case 7002: return RESP_REGISTER;
+        case 8001: return PUSH_PLAYER_POSITION;
         default: return null;
       }
     }
@@ -471,7 +488,7 @@ public final class MsgId {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\010id.proto\022\020com.winter.proto*\342\003\n\005CmdId\022\014" +
+      "\n\010id.proto\022\020com.winter.proto*\375\003\n\005CmdId\022\014" +
       "\n\010CMD_NONE\020\000\022\016\n\tREQ_LOGIN\020\351\007\022\017\n\nRESP_LOG" +
       "IN\020\352\007\022\031\n\024REQ_BUILDING_UPGRADE\020\321\017\022\032\n\025RESP" +
       "_BUILDING_UPGRADE\020\322\017\022\032\n\025PUSH_BUILDING_UP" +
@@ -483,8 +500,9 @@ public final class MsgId {
       "\276\027\022\022\n\rREQ_CHAT_SEND\020\241\037\022\022\n\rRESP_CHAT_MSG\020" +
       "\242\037\022\022\n\rREQ_HEARTBEAT\020\211\'\022\023\n\016RESP_HEARTBEAT" +
       "\020\212\'\022\r\n\010REQ_MOVE\020\361.\022\016\n\tRESP_MOVE\020\362.\022\021\n\014RE" +
-      "Q_REGISTER\020\3316\022\022\n\rRESP_REGISTER\020\3326B\027\n\016com" +
-      ".winter.msgB\005MsgIdb\006proto3"
+      "Q_REGISTER\020\3316\022\022\n\rRESP_REGISTER\020\3326\022\031\n\024PUS" +
+      "H_PLAYER_POSITION\020\301>B\027\n\016com.winter.msgB\005" +
+      "MsgIdb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

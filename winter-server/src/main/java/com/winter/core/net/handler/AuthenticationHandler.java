@@ -14,7 +14,7 @@ public class AuthenticationHandler extends SimpleChannelInboundHandler<GamePacke
     // 重写channelRead方法，用于处理接收到的消息
     @Override
     public void channelRead0(ChannelHandlerContext ctx, GamePacket msg) throws Exception {
-        if (msg.getCmd() == CmdId.REQ_LOGIN) {
+        if (msg.getCmd() == CmdId.REQ_LOGIN || msg.getCmd() == CmdId.REQ_REGISTER) {
             // 放行登录请求给后续业务处理器
             ctx.fireChannelRead(msg);
             return;

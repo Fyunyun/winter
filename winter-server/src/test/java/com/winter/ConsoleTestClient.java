@@ -12,6 +12,7 @@ import com.winter.msg.CollectMsg.RespCollect;
 import com.winter.msg.MoveMsg.ReqMove;
 import com.winter.msg.MoveMsg.RespMove;
 import com.winter.msg.MsgId.CmdId;
+import com.winter.msg.NotificationMsg;
 import com.winter.msg.PacketMsg.GamePacket;
 import com.winter.msg.RegisterMsg.ReqRegister;
 import com.winter.msg.RegisterMsg.RespRegister;
@@ -360,6 +361,10 @@ public class ConsoleTestClient {
                 case RESP_COLLECT_FOOD:
                     RespCollect collectResp = RespCollect.parseFrom(msg.getContent());
                     System.out.println("  采集结果: code=" + collectResp.getCode() + ", msg=" + collectResp.getMsg() + ", playerId=" + collectResp.getPlayerid());
+                    break;
+                case PUSH_PLAYER_POSITION:
+                    NotificationMsg.BrdPlayerMove brd = NotificationMsg.BrdPlayerMove.parseFrom(msg.getContent());
+                    System.out.println("  AOI广播: playerId=" + brd.getPlayerId() + ", x=" + brd.getX() + ", y=" + brd.getY());
                     break;
                 default:
                     System.out.println("  未识别响应内容，长度=" + msg.getContent().size());

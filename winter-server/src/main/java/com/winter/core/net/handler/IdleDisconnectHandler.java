@@ -1,6 +1,7 @@
 package com.winter.core.net.handler;
 
 import com.winter.core.util.SessionUtil;
+import com.winter.modules.player.PlayerManager;
 
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,6 +20,8 @@ public class IdleDisconnectHandler extends ChannelInboundHandlerAdapter {
 
             // 如果是“读空闲”（Reader Idle），说明好久没收到玩家的数据了
             if (event.state() == IdleState.READER_IDLE) {
+
+                PlayerManager.removePlayer(playerId);
 
                 // 处理心跳消息
                 ctx.close().addListener((ChannelFutureListener) future -> {
