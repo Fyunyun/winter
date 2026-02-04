@@ -1,0 +1,42 @@
+syntax = "proto3";
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "FriendMsg";
+
+// 1. 申请添加好友
+message ReqAddFriend {
+  int64 target_id = 1; // 对方ID
+}
+
+message RespAddFriend {
+  int64  target_id = 1;
+  string message   = 2;
+}
+
+// 2. 处理好友申请
+message ReqHandleFriend {
+  int64 target_id = 1;
+  bool  agree     = 2; // true=同意, false=拒绝
+}
+
+// 3. 获取好友列表 (包含对方在线状态)
+message ReqGetFriendList {}
+
+message FriendInfo {
+  int64  player_id = 1;
+  string name      = 2;
+  int32  level     = 3;
+  bool   is_online = 4; // 【重点】这需要服务器实时计算
+  int32  status    = 5; // 0:申请中(显示红点), 1:好友
+}
+
+message RespFriendList {
+  repeated FriendInfo friends = 1;
+}
+
+// 4. 服务器主动推送：收到好友申请
+message BrdFriendRequest {
+  int64  from_id   = 1;
+  string from_name = 2;
+}

@@ -11,7 +11,7 @@ import redis.clients.jedis.args.GeoUnit;
 public class AoiService {
 
     private static final String GEO_KEY = "world:map:pos";
-    private static final double AOI_RADIUS = 50000000.0; // 视野半径 500 米
+    private static final double AOI_RADIUS = 500.0; // 视野半径 500 千米
 
     /**
      * 更新我的坐标，并寻找周围的人
@@ -24,14 +24,14 @@ public class AoiService {
             // GeoAdd: 将 member(myId) 加到 key 中，坐标为 x, y
             redis.geoadd(GEO_KEY, x, y, String.valueOf(myId));
 
-            // 2. 搜索我周围 500 米内的人
+            // 2. 搜索我周围 500 千米内的人
             // GeoRadius: 返回成员列表
             List<GeoRadiusResponse> responses = redis.georadius(
                     GEO_KEY,
                     x,
                     y,
                     AOI_RADIUS,
-                    GeoUnit.M, // 单位：米
+                    GeoUnit.KM, // 单位：千米
                     GeoRadiusParam.geoRadiusParam().withDist() // 可以顺便返回距离
             );
 

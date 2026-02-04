@@ -51,5 +51,12 @@ enum CmdId {
 
     // 广播玩家位置信息
     PUSH_PLAYER_POSITION = 8001; // 广播玩家位置信息
-    
+
+    // 好友模块
+    REQ_ADD_FRIEND = 9001; // 申请添加好友
+    RESP_ADD_FRIEND = 9002; // 添加好友响应
+    REQ_HANDLE_FRIEND = 9003; // 处理好友申请
+    REQ_GET_FRIEND_LIST = 9004; // 获取好友列表
+    RESP_FRIEND_LIST = 9005; // 好友列表响应
+    BRD_FRIEND_REQUEST = 9006; // 服务器主动推送：收到好友申请
 }

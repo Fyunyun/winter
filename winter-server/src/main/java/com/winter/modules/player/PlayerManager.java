@@ -1,5 +1,6 @@
 package com.winter.modules.player;
 
+import com.google.protobuf.GeneratedMessageV3;
 import com.winter.common.model.PlayerModel;
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.NotificationMsg.BrdPlayerMove;
@@ -26,7 +27,7 @@ public class PlayerManager {
     }
 
     // 【核心】给指定玩家发包
-    public static void sendToPlayer(long playerId, BrdPlayerMove message, CmdId cmd) {
+    public static void sendToPlayer(long playerId, GeneratedMessageV3 message, CmdId cmd) {
         Channel channel = onlinePlayers.get(playerId);
         if (channel != null && channel.isActive()) {
             // 发送一个 send 方法用来打包

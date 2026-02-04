@@ -195,6 +195,54 @@ public final class MsgId {
      * <code>PUSH_PLAYER_POSITION = 8001;</code>
      */
     PUSH_PLAYER_POSITION(8001),
+    /**
+     * <pre>
+     * 好友模块
+     * </pre>
+     *
+     * <code>REQ_ADD_FRIEND = 9001;</code>
+     */
+    REQ_ADD_FRIEND(9001),
+    /**
+     * <pre>
+     * 添加好友响应
+     * </pre>
+     *
+     * <code>RESP_ADD_FRIEND = 9002;</code>
+     */
+    RESP_ADD_FRIEND(9002),
+    /**
+     * <pre>
+     * 处理好友申请
+     * </pre>
+     *
+     * <code>REQ_HANDLE_FRIEND = 9003;</code>
+     */
+    REQ_HANDLE_FRIEND(9003),
+    /**
+     * <pre>
+     * 获取好友列表
+     * </pre>
+     *
+     * <code>REQ_GET_FRIEND_LIST = 9004;</code>
+     */
+    REQ_GET_FRIEND_LIST(9004),
+    /**
+     * <pre>
+     * 好友列表响应
+     * </pre>
+     *
+     * <code>RESP_FRIEND_LIST = 9005;</code>
+     */
+    RESP_FRIEND_LIST(9005),
+    /**
+     * <pre>
+     * 服务器主动推送：收到好友申请
+     * </pre>
+     *
+     * <code>BRD_FRIEND_REQUEST = 9006;</code>
+     */
+    BRD_FRIEND_REQUEST(9006),
     UNRECOGNIZED(-1),
     ;
 
@@ -374,6 +422,54 @@ public final class MsgId {
      * <code>PUSH_PLAYER_POSITION = 8001;</code>
      */
     public static final int PUSH_PLAYER_POSITION_VALUE = 8001;
+    /**
+     * <pre>
+     * 好友模块
+     * </pre>
+     *
+     * <code>REQ_ADD_FRIEND = 9001;</code>
+     */
+    public static final int REQ_ADD_FRIEND_VALUE = 9001;
+    /**
+     * <pre>
+     * 添加好友响应
+     * </pre>
+     *
+     * <code>RESP_ADD_FRIEND = 9002;</code>
+     */
+    public static final int RESP_ADD_FRIEND_VALUE = 9002;
+    /**
+     * <pre>
+     * 处理好友申请
+     * </pre>
+     *
+     * <code>REQ_HANDLE_FRIEND = 9003;</code>
+     */
+    public static final int REQ_HANDLE_FRIEND_VALUE = 9003;
+    /**
+     * <pre>
+     * 获取好友列表
+     * </pre>
+     *
+     * <code>REQ_GET_FRIEND_LIST = 9004;</code>
+     */
+    public static final int REQ_GET_FRIEND_LIST_VALUE = 9004;
+    /**
+     * <pre>
+     * 好友列表响应
+     * </pre>
+     *
+     * <code>RESP_FRIEND_LIST = 9005;</code>
+     */
+    public static final int RESP_FRIEND_LIST_VALUE = 9005;
+    /**
+     * <pre>
+     * 服务器主动推送：收到好友申请
+     * </pre>
+     *
+     * <code>BRD_FRIEND_REQUEST = 9006;</code>
+     */
+    public static final int BRD_FRIEND_REQUEST_VALUE = 9006;
 
 
     public final int getNumber() {
@@ -423,6 +519,12 @@ public final class MsgId {
         case 7001: return REQ_REGISTER;
         case 7002: return RESP_REGISTER;
         case 8001: return PUSH_PLAYER_POSITION;
+        case 9001: return REQ_ADD_FRIEND;
+        case 9002: return RESP_ADD_FRIEND;
+        case 9003: return REQ_HANDLE_FRIEND;
+        case 9004: return REQ_GET_FRIEND_LIST;
+        case 9005: return RESP_FRIEND_LIST;
+        case 9006: return BRD_FRIEND_REQUEST;
         default: return null;
       }
     }
@@ -488,7 +590,7 @@ public final class MsgId {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\010id.proto\022\020com.winter.proto*\375\003\n\005CmdId\022\014" +
+      "\n\010id.proto\022\020com.winter.proto*\212\005\n\005CmdId\022\014" +
       "\n\010CMD_NONE\020\000\022\016\n\tREQ_LOGIN\020\351\007\022\017\n\nRESP_LOG" +
       "IN\020\352\007\022\031\n\024REQ_BUILDING_UPGRADE\020\321\017\022\032\n\025RESP" +
       "_BUILDING_UPGRADE\020\322\017\022\032\n\025PUSH_BUILDING_UP" +
@@ -501,8 +603,11 @@ public final class MsgId {
       "\242\037\022\022\n\rREQ_HEARTBEAT\020\211\'\022\023\n\016RESP_HEARTBEAT" +
       "\020\212\'\022\r\n\010REQ_MOVE\020\361.\022\016\n\tRESP_MOVE\020\362.\022\021\n\014RE" +
       "Q_REGISTER\020\3316\022\022\n\rRESP_REGISTER\020\3326\022\031\n\024PUS" +
-      "H_PLAYER_POSITION\020\301>B\027\n\016com.winter.msgB\005" +
-      "MsgIdb\006proto3"
+      "H_PLAYER_POSITION\020\301>\022\023\n\016REQ_ADD_FRIEND\020\251" +
+      "F\022\024\n\017RESP_ADD_FRIEND\020\252F\022\026\n\021REQ_HANDLE_FR" +
+      "IEND\020\253F\022\030\n\023REQ_GET_FRIEND_LIST\020\254F\022\025\n\020RES" +
+      "P_FRIEND_LIST\020\255F\022\027\n\022BRD_FRIEND_REQUEST\020\256" +
+      "FB\027\n\016com.winter.msgB\005MsgIdb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
