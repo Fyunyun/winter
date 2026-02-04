@@ -221,28 +221,36 @@ public final class MsgId {
     REQ_HANDLE_FRIEND(9003),
     /**
      * <pre>
+     * 处理好友申请响应
+     * </pre>
+     *
+     * <code>RESP_HANDLE_FRIEND = 9004;</code>
+     */
+    RESP_HANDLE_FRIEND(9004),
+    /**
+     * <pre>
      * 获取好友列表
      * </pre>
      *
-     * <code>REQ_GET_FRIEND_LIST = 9004;</code>
+     * <code>REQ_GET_FRIEND_LIST = 9005;</code>
      */
-    REQ_GET_FRIEND_LIST(9004),
+    REQ_GET_FRIEND_LIST(9005),
     /**
      * <pre>
      * 好友列表响应
      * </pre>
      *
-     * <code>RESP_FRIEND_LIST = 9005;</code>
+     * <code>RESP_FRIEND_LIST = 9006;</code>
      */
-    RESP_FRIEND_LIST(9005),
+    RESP_FRIEND_LIST(9006),
     /**
      * <pre>
      * 服务器主动推送：收到好友申请
      * </pre>
      *
-     * <code>BRD_FRIEND_REQUEST = 9006;</code>
+     * <code>BRD_FRIEND_REQUEST = 9007;</code>
      */
-    BRD_FRIEND_REQUEST(9006),
+    BRD_FRIEND_REQUEST(9007),
     UNRECOGNIZED(-1),
     ;
 
@@ -448,28 +456,36 @@ public final class MsgId {
     public static final int REQ_HANDLE_FRIEND_VALUE = 9003;
     /**
      * <pre>
+     * 处理好友申请响应
+     * </pre>
+     *
+     * <code>RESP_HANDLE_FRIEND = 9004;</code>
+     */
+    public static final int RESP_HANDLE_FRIEND_VALUE = 9004;
+    /**
+     * <pre>
      * 获取好友列表
      * </pre>
      *
-     * <code>REQ_GET_FRIEND_LIST = 9004;</code>
+     * <code>REQ_GET_FRIEND_LIST = 9005;</code>
      */
-    public static final int REQ_GET_FRIEND_LIST_VALUE = 9004;
+    public static final int REQ_GET_FRIEND_LIST_VALUE = 9005;
     /**
      * <pre>
      * 好友列表响应
      * </pre>
      *
-     * <code>RESP_FRIEND_LIST = 9005;</code>
+     * <code>RESP_FRIEND_LIST = 9006;</code>
      */
-    public static final int RESP_FRIEND_LIST_VALUE = 9005;
+    public static final int RESP_FRIEND_LIST_VALUE = 9006;
     /**
      * <pre>
      * 服务器主动推送：收到好友申请
      * </pre>
      *
-     * <code>BRD_FRIEND_REQUEST = 9006;</code>
+     * <code>BRD_FRIEND_REQUEST = 9007;</code>
      */
-    public static final int BRD_FRIEND_REQUEST_VALUE = 9006;
+    public static final int BRD_FRIEND_REQUEST_VALUE = 9007;
 
 
     public final int getNumber() {
@@ -522,9 +538,10 @@ public final class MsgId {
         case 9001: return REQ_ADD_FRIEND;
         case 9002: return RESP_ADD_FRIEND;
         case 9003: return REQ_HANDLE_FRIEND;
-        case 9004: return REQ_GET_FRIEND_LIST;
-        case 9005: return RESP_FRIEND_LIST;
-        case 9006: return BRD_FRIEND_REQUEST;
+        case 9004: return RESP_HANDLE_FRIEND;
+        case 9005: return REQ_GET_FRIEND_LIST;
+        case 9006: return RESP_FRIEND_LIST;
+        case 9007: return BRD_FRIEND_REQUEST;
         default: return null;
       }
     }
@@ -590,7 +607,7 @@ public final class MsgId {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\010id.proto\022\020com.winter.proto*\212\005\n\005CmdId\022\014" +
+      "\n\010id.proto\022\020com.winter.proto*\243\005\n\005CmdId\022\014" +
       "\n\010CMD_NONE\020\000\022\016\n\tREQ_LOGIN\020\351\007\022\017\n\nRESP_LOG" +
       "IN\020\352\007\022\031\n\024REQ_BUILDING_UPGRADE\020\321\017\022\032\n\025RESP" +
       "_BUILDING_UPGRADE\020\322\017\022\032\n\025PUSH_BUILDING_UP" +
@@ -605,9 +622,10 @@ public final class MsgId {
       "Q_REGISTER\020\3316\022\022\n\rRESP_REGISTER\020\3326\022\031\n\024PUS" +
       "H_PLAYER_POSITION\020\301>\022\023\n\016REQ_ADD_FRIEND\020\251" +
       "F\022\024\n\017RESP_ADD_FRIEND\020\252F\022\026\n\021REQ_HANDLE_FR" +
-      "IEND\020\253F\022\030\n\023REQ_GET_FRIEND_LIST\020\254F\022\025\n\020RES" +
-      "P_FRIEND_LIST\020\255F\022\027\n\022BRD_FRIEND_REQUEST\020\256" +
-      "FB\027\n\016com.winter.msgB\005MsgIdb\006proto3"
+      "IEND\020\253F\022\027\n\022RESP_HANDLE_FRIEND\020\254F\022\030\n\023REQ_" +
+      "GET_FRIEND_LIST\020\255F\022\025\n\020RESP_FRIEND_LIST\020\256" +
+      "F\022\027\n\022BRD_FRIEND_REQUEST\020\257FB\027\n\016com.winter" +
+      ".msgB\005MsgIdb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

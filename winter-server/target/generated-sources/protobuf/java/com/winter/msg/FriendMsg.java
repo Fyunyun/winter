@@ -536,6 +536,10 @@ public final class FriendMsg {
         getMessageBytes();
   }
   /**
+   * <pre>
+   * 返回添加好友结果
+   * </pre>
+   *
    * Protobuf type {@code com.winter.proto.RespAddFriend}
    */
   public static final class RespAddFriend extends
@@ -792,6 +796,10 @@ public final class FriendMsg {
       return builder;
     }
     /**
+     * <pre>
+     * 返回添加好友结果
+     * </pre>
+     *
      * Protobuf type {@code com.winter.proto.RespAddFriend}
      */
     public static final class Builder extends
@@ -1698,6 +1706,634 @@ public final class FriendMsg {
 
     @java.lang.Override
     public com.winter.msg.FriendMsg.ReqHandleFriend getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface RespHandleFriendOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:com.winter.proto.RespHandleFriend)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 target_id = 1;</code>
+     * @return The targetId.
+     */
+    long getTargetId();
+
+    /**
+     * <code>string message = 2;</code>
+     * @return The message.
+     */
+    java.lang.String getMessage();
+    /**
+     * <code>string message = 2;</code>
+     * @return The bytes for message.
+     */
+    com.google.protobuf.ByteString
+        getMessageBytes();
+  }
+  /**
+   * <pre>
+   * 回应处理好友申请结果
+   * </pre>
+   *
+   * Protobuf type {@code com.winter.proto.RespHandleFriend}
+   */
+  public static final class RespHandleFriend extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:com.winter.proto.RespHandleFriend)
+      RespHandleFriendOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use RespHandleFriend.newBuilder() to construct.
+    private RespHandleFriend(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private RespHandleFriend() {
+      message_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new RespHandleFriend();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.winter.msg.FriendMsg.internal_static_com_winter_proto_RespHandleFriend_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.winter.msg.FriendMsg.internal_static_com_winter_proto_RespHandleFriend_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.winter.msg.FriendMsg.RespHandleFriend.class, com.winter.msg.FriendMsg.RespHandleFriend.Builder.class);
+    }
+
+    public static final int TARGET_ID_FIELD_NUMBER = 1;
+    private long targetId_;
+    /**
+     * <code>int64 target_id = 1;</code>
+     * @return The targetId.
+     */
+    @java.lang.Override
+    public long getTargetId() {
+      return targetId_;
+    }
+
+    public static final int MESSAGE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object message_;
+    /**
+     * <code>string message = 2;</code>
+     * @return The message.
+     */
+    @java.lang.Override
+    public java.lang.String getMessage() {
+      java.lang.Object ref = message_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        message_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string message = 2;</code>
+     * @return The bytes for message.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getMessageBytes() {
+      java.lang.Object ref = message_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        message_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (targetId_ != 0L) {
+        output.writeInt64(1, targetId_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (targetId_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, targetId_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.winter.msg.FriendMsg.RespHandleFriend)) {
+        return super.equals(obj);
+      }
+      com.winter.msg.FriendMsg.RespHandleFriend other = (com.winter.msg.FriendMsg.RespHandleFriend) obj;
+
+      if (getTargetId()
+          != other.getTargetId()) return false;
+      if (!getMessage()
+          .equals(other.getMessage())) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTargetId());
+      hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getMessage().hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.winter.msg.FriendMsg.RespHandleFriend parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.winter.msg.FriendMsg.RespHandleFriend prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     * 回应处理好友申请结果
+     * </pre>
+     *
+     * Protobuf type {@code com.winter.proto.RespHandleFriend}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:com.winter.proto.RespHandleFriend)
+        com.winter.msg.FriendMsg.RespHandleFriendOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.winter.msg.FriendMsg.internal_static_com_winter_proto_RespHandleFriend_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.winter.msg.FriendMsg.internal_static_com_winter_proto_RespHandleFriend_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.winter.msg.FriendMsg.RespHandleFriend.class, com.winter.msg.FriendMsg.RespHandleFriend.Builder.class);
+      }
+
+      // Construct using com.winter.msg.FriendMsg.RespHandleFriend.newBuilder()
+      private Builder() {
+
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        targetId_ = 0L;
+
+        message_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.winter.msg.FriendMsg.internal_static_com_winter_proto_RespHandleFriend_descriptor;
+      }
+
+      @java.lang.Override
+      public com.winter.msg.FriendMsg.RespHandleFriend getDefaultInstanceForType() {
+        return com.winter.msg.FriendMsg.RespHandleFriend.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public com.winter.msg.FriendMsg.RespHandleFriend build() {
+        com.winter.msg.FriendMsg.RespHandleFriend result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public com.winter.msg.FriendMsg.RespHandleFriend buildPartial() {
+        com.winter.msg.FriendMsg.RespHandleFriend result = new com.winter.msg.FriendMsg.RespHandleFriend(this);
+        result.targetId_ = targetId_;
+        result.message_ = message_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.winter.msg.FriendMsg.RespHandleFriend) {
+          return mergeFrom((com.winter.msg.FriendMsg.RespHandleFriend)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.winter.msg.FriendMsg.RespHandleFriend other) {
+        if (other == com.winter.msg.FriendMsg.RespHandleFriend.getDefaultInstance()) return this;
+        if (other.getTargetId() != 0L) {
+          setTargetId(other.getTargetId());
+        }
+        if (!other.getMessage().isEmpty()) {
+          message_ = other.message_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 8: {
+                targetId_ = input.readInt64();
+
+                break;
+              } // case 8
+              case 18: {
+                message_ = input.readStringRequireUtf8();
+
+                break;
+              } // case 18
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.unwrapIOException();
+        } finally {
+          onChanged();
+        } // finally
+        return this;
+      }
+
+      private long targetId_ ;
+      /**
+       * <code>int64 target_id = 1;</code>
+       * @return The targetId.
+       */
+      @java.lang.Override
+      public long getTargetId() {
+        return targetId_;
+      }
+      /**
+       * <code>int64 target_id = 1;</code>
+       * @param value The targetId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTargetId(long value) {
+        
+        targetId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 target_id = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTargetId() {
+        
+        targetId_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object message_ = "";
+      /**
+       * <code>string message = 2;</code>
+       * @return The message.
+       */
+      public java.lang.String getMessage() {
+        java.lang.Object ref = message_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          message_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @return The bytes for message.
+       */
+      public com.google.protobuf.ByteString
+          getMessageBytes() {
+        java.lang.Object ref = message_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          message_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @param value The message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessage(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        message_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMessage() {
+        
+        message_ = getDefaultInstance().getMessage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @param value The bytes for message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        message_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:com.winter.proto.RespHandleFriend)
+    }
+
+    // @@protoc_insertion_point(class_scope:com.winter.proto.RespHandleFriend)
+    private static final com.winter.msg.FriendMsg.RespHandleFriend DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.winter.msg.FriendMsg.RespHandleFriend();
+    }
+
+    public static com.winter.msg.FriendMsg.RespHandleFriend getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<RespHandleFriend>
+        PARSER = new com.google.protobuf.AbstractParser<RespHandleFriend>() {
+      @java.lang.Override
+      public RespHandleFriend parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
+      }
+    };
+
+    public static com.google.protobuf.Parser<RespHandleFriend> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<RespHandleFriend> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.winter.msg.FriendMsg.RespHandleFriend getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -4401,6 +5037,11 @@ public final class FriendMsg {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_winter_proto_ReqHandleFriend_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_winter_proto_RespHandleFriend_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_winter_proto_RespHandleFriend_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_winter_proto_ReqGetFriendList_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -4433,14 +5074,15 @@ public final class FriendMsg {
       "ddFriend\022\021\n\ttarget_id\030\001 \001(\003\"3\n\rRespAddFr" +
       "iend\022\021\n\ttarget_id\030\001 \001(\003\022\017\n\007message\030\002 \001(\t" +
       "\"3\n\017ReqHandleFriend\022\021\n\ttarget_id\030\001 \001(\003\022\r" +
-      "\n\005agree\030\002 \001(\010\"\022\n\020ReqGetFriendList\"_\n\nFri" +
-      "endInfo\022\021\n\tplayer_id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t" +
-      "\022\r\n\005level\030\003 \001(\005\022\021\n\tis_online\030\004 \001(\010\022\016\n\006st" +
-      "atus\030\005 \001(\005\"?\n\016RespFriendList\022-\n\007friends\030" +
-      "\001 \003(\0132\034.com.winter.proto.FriendInfo\"6\n\020B" +
-      "rdFriendRequest\022\017\n\007from_id\030\001 \001(\003\022\021\n\tfrom" +
-      "_name\030\002 \001(\tB\033\n\016com.winter.msgB\tFriendMsg" +
-      "b\006proto3"
+      "\n\005agree\030\002 \001(\010\"6\n\020RespHandleFriend\022\021\n\ttar" +
+      "get_id\030\001 \001(\003\022\017\n\007message\030\002 \001(\t\"\022\n\020ReqGetF" +
+      "riendList\"_\n\nFriendInfo\022\021\n\tplayer_id\030\001 \001" +
+      "(\003\022\014\n\004name\030\002 \001(\t\022\r\n\005level\030\003 \001(\005\022\021\n\tis_on" +
+      "line\030\004 \001(\010\022\016\n\006status\030\005 \001(\005\"?\n\016RespFriend" +
+      "List\022-\n\007friends\030\001 \003(\0132\034.com.winter.proto" +
+      ".FriendInfo\"6\n\020BrdFriendRequest\022\017\n\007from_" +
+      "id\030\001 \001(\003\022\021\n\tfrom_name\030\002 \001(\tB\033\n\016com.winte" +
+      "r.msgB\tFriendMsgb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -4464,26 +5106,32 @@ public final class FriendMsg {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_ReqHandleFriend_descriptor,
         new java.lang.String[] { "TargetId", "Agree", });
-    internal_static_com_winter_proto_ReqGetFriendList_descriptor =
+    internal_static_com_winter_proto_RespHandleFriend_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_com_winter_proto_RespHandleFriend_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_winter_proto_RespHandleFriend_descriptor,
+        new java.lang.String[] { "TargetId", "Message", });
+    internal_static_com_winter_proto_ReqGetFriendList_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_com_winter_proto_ReqGetFriendList_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_ReqGetFriendList_descriptor,
         new java.lang.String[] { });
     internal_static_com_winter_proto_FriendInfo_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_com_winter_proto_FriendInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_FriendInfo_descriptor,
         new java.lang.String[] { "PlayerId", "Name", "Level", "IsOnline", "Status", });
     internal_static_com_winter_proto_RespFriendList_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_com_winter_proto_RespFriendList_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_RespFriendList_descriptor,
         new java.lang.String[] { "Friends", });
     internal_static_com_winter_proto_BrdFriendRequest_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_com_winter_proto_BrdFriendRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_BrdFriendRequest_descriptor,

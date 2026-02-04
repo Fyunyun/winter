@@ -7,7 +7,9 @@ import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.PacketMsg.GamePacket;
 import com.winter.msg.FriendMsg.ReqAddFriend;
 import com.winter.msg.FriendMsg.RespAddFriend;
+import com.winter.msg.FriendMsg.RespHandleFriend;
 import com.winter.msg.FriendMsg.BrdFriendRequest;
+import com.winter.msg.FriendMsg.ReqHandleFriend;
 
 import io.netty.channel.ChannelHandlerContext;
 
@@ -45,6 +47,38 @@ public class FriendController {
                     .setContent(resp.toByteString())
                     .build();
             ctx.writeAndFlush(packet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 处理好友请求
+    @GameHandler(cmd = CmdId.REQ_HANDLE_FRIEND)
+    public void handleFriendReq(ChannelHandlerContext ctx, PlayerModel player, byte[] data) {
+        try {
+            ReqHandleFriend req = ReqHandleFriend.parseFrom(data);
+            boolean result = friendService.handleFriendRequest(player, req.getTargetId(), req.getAgree());
+            // 反馈结果
+            RespAddFriend resp = RespAddFriend.newBuilder()
+                    .setTargetId(req.getTargetId())
+                    .setMessage(result ? "好友请求处理成功" : "好友请求处理失败")
+                    .build();
+            GamePacket packet = GamePacket.newBuilder()
+                    .setCmd(CmdId.RESP_HANDLE_FRIEND)
+                    .setContent(resp.toByteString())
+                    .build();
+            ctx.writeAndFlush(packet);
+
+            PlayerManager.sendToPlayer(req.getTargetId(),
+                    req.getAgree() ? RespHandleFriend.newBuilder()
+                            .setTargetId(player.getPlayerId())
+                            .setMessage("你的好友请求已被接受")
+                            .build()
+                            : RespHandleFriend.newBuilder()
+                                    .setTargetId(player.getPlayerId())
+                                    .setMessage("你的好友请求已被拒绝")
+                                    .build(),
+                    CmdId.RESP_HANDLE_FRIEND);
         } catch (Exception e) {
             e.printStackTrace();
         }

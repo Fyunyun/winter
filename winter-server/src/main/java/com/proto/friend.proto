@@ -9,6 +9,7 @@ message ReqAddFriend {
   int64 target_id = 1; // 对方ID
 }
 
+// 返回添加好友结果
 message RespAddFriend {
   int64  target_id = 1;
   string message   = 2;
@@ -18,6 +19,12 @@ message RespAddFriend {
 message ReqHandleFriend {
   int64 target_id = 1;
   bool  agree     = 2; // true=同意, false=拒绝
+}
+
+// 回应处理好友申请结果
+message RespHandleFriend {
+  int64  target_id = 1;
+  string message   = 2;
 }
 
 // 3. 获取好友列表 (包含对方在线状态)

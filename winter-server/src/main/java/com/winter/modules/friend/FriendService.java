@@ -20,4 +20,15 @@ public class FriendService {
         boolean friendRequest = friendDao.addFriendRequest(player.getPlayerId(), friendId);
         return friendRequest;
     }
+
+    public boolean handleFriendRequest(PlayerModel player, Long targetId, boolean accept) {
+        if (!friendDao.hasRequest(player.getPlayerId(), targetId)) {
+            return false;
+        }
+        if (accept) {
+            return friendDao.acceptFriendRequest(targetId, player.getPlayerId());
+        } else {
+            return friendDao.rejectFriendRequest(targetId, player.getPlayerId());
+        }
+    }
 }
