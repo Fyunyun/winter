@@ -74,7 +74,7 @@ public class ConsoleTestClient {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String line;
             while ((line = reader.readLine()) != null) {
-                String trimmed = line.trim();
+                String trimmed = line.trim(); //去除用户输入的前后空白字符
                 if (trimmed.isEmpty()) {
                     System.out.print("请输入指令 > ");
                     continue;
