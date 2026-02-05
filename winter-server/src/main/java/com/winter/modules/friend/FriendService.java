@@ -50,6 +50,7 @@ public class FriendService {
             FriendInfo friendInfo = FriendInfo.newBuilder()
                     .setFriendId(friendEntry.getFriendId())
                     .setFriendName(friendModel != null ? friendModel.getName() : "未知")
+                    .setFriendLevel(friendModel != null ? friendModel.getLevel() : 0)
                     .setIsOnline(online)
                     .setStatus(friendEntry.getStatus())
                     .build();

@@ -6,6 +6,7 @@ import com.winter.modules.move.MoveController;
 import com.winter.modules.login.LoginController;
 import com.winter.modules.register.RegisterController;
 import com.winter.modules.collect.CollectController;
+import com.winter.modules.friend.FriendController;
 
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.PacketMsg.GamePacket;
@@ -48,6 +49,9 @@ public class MessageDispatcher {
 
         // === 注册移动模块 ===
         register(new MoveController());
+
+        // === 注册好友模块 ===
+        register(new FriendController());
 
         // === 注册采集模块 ===
         register(new CollectController());

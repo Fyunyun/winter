@@ -9,6 +9,13 @@ import com.winter.msg.BuildingMsg.RespBuildCreate;
 import com.winter.msg.BuildingMsg.RespBuildUpgrade;
 import com.winter.msg.CollectMsg.ReqCollect;
 import com.winter.msg.CollectMsg.RespCollect;
+import com.winter.msg.FriendMsg.BrdFriendRequest;
+import com.winter.msg.FriendMsg.ReqAddFriend;
+import com.winter.msg.FriendMsg.ReqGetFriendList;
+import com.winter.msg.FriendMsg.ReqHandleFriend;
+import com.winter.msg.FriendMsg.RespAddFriend;
+import com.winter.msg.FriendMsg.RespFriendList;
+import com.winter.msg.FriendMsg.RespHandleFriend;
 import com.winter.msg.MoveMsg.ReqMove;
 import com.winter.msg.MoveMsg.RespMove;
 import com.winter.msg.MsgId.CmdId;
@@ -94,6 +101,15 @@ public class ConsoleTestClient {
                         case "login":
                             handleLogin(channel, parts);
                             break;
+                        case "add_friend":
+                            handleAddFriend(channel, parts);
+                            break;
+                        case "handle_friend":
+                            handleHandleFriend(channel, parts);
+                            break;
+                        case "friend_list":
+                            handleFriendList(channel);
+                            break;
                         case "move":
                             handleMove(channel, parts);
                             break;
@@ -165,6 +181,50 @@ public class ConsoleTestClient {
                 .build();
         sendPacket(channel, CmdId.REQ_MOVE, req.toByteString());
         System.out.println("[发送] 移动请求: (" + x + ", " + y + ")");
+    }
+
+    private static void handleAddFriend(Channel channel, String[] parts) {
+        if (parts.length < 2) {
+            System.out.println("格式错误，请使用: add_friend <targetId>");
+            return;
+        }
+        long targetId = Long.parseLong(parts[1]);
+        ReqAddFriend req = ReqAddFriend.newBuilder()
+                .setTargetId(targetId)
+                .build();
+        sendPacket(channel, CmdId.REQ_ADD_FRIEND, req.toByteString());
+        System.out.println("[发送] 添加好友请求 targetId=" + targetId);
+    }
+
+    private static void handleHandleFriend(Channel channel, String[] parts) {
+        if (parts.length < 3) {
+            System.out.println("格式错误，请使用: handle_friend <targetId> <accept|reject>");
+            return;
+        }
+        long targetId = Long.parseLong(parts[1]);
+        String action = parts[2].toLowerCase(Locale.ROOT);
+        boolean agree;
+        if (action.equals("accept")) {
+            agree = true;
+        } else if (action.equals("reject")) {
+            agree = false;
+        } else {
+            System.out.println("格式错误，请使用: handle_friend <targetId> <accept|reject>");
+            return;
+        }
+
+        ReqHandleFriend req = ReqHandleFriend.newBuilder()
+                .setTargetId(targetId)
+                .setAgree(agree)
+                .build();
+        sendPacket(channel, CmdId.REQ_HANDLE_FRIEND, req.toByteString());
+        System.out.println("[发送] 处理好友请求 targetId=" + targetId + ", agree=" + agree);
+    }
+
+    private static void handleFriendList(Channel channel) {
+        ReqGetFriendList req = ReqGetFriendList.newBuilder().build();
+        sendPacket(channel, CmdId.REQ_GET_FRIEND_LIST, req.toByteString());
+        System.out.println("[发送] 获取好友列表请求");
     }
 
     private static void handleCollect(Channel channel, String[] parts) {
@@ -310,6 +370,9 @@ public class ConsoleTestClient {
         System.out.println("help                                  显示帮助");
         System.out.println("register <username> <password>        注册");
         System.out.println("login <username> <password>           登录");
+        System.out.println("add_friend <targetId>                 申请添加好友");
+        System.out.println("handle_friend <targetId> <accept|reject> 处理好友申请");
+        System.out.println("friend_list                           获取好友列表");
         System.out.println("move <x> <y>                           移动");
         System.out.println("collect <coal|wood|food> [amount]     采集资源");
         System.out.println("building_create <buildingType>        创建建筑");
@@ -361,6 +424,28 @@ public class ConsoleTestClient {
                 case RESP_COLLECT_FOOD:
                     RespCollect collectResp = RespCollect.parseFrom(msg.getContent());
                     System.out.println("  采集结果: code=" + collectResp.getCode() + ", msg=" + collectResp.getMsg() + ", playerId=" + collectResp.getPlayerid());
+                    break;
+                case RESP_ADD_FRIEND:
+                    RespAddFriend addFriendResp = RespAddFriend.parseFrom(msg.getContent());
+                    System.out.println("  添加好友响应: targetId=" + addFriendResp.getTargetId() + ", msg=" + addFriendResp.getMessage());
+                    break;
+                case RESP_HANDLE_FRIEND:
+                    RespHandleFriend handleResp = RespHandleFriend.parseFrom(msg.getContent());
+                    System.out.println("  处理好友响应: targetId=" + handleResp.getTargetId() + ", msg=" + handleResp.getMessage());
+                    break;
+                case RESP_FRIEND_LIST:
+                    RespFriendList listResp = RespFriendList.parseFrom(msg.getContent());
+                    System.out.println("  好友列表: count=" + listResp.getFriendsCount());
+                    listResp.getFriendsList().forEach(friend ->
+                            System.out.println("    friendId=" + friend.getFriendId()
+                                    + ", name=" + friend.getFriendName()
+                                    + ", level=" + friend.getFriendLevel()
+                                    + ", online=" + friend.getIsOnline()
+                                    + ", status=" + friend.getStatus()));
+                    break;
+                case BRD_FRIEND_REQUEST:
+                    BrdFriendRequest brdFriend = BrdFriendRequest.parseFrom(msg.getContent());
+                    System.out.println("  收到好友申请: fromId=" + brdFriend.getFromId() + ", fromName=" + brdFriend.getFromName());
                     break;
                 case PUSH_PLAYER_POSITION:
                     NotificationMsg.BrdPlayerMove brd = NotificationMsg.BrdPlayerMove.parseFrom(msg.getContent());
