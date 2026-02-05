@@ -1,6 +1,12 @@
 package com.winter.modules.friend;
 
+import java.util.List;
+
 import com.winter.common.model.PlayerModel;
+import com.winter.core.db.DataService;
+import com.winter.modules.player.PlayerManager;
+import com.winter.msg.FriendMsg.RespFriendList;
+import com.winter.msg.FriendMsg.FriendInfo;
 
 public class FriendService {
 
@@ -30,5 +36,25 @@ public class FriendService {
         } else {
             return friendDao.rejectFriendRequest(targetId, player.getPlayerId());
         }
+    }
+
+    public RespFriendList getFriendList(Long myId) {
+        List<FriendEntry> friendList = friendDao.getFriendList(myId);
+
+        RespFriendList.Builder resp = RespFriendList.newBuilder();
+
+        for (FriendEntry friendEntry : friendList) {
+            PlayerModel friendModel = DataService.loadPlayerFromRedis(friendEntry.getFriendId());
+            boolean online = PlayerManager.isOnline(friendEntry.getFriendId());
+
+            FriendInfo friendInfo = FriendInfo.newBuilder()
+                    .setFriendId(friendEntry.getFriendId())
+                    .setFriendName(friendModel != null ? friendModel.getName() : "未知")
+                    .setIsOnline(online)
+                    .setStatus(friendEntry.getStatus())
+                    .build();
+            resp.addFriends(friendInfo);      
+        }
+        return resp.build();
     }
 }

@@ -31,9 +31,9 @@ message RespHandleFriend {
 message ReqGetFriendList {}
 
 message FriendInfo {
-  int64  player_id = 1;
-  string name      = 2;
-  int32  level     = 3;
+  int64  friend_id = 1;
+  string friend_name      = 2;
+  int32  friend_level     = 3;
   bool   is_online = 4; // 【重点】这需要服务器实时计算
   int32  status    = 5; // 0:申请中(显示红点), 1:好友
 }

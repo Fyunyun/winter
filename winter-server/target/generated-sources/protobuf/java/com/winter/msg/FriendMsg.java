@@ -2752,28 +2752,28 @@ public final class FriendMsg {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 player_id = 1;</code>
-     * @return The playerId.
+     * <code>int64 friend_id = 1;</code>
+     * @return The friendId.
      */
-    long getPlayerId();
+    long getFriendId();
 
     /**
-     * <code>string name = 2;</code>
-     * @return The name.
+     * <code>string friend_name = 2;</code>
+     * @return The friendName.
      */
-    java.lang.String getName();
+    java.lang.String getFriendName();
     /**
-     * <code>string name = 2;</code>
-     * @return The bytes for name.
+     * <code>string friend_name = 2;</code>
+     * @return The bytes for friendName.
      */
     com.google.protobuf.ByteString
-        getNameBytes();
+        getFriendNameBytes();
 
     /**
-     * <code>int32 level = 3;</code>
-     * @return The level.
+     * <code>int32 friend_level = 3;</code>
+     * @return The friendLevel.
      */
-    int getLevel();
+    int getFriendLevel();
 
     /**
      * <pre>
@@ -2808,7 +2808,7 @@ public final class FriendMsg {
       super(builder);
     }
     private FriendInfo() {
-      name_ = "";
+      friendName_ = "";
     }
 
     @java.lang.Override
@@ -2836,64 +2836,64 @@ public final class FriendMsg {
               com.winter.msg.FriendMsg.FriendInfo.class, com.winter.msg.FriendMsg.FriendInfo.Builder.class);
     }
 
-    public static final int PLAYER_ID_FIELD_NUMBER = 1;
-    private long playerId_;
+    public static final int FRIEND_ID_FIELD_NUMBER = 1;
+    private long friendId_;
     /**
-     * <code>int64 player_id = 1;</code>
-     * @return The playerId.
+     * <code>int64 friend_id = 1;</code>
+     * @return The friendId.
      */
     @java.lang.Override
-    public long getPlayerId() {
-      return playerId_;
+    public long getFriendId() {
+      return friendId_;
     }
 
-    public static final int NAME_FIELD_NUMBER = 2;
-    private volatile java.lang.Object name_;
+    public static final int FRIEND_NAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object friendName_;
     /**
-     * <code>string name = 2;</code>
-     * @return The name.
+     * <code>string friend_name = 2;</code>
+     * @return The friendName.
      */
     @java.lang.Override
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
+    public java.lang.String getFriendName() {
+      java.lang.Object ref = friendName_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        name_ = s;
+        friendName_ = s;
         return s;
       }
     }
     /**
-     * <code>string name = 2;</code>
-     * @return The bytes for name.
+     * <code>string friend_name = 2;</code>
+     * @return The bytes for friendName.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
+        getFriendNameBytes() {
+      java.lang.Object ref = friendName_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        name_ = b;
+        friendName_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int LEVEL_FIELD_NUMBER = 3;
-    private int level_;
+    public static final int FRIEND_LEVEL_FIELD_NUMBER = 3;
+    private int friendLevel_;
     /**
-     * <code>int32 level = 3;</code>
-     * @return The level.
+     * <code>int32 friend_level = 3;</code>
+     * @return The friendLevel.
      */
     @java.lang.Override
-    public int getLevel() {
-      return level_;
+    public int getFriendLevel() {
+      return friendLevel_;
     }
 
     public static final int IS_ONLINE_FIELD_NUMBER = 4;
@@ -2940,14 +2940,14 @@ public final class FriendMsg {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (playerId_ != 0L) {
-        output.writeInt64(1, playerId_);
+      if (friendId_ != 0L) {
+        output.writeInt64(1, friendId_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(friendName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, friendName_);
       }
-      if (level_ != 0) {
-        output.writeInt32(3, level_);
+      if (friendLevel_ != 0) {
+        output.writeInt32(3, friendLevel_);
       }
       if (isOnline_ != false) {
         output.writeBool(4, isOnline_);
@@ -2964,16 +2964,16 @@ public final class FriendMsg {
       if (size != -1) return size;
 
       size = 0;
-      if (playerId_ != 0L) {
+      if (friendId_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, playerId_);
+          .computeInt64Size(1, friendId_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(friendName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, friendName_);
       }
-      if (level_ != 0) {
+      if (friendLevel_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, level_);
+          .computeInt32Size(3, friendLevel_);
       }
       if (isOnline_ != false) {
         size += com.google.protobuf.CodedOutputStream
@@ -2998,12 +2998,12 @@ public final class FriendMsg {
       }
       com.winter.msg.FriendMsg.FriendInfo other = (com.winter.msg.FriendMsg.FriendInfo) obj;
 
-      if (getPlayerId()
-          != other.getPlayerId()) return false;
-      if (!getName()
-          .equals(other.getName())) return false;
-      if (getLevel()
-          != other.getLevel()) return false;
+      if (getFriendId()
+          != other.getFriendId()) return false;
+      if (!getFriendName()
+          .equals(other.getFriendName())) return false;
+      if (getFriendLevel()
+          != other.getFriendLevel()) return false;
       if (getIsOnline()
           != other.getIsOnline()) return false;
       if (getStatus()
@@ -3019,13 +3019,13 @@ public final class FriendMsg {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PLAYER_ID_FIELD_NUMBER;
+      hash = (37 * hash) + FRIEND_ID_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getPlayerId());
-      hash = (37 * hash) + NAME_FIELD_NUMBER;
-      hash = (53 * hash) + getName().hashCode();
-      hash = (37 * hash) + LEVEL_FIELD_NUMBER;
-      hash = (53 * hash) + getLevel();
+          getFriendId());
+      hash = (37 * hash) + FRIEND_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getFriendName().hashCode();
+      hash = (37 * hash) + FRIEND_LEVEL_FIELD_NUMBER;
+      hash = (53 * hash) + getFriendLevel();
       hash = (37 * hash) + IS_ONLINE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getIsOnline());
@@ -3159,11 +3159,11 @@ public final class FriendMsg {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        playerId_ = 0L;
+        friendId_ = 0L;
 
-        name_ = "";
+        friendName_ = "";
 
-        level_ = 0;
+        friendLevel_ = 0;
 
         isOnline_ = false;
 
@@ -3195,9 +3195,9 @@ public final class FriendMsg {
       @java.lang.Override
       public com.winter.msg.FriendMsg.FriendInfo buildPartial() {
         com.winter.msg.FriendMsg.FriendInfo result = new com.winter.msg.FriendMsg.FriendInfo(this);
-        result.playerId_ = playerId_;
-        result.name_ = name_;
-        result.level_ = level_;
+        result.friendId_ = friendId_;
+        result.friendName_ = friendName_;
+        result.friendLevel_ = friendLevel_;
         result.isOnline_ = isOnline_;
         result.status_ = status_;
         onBuilt();
@@ -3248,15 +3248,15 @@ public final class FriendMsg {
 
       public Builder mergeFrom(com.winter.msg.FriendMsg.FriendInfo other) {
         if (other == com.winter.msg.FriendMsg.FriendInfo.getDefaultInstance()) return this;
-        if (other.getPlayerId() != 0L) {
-          setPlayerId(other.getPlayerId());
+        if (other.getFriendId() != 0L) {
+          setFriendId(other.getFriendId());
         }
-        if (!other.getName().isEmpty()) {
-          name_ = other.name_;
+        if (!other.getFriendName().isEmpty()) {
+          friendName_ = other.friendName_;
           onChanged();
         }
-        if (other.getLevel() != 0) {
-          setLevel(other.getLevel());
+        if (other.getFriendLevel() != 0) {
+          setFriendLevel(other.getFriendLevel());
         }
         if (other.getIsOnline() != false) {
           setIsOnline(other.getIsOnline());
@@ -3291,17 +3291,17 @@ public final class FriendMsg {
                 done = true;
                 break;
               case 8: {
-                playerId_ = input.readInt64();
+                friendId_ = input.readInt64();
 
                 break;
               } // case 8
               case 18: {
-                name_ = input.readStringRequireUtf8();
+                friendName_ = input.readStringRequireUtf8();
 
                 break;
               } // case 18
               case 24: {
-                level_ = input.readInt32();
+                friendLevel_ = input.readInt32();
 
                 break;
               } // case 24
@@ -3331,140 +3331,140 @@ public final class FriendMsg {
         return this;
       }
 
-      private long playerId_ ;
+      private long friendId_ ;
       /**
-       * <code>int64 player_id = 1;</code>
-       * @return The playerId.
+       * <code>int64 friend_id = 1;</code>
+       * @return The friendId.
        */
       @java.lang.Override
-      public long getPlayerId() {
-        return playerId_;
+      public long getFriendId() {
+        return friendId_;
       }
       /**
-       * <code>int64 player_id = 1;</code>
-       * @param value The playerId to set.
+       * <code>int64 friend_id = 1;</code>
+       * @param value The friendId to set.
        * @return This builder for chaining.
        */
-      public Builder setPlayerId(long value) {
+      public Builder setFriendId(long value) {
         
-        playerId_ = value;
+        friendId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 player_id = 1;</code>
+       * <code>int64 friend_id = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearPlayerId() {
+      public Builder clearFriendId() {
         
-        playerId_ = 0L;
+        friendId_ = 0L;
         onChanged();
         return this;
       }
 
-      private java.lang.Object name_ = "";
+      private java.lang.Object friendName_ = "";
       /**
-       * <code>string name = 2;</code>
-       * @return The name.
+       * <code>string friend_name = 2;</code>
+       * @return The friendName.
        */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
+      public java.lang.String getFriendName() {
+        java.lang.Object ref = friendName_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          name_ = s;
+          friendName_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string name = 2;</code>
-       * @return The bytes for name.
+       * <code>string friend_name = 2;</code>
+       * @return The bytes for friendName.
        */
       public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
+          getFriendNameBytes() {
+        java.lang.Object ref = friendName_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          name_ = b;
+          friendName_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string name = 2;</code>
-       * @param value The name to set.
+       * <code>string friend_name = 2;</code>
+       * @param value The friendName to set.
        * @return This builder for chaining.
        */
-      public Builder setName(
+      public Builder setFriendName(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        name_ = value;
+        friendName_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string name = 2;</code>
+       * <code>string friend_name = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder clearName() {
+      public Builder clearFriendName() {
         
-        name_ = getDefaultInstance().getName();
+        friendName_ = getDefaultInstance().getFriendName();
         onChanged();
         return this;
       }
       /**
-       * <code>string name = 2;</code>
-       * @param value The bytes for name to set.
+       * <code>string friend_name = 2;</code>
+       * @param value The bytes for friendName to set.
        * @return This builder for chaining.
        */
-      public Builder setNameBytes(
+      public Builder setFriendNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        name_ = value;
+        friendName_ = value;
         onChanged();
         return this;
       }
 
-      private int level_ ;
+      private int friendLevel_ ;
       /**
-       * <code>int32 level = 3;</code>
-       * @return The level.
+       * <code>int32 friend_level = 3;</code>
+       * @return The friendLevel.
        */
       @java.lang.Override
-      public int getLevel() {
-        return level_;
+      public int getFriendLevel() {
+        return friendLevel_;
       }
       /**
-       * <code>int32 level = 3;</code>
-       * @param value The level to set.
+       * <code>int32 friend_level = 3;</code>
+       * @param value The friendLevel to set.
        * @return This builder for chaining.
        */
-      public Builder setLevel(int value) {
+      public Builder setFriendLevel(int value) {
         
-        level_ = value;
+        friendLevel_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 level = 3;</code>
+       * <code>int32 friend_level = 3;</code>
        * @return This builder for chaining.
        */
-      public Builder clearLevel() {
+      public Builder clearFriendLevel() {
         
-        level_ = 0;
+        friendLevel_ = 0;
         onChanged();
         return this;
       }
@@ -5076,13 +5076,13 @@ public final class FriendMsg {
       "\"3\n\017ReqHandleFriend\022\021\n\ttarget_id\030\001 \001(\003\022\r" +
       "\n\005agree\030\002 \001(\010\"6\n\020RespHandleFriend\022\021\n\ttar" +
       "get_id\030\001 \001(\003\022\017\n\007message\030\002 \001(\t\"\022\n\020ReqGetF" +
-      "riendList\"_\n\nFriendInfo\022\021\n\tplayer_id\030\001 \001" +
-      "(\003\022\014\n\004name\030\002 \001(\t\022\r\n\005level\030\003 \001(\005\022\021\n\tis_on" +
-      "line\030\004 \001(\010\022\016\n\006status\030\005 \001(\005\"?\n\016RespFriend" +
-      "List\022-\n\007friends\030\001 \003(\0132\034.com.winter.proto" +
-      ".FriendInfo\"6\n\020BrdFriendRequest\022\017\n\007from_" +
-      "id\030\001 \001(\003\022\021\n\tfrom_name\030\002 \001(\tB\033\n\016com.winte" +
-      "r.msgB\tFriendMsgb\006proto3"
+      "riendList\"m\n\nFriendInfo\022\021\n\tfriend_id\030\001 \001" +
+      "(\003\022\023\n\013friend_name\030\002 \001(\t\022\024\n\014friend_level\030" +
+      "\003 \001(\005\022\021\n\tis_online\030\004 \001(\010\022\016\n\006status\030\005 \001(\005" +
+      "\"?\n\016RespFriendList\022-\n\007friends\030\001 \003(\0132\034.co" +
+      "m.winter.proto.FriendInfo\"6\n\020BrdFriendRe" +
+      "quest\022\017\n\007from_id\030\001 \001(\003\022\021\n\tfrom_name\030\002 \001(" +
+      "\tB\033\n\016com.winter.msgB\tFriendMsgb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5123,7 +5123,7 @@ public final class FriendMsg {
     internal_static_com_winter_proto_FriendInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_FriendInfo_descriptor,
-        new java.lang.String[] { "PlayerId", "Name", "Level", "IsOnline", "Status", });
+        new java.lang.String[] { "FriendId", "FriendName", "FriendLevel", "IsOnline", "Status", });
     internal_static_com_winter_proto_RespFriendList_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_com_winter_proto_RespFriendList_fieldAccessorTable = new

@@ -3,7 +3,7 @@ package com.winter.modules.player;
 import com.google.protobuf.GeneratedMessageV3;
 import com.winter.common.model.PlayerModel;
 import com.winter.msg.MsgId.CmdId;
-import com.winter.msg.NotificationMsg.BrdPlayerMove;
+
 
 import io.netty.channel.Channel;
 import java.util.Map;
@@ -38,5 +38,10 @@ public class PlayerManager {
             channel.writeAndFlush(packet);
             System.out.println("推送消息给 " + playerId + ": " + cmd);
         }
+    }
+
+    // 查询玩家是否在线
+    public static boolean isOnline(long playerId) {
+        return onlinePlayers.containsKey(playerId);
     }
 }

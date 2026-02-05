@@ -7,6 +7,7 @@ import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.PacketMsg.GamePacket;
 import com.winter.msg.FriendMsg.ReqAddFriend;
 import com.winter.msg.FriendMsg.RespAddFriend;
+import com.winter.msg.FriendMsg.RespFriendList;
 import com.winter.msg.FriendMsg.RespHandleFriend;
 import com.winter.msg.FriendMsg.BrdFriendRequest;
 import com.winter.msg.FriendMsg.ReqHandleFriend;
@@ -79,6 +80,22 @@ public class FriendController {
                                     .setMessage("你的好友请求已被拒绝")
                                     .build(),
                     CmdId.RESP_HANDLE_FRIEND);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 获取好友列表
+    @GameHandler(cmd = CmdId.REQ_GET_FRIEND_LIST)
+    public void getFriendList(ChannelHandlerContext ctx, PlayerModel player, byte[] data) {
+        try {
+            RespFriendList friendList = friendService.getFriendList(player.getPlayerId());
+
+            GamePacket packet = GamePacket.newBuilder()
+                    .setCmd(CmdId.RESP_FRIEND_LIST)
+                    .setContent(friendList.toByteString())
+                    .build();
+            ctx.writeAndFlush(packet);
         } catch (Exception e) {
             e.printStackTrace();
         }

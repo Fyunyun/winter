@@ -3,6 +3,9 @@ package com.winter.modules.friend;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.winter.core.db.DbManager;
 
 public class FriendDao {
@@ -118,5 +121,26 @@ public class FriendDao {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<FriendEntry> getFriendList(Long myId) {
+        String sql = "select friend_id, status from friend where owner_id = ?";
+        List<FriendEntry> friendIds = new ArrayList<>();
+        try (Connection conn = DbManager.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, myId);
+
+            ResultSet rs = ps.executeQuery();
+            System.out.println("好友列表：");
+            while (rs.next()) {
+                Long friendId = rs.getLong("friend_id");
+                int status = rs.getInt("status");
+                friendIds.add(new FriendEntry(friendId, status));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return friendIds;
     }
 }
