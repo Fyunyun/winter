@@ -10,9 +10,16 @@ import com.winter.msg.PacketMsg.GamePacket;
 
 import io.netty.channel.ChannelHandlerContext;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class LoginService {
 
-    LoginDao loginDao = new LoginDao();
+    private final LoginDao loginDao;
+
+    public LoginService(LoginDao loginDao) {
+        this.loginDao = loginDao;
+    }
 
     /**
      * 统一的登录入口

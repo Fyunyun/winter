@@ -8,6 +8,9 @@ import java.util.List;
 
 import com.winter.core.db.DbManager;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class FriendDao {
 
     public boolean isFriend(Long playerId, Long friendId) {

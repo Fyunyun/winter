@@ -60,4 +60,8 @@ enum CmdId {
     REQ_GET_FRIEND_LIST = 9005; // 获取好友列表
     RESP_FRIEND_LIST = 9006; // 好友列表响应
     BRD_FRIEND_REQUEST = 9007; // 服务器主动推送：收到好友申请
+
+    // 聊天
+    REQ_SEND_PRIVATE_CHAT = 10001; // 发送私聊消息
+    BRD_PRIVATE_CHAT = 10002; // 接收私聊消息
 }

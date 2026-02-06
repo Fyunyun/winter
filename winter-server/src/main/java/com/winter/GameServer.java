@@ -19,6 +19,7 @@ import com.winter.core.db.DataService;
 import com.winter.core.net.handler.IdleDisconnectHandler;
 import com.winter.core.net.handler.ServerHandler;
 import com.winter.core.router.MessageDispatcher;
+import com.winter.core.spring.SpringContext;
 import com.winter.msg.PacketMsg.GamePacket;
 import com.winter.core.net.handler.AuthenticationHandler;
 
@@ -106,6 +107,8 @@ public class GameServer {
      * @throws InterruptedException 如果线程被中断
      */
     public static void main(String[] args) throws InterruptedException {
+
+        SpringContext.init();
 
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             System.out.println(">>> 执行全服数据存盘...");

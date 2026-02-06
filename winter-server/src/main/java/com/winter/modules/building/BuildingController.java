@@ -13,9 +13,16 @@ import com.winter.msg.PacketMsg.GamePacket;
 
 import io.netty.channel.ChannelHandlerContext;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class BuildingController {
 
-    private final BuildingService buildingService = new BuildingService();
+    private final BuildingService buildingService;
+
+    public BuildingController(BuildingService buildingService) {
+        this.buildingService = buildingService;
+    }
 
     @GameHandler(cmd = CmdId.REQ_BUILDING_UPGRADE)
     public void upgrade(ChannelHandlerContext ctx, PlayerModel player, byte[] data) {

@@ -14,9 +14,16 @@ import com.winter.msg.FriendMsg.ReqHandleFriend;
 
 import io.netty.channel.ChannelHandlerContext;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class FriendController {
 
-    FriendService friendService = new FriendService();
+    private final FriendService friendService;
+
+    public FriendController(FriendService friendService) {
+        this.friendService = friendService;
+    }
 
     // 请求添加好友
     @GameHandler(cmd = CmdId.REQ_ADD_FRIEND)

@@ -91,6 +91,13 @@
         <artifactId>fastjson</artifactId>
         <version>2.0.21</version>
     </dependency>
+
+    <!-- Spring (for dependency injection) -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>6.1.6</version>
+    </dependency>
 </dependencies>
 
     

@@ -10,9 +10,16 @@ import com.winter.modules.scene.AoiService;
 import com.winter.msg.NotificationMsg;
 import com.winter.msg.MsgId.CmdId;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class MoveService {
 
-    private MoveDao moveDao = new MoveDao();
+    private final MoveDao moveDao;
+
+    public MoveService(MoveDao moveDao) {
+        this.moveDao = moveDao;
+    }
     static final ExecutorService broadcastExecutor = Executors.newFixedThreadPool(4);
 
     public boolean movePlayer(PlayerModel player, float newX, float newY) {

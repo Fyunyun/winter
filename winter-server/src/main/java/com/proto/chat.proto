@@ -1,0 +1,21 @@
+syntax = "proto3";
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "ChatMsg";
+
+// 1. 发送私聊消息 (客户端 -> 服务器)
+message ReqSendPrivateChat {
+  int64  target_id = 1; // 发给谁
+  string content   = 2; // 内容
+  int32  msg_type  = 3; // 0:纯文本, 1:表情ID, 2:语音连接
+}
+
+// 2. 接收私聊消息 (服务器 -> 客户端)
+message BrdPrivateChat {
+  int64  from_id   = 1; // 谁发的
+  string from_name = 2; // 发送者名字 (省得客户端再去查)
+  string content   = 3;
+  int32  msg_type  = 4;
+  int64  timestamp = 5; // 发送时间戳
+}

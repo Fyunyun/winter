@@ -6,6 +6,9 @@ import com.winter.core.db.DataService;
 import com.winter.core.db.DbManager;
 import redis.clients.jedis.Jedis;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class MoveDao {
 
     public boolean updatePlayerPosition(PlayerModel player, float x, float y) {

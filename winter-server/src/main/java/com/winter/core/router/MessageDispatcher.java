@@ -7,6 +7,9 @@ import com.winter.modules.login.LoginController;
 import com.winter.modules.register.RegisterController;
 import com.winter.modules.collect.CollectController;
 import com.winter.modules.friend.FriendController;
+import com.winter.modules.chat.ChatController;
+
+import com.winter.core.spring.SpringContext;
 
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.PacketMsg.GamePacket;
@@ -39,22 +42,25 @@ public class MessageDispatcher {
      */
     public static void init() {
         // === 注册建筑模块 ===
-        register(new BuildingController());
+        register(SpringContext.getBean(BuildingController.class));
 
         // === 注册登录模块 ===
-        register(new LoginController());
+        register(SpringContext.getBean(LoginController.class));
 
         // === 注册注册模块 ===
-        register(new RegisterController());
+        register(SpringContext.getBean(RegisterController.class));
 
         // === 注册移动模块 ===
-        register(new MoveController());
+        register(SpringContext.getBean(MoveController.class));
 
         // === 注册好友模块 ===
-        register(new FriendController());
+        register(SpringContext.getBean(FriendController.class));
 
         // === 注册采集模块 ===
-        register(new CollectController());
+        register(SpringContext.getBean(CollectController.class));
+
+        // === 注册聊天模块 ===
+        register(SpringContext.getBean(ChatController.class));
 
         System.out.println("消息分发器初始化完成，注册了 " + HANDLER_MAP.size() + " 个路由。");
     }

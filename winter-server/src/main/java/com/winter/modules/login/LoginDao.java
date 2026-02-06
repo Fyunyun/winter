@@ -12,6 +12,9 @@ import com.winter.core.db.DbManager;
 
 import redis.clients.jedis.Jedis;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class LoginDao {
     private static final String REDIS_KEY_PREFIX = "p:data:";
 

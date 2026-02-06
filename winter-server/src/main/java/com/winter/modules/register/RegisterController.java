@@ -11,9 +11,16 @@ import com.winter.msg.SuccessMsg.SuccessCode;
 
 import io.netty.channel.ChannelHandlerContext;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class RegisterController {
 
-    RegisterService registerService = new RegisterService();
+    private final RegisterService registerService;
+
+    public RegisterController(RegisterService registerService) {
+        this.registerService = registerService;
+    }
 
     @GameHandler(cmd = CmdId.REQ_REGISTER)
     public void register(ChannelHandlerContext ctx, PlayerModel player, byte[] data) {

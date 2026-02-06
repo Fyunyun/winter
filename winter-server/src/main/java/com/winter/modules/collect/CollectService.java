@@ -2,9 +2,16 @@ package com.winter.modules.collect;
 
 import com.winter.common.model.PlayerModel;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class CollectService {
 
-    CollectDao collectDao = new CollectDao();
+    private final CollectDao collectDao;
+
+    public CollectService(CollectDao collectDao) {
+        this.collectDao = collectDao;
+    }
 
     public boolean collectCoal(PlayerModel player, int amount) {
         // 处理采集煤炭的逻辑

@@ -9,9 +9,16 @@ import com.winter.common.model.PlayerModel;
 import com.winter.core.db.DataService;
 import com.winter.core.db.DbManager;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class BuildingService {
 
-    private static final BuildingDao buildingDao = new BuildingDao();
+    private final BuildingDao buildingDao;
+
+    public BuildingService(BuildingDao buildingDao) {
+        this.buildingDao = buildingDao;
+    }
 
     // --- 1. 获取某个建筑 (先查 Redis，没有再查 MySQL) ---
     public BuildingModel getBuilding(long playerId, int type) {

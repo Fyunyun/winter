@@ -8,9 +8,16 @@ import com.winter.modules.player.PlayerManager;
 import com.winter.msg.FriendMsg.RespFriendList;
 import com.winter.msg.FriendMsg.FriendInfo;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class FriendService {
 
-    FriendDao friendDao = new FriendDao();
+    private final FriendDao friendDao;
+
+    public FriendService(FriendDao friendDao) {
+        this.friendDao = friendDao;
+    }
 
     public boolean addFriendRequest(PlayerModel player, Long friendId) {
         if (player.getPlayerId() == friendId) {

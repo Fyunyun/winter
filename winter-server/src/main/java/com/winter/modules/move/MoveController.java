@@ -10,13 +10,21 @@ import com.winter.msg.MoveMsg.RespMove;
 
 import io.netty.channel.ChannelHandlerContext;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class MoveController {
+
+    private final MoveService moveService;
+
+    public MoveController(MoveService moveService) {
+        this.moveService = moveService;
+    }
 
     @GameHandler(cmd = CmdId.REQ_MOVE)
     public void handleMoveReq(ChannelHandlerContext ctx, PlayerModel player, byte[] data) {
         try {
             ReqMove req = ReqMove.parseFrom(data);
-            MoveService moveService = new MoveService();
             Boolean movePlayer = moveService.movePlayer(player, req.getX(), req.getY());
             
             String moveSuccess = movePlayer ? "Move successful" : "Move failed";

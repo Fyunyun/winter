@@ -8,9 +8,16 @@ import com.winter.msg.CollectMsg.ReqCollect;
 import com.winter.msg.CollectMsg.RespCollect;
 import io.netty.channel.ChannelHandlerContext;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CollectController {
 
-    CollectService collectService = new CollectService();
+    private final CollectService collectService;
+
+    public CollectController(CollectService collectService) {
+        this.collectService = collectService;
+    }
 
     @GameHandler(cmd = { CmdId.REQ_COLLECT_COAL, CmdId.REQ_COLLECT_WOOD, CmdId.REQ_COLLECT_FOOD })
     public void collectResource(ChannelHandlerContext ctx, PlayerModel player, byte[] data, CmdId cmdId) {

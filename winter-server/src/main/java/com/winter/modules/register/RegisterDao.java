@@ -8,8 +8,10 @@ import com.winter.core.db.DbManager;
 import com.winter.msg.ErrorMsg.ErrorCode;
 import com.winter.msg.SuccessMsg.SuccessCode;
 
-public class RegisterDao {
+import org.springframework.stereotype.Repository;
 
+@Repository
+public class RegisterDao {
     // 注册新账号
     public int register(String username, String password) {
 

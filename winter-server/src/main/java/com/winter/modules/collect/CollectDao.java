@@ -3,6 +3,9 @@ package com.winter.modules.collect;
 import com.winter.common.model.PlayerModel;
 import com.winter.core.db.DataService;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class CollectDao {
 
     public boolean collectCoal(PlayerModel player, int amount) {

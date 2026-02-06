@@ -10,6 +10,9 @@ import com.winter.core.db.DbManager;
 
 import redis.clients.jedis.Jedis;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class BuildingDao {
 
     // 保存到redis
