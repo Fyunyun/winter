@@ -5,6 +5,7 @@ import com.winter.core.db.DbManager;
 import com.winter.core.router.GameHandler;
 import com.winter.core.util.SessionUtil;
 import com.winter.modules.player.PlayerManager;
+import com.winter.modules.player.PlayerService;
 import com.winter.msg.AuthMsg.RespLogin;
 import com.winter.msg.MsgId.CmdId;
 
@@ -15,16 +16,17 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
 import redis.clients.jedis.Jedis;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LoginController {
 
-    private final LoginService loginService;
+    @Autowired
+    private LoginService loginService;
 
-    public LoginController(LoginService loginService) {
-        this.loginService = loginService;
-    }
+    @Autowired
+    private PlayerService playerService;
 
     @GameHandler(cmd = CmdId.REQ_LOGIN)
     public void login(ChannelHandlerContext ctx, PlayerModel player, byte[] data) {
@@ -34,17 +36,15 @@ public class LoginController {
             SessionUtil.bindPlayerId(ctx.channel(), result.getPlayerId());
             ctx.channel().attr(AttributeKey.valueOf("PLAYER")).set(result);
 
-            // 将玩家加入在线列表   
+            // 将玩家加入在线列表
             PlayerManager.addPlayer(result, ctx.channel());
 
-            try{
+            try {
                 Jedis redis = DbManager.getJedis();
-            redis.geoadd("world:map:pos", result.getX(), result.getY(), String.valueOf(result.getPlayerId()));
-            } catch(Exception e){
+                redis.geoadd("world:map:pos", result.getX(), result.getY(), String.valueOf(result.getPlayerId()));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-
             RespLogin resp = RespLogin.newBuilder()
                     .setCode(SuccessCode.LOGIN_SUCCESS.getNumber())
                     .setMsg("登录成功")
@@ -55,6 +55,7 @@ public class LoginController {
                     .setContent(resp.toByteString())
                     .build();
             ctx.writeAndFlush(packet);
+            playerService.checkOfflineMessages(result);
         }
     }
 }

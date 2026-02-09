@@ -14,11 +14,7 @@ import org.springframework.stereotype.Controller;
 public class ChatController {
 
     @Autowired
-    private final ChatService chatService;
-
-    public ChatController(ChatService chatService) {
-        this.chatService = chatService;
-    }
+    private ChatService chatService;
 
     @GameHandler(cmd = CmdId.REQ_SEND_PRIVATE_CHAT)
     public void sendPrivateChat(ChannelHandlerContext ctx, PlayerModel player, byte[] data) {
@@ -26,7 +22,7 @@ public class ChatController {
             ReqSendPrivateChat req = ReqSendPrivateChat.parseFrom(data);
 
             // TODO: 这里后续可以调用 chatService 做私聊投递/持久化
-            // chatService.sendPrivateChat(player, req);
+            chatService.sendPrivateChat(player, req.getTargetId(), req.getContent(), req.getMsgType());
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -120,7 +120,10 @@ public class GameServer {
 
         MessageDispatcher.init(); // 初始化消息分发器
 
+        // 加载敏感词到内存
+        DataService.loadSensitiveWords();
         // 创建服务器实例并启动，监听端口 8088
+        System.out.println(">>> 正在启动冬日游戏服务器...");
         new GameServer(8088).start();
     }
 }

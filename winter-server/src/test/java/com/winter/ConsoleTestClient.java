@@ -7,6 +7,8 @@ import com.winter.msg.BuildingMsg.ReqBuildCreate;
 import com.winter.msg.BuildingMsg.ReqBuildUpgrade;
 import com.winter.msg.BuildingMsg.RespBuildCreate;
 import com.winter.msg.BuildingMsg.RespBuildUpgrade;
+import com.winter.msg.ChatMsg.BrdPrivateChat;
+import com.winter.msg.ChatMsg.ReqSendPrivateChat;
 import com.winter.msg.CollectMsg.ReqCollect;
 import com.winter.msg.CollectMsg.RespCollect;
 import com.winter.msg.FriendMsg.BrdFriendRequest;
@@ -115,6 +117,12 @@ public class ConsoleTestClient {
                             break;
                         case "collect":
                             handleCollect(channel, parts);
+                            break;
+                        case "chat":
+                            handlePrivateChat(channel, parts);
+                            break;
+                        case "chat_loop":
+                            handleChatLoop(channel, reader, parts);
                             break;
                         case "building_create":
                             handleBuildingCreate(channel, parts);
@@ -263,6 +271,58 @@ public class ConsoleTestClient {
         System.out.println("[发送] 采集请求: " + type + " x" + amount);
     }
 
+    private static void handlePrivateChat(Channel channel, String[] parts) {
+        if (parts.length < 3) {
+            System.out.println("格式错误，请使用: chat <targetId> <message>");
+            return;
+        }
+        long targetId = Long.parseLong(parts[1]);
+        StringBuilder contentBuilder = new StringBuilder();
+        for (int i = 2; i < parts.length; i++) {
+            if (i > 2) {
+                contentBuilder.append(' ');
+            }
+            contentBuilder.append(parts[i]);
+        }
+
+        sendPrivateChat(channel, targetId, contentBuilder.toString());
+    }
+
+    private static void handleChatLoop(Channel channel, BufferedReader reader, String[] parts) throws Exception {
+        if (parts.length < 2) {
+            System.out.println("格式错误，请使用: chat_loop <targetId>");
+            return;
+        }
+        long targetId = Long.parseLong(parts[1]);
+        System.out.println("进入持续聊天模式，输入 exit 退出。");
+
+        while (true) {
+            System.out.print("chat(" + targetId + ") > ");
+            String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            String trimmed = line.trim();
+            if (trimmed.equalsIgnoreCase("exit") || trimmed.equalsIgnoreCase("quit")) {
+                break;
+            }
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            sendPrivateChat(channel, targetId, trimmed);
+        }
+    }
+
+    private static void sendPrivateChat(Channel channel, long targetId, String content) {
+        ReqSendPrivateChat req = ReqSendPrivateChat.newBuilder()
+                .setTargetId(targetId)
+                .setContent(content)
+                .setMsgType(0)
+                .build();
+        sendPacket(channel, CmdId.REQ_SEND_PRIVATE_CHAT, req.toByteString());
+        System.out.println("[发送] 私聊消息: targetId=" + targetId + ", content=" + content);
+    }
+
     private static void handleBuildingCreate(Channel channel, String[] parts) {
         if (parts.length < 2) {
             System.out.println("格式错误，请使用: building_create <buildingType>");
@@ -375,6 +435,8 @@ public class ConsoleTestClient {
         System.out.println("friend_list                           获取好友列表");
         System.out.println("move <x> <y>                           移动");
         System.out.println("collect <coal|wood|food> [amount]     采集资源");
+        System.out.println("chat <targetId> <message>             发送私聊消息");
+        System.out.println("chat_loop <targetId>                  持续私聊输入模式");
         System.out.println("building_create <buildingType>        创建建筑");
         System.out.println("building_upgrade <buildingType>       升级建筑");
         System.out.println("all <username> <password>             一键测试全流程");
@@ -446,6 +508,14 @@ public class ConsoleTestClient {
                 case BRD_FRIEND_REQUEST:
                     BrdFriendRequest brdFriend = BrdFriendRequest.parseFrom(msg.getContent());
                     System.out.println("  收到好友申请: fromId=" + brdFriend.getFromId() + ", fromName=" + brdFriend.getFromName());
+                    break;
+                case BRD_PRIVATE_CHAT:
+                    BrdPrivateChat privateChat = BrdPrivateChat.parseFrom(msg.getContent());
+                    System.out.println("  私聊消息: fromId=" + privateChat.getFromId()
+                            + ", fromName=" + privateChat.getFromName()
+                            + ", msgType=" + privateChat.getMsgType()
+                            + ", content=" + privateChat.getContent()
+                            + ", timestamp=" + privateChat.getTimestamp());
                     break;
                 case PUSH_PLAYER_POSITION:
                     NotificationMsg.BrdPlayerMove brd = NotificationMsg.BrdPlayerMove.parseFrom(msg.getContent());

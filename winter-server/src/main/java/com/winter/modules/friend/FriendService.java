@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.winter.common.model.PlayerModel;
 import com.winter.core.db.DataService;
+import com.winter.modules.friend.Entry.FriendEntry;
 import com.winter.modules.player.PlayerManager;
 import com.winter.msg.FriendMsg.RespFriendList;
 import com.winter.msg.FriendMsg.FriendInfo;

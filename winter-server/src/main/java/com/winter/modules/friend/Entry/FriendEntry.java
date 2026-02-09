@@ -1,4 +1,4 @@
-package com.winter.modules.friend;
+package com.winter.modules.friend.Entry;
 
 public class FriendEntry {
     private final long friendId;

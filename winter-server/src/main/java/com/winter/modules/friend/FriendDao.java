@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.winter.core.db.DbManager;
+import com.winter.modules.friend.Entry.FriendEntry;
 
 import org.springframework.stereotype.Repository;
 

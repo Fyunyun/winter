@@ -1,17 +1,21 @@
 package com.winter.core.db;
 
 import redis.clients.jedis.Jedis;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import com.winter.common.model.PlayerModel;
+import com.winter.modules.chat.util.SensitiveWordFilter;
+import com.winter.core.spring.SpringContext;
+import java.util.Collection;
+import java.util.ArrayList;
 
 public class DataService {
     private static final String REDIS_KEY_PREFIX = "p:data:";
 
+    private static volatile SensitiveWordFilter wordFilter;
 
     // 1. 从Redis加载某个玩家数据
     public static PlayerModel loadPlayerFromRedis(Long playerId) {
@@ -33,7 +37,7 @@ public class DataService {
         return model;
     }
 
-    //redis中加载全部玩家
+    // redis中加载全部玩家
     public static Map<Long, PlayerModel> loadAllPlayersFromRedis() {
         Map<Long, PlayerModel> players = new HashMap<>();
         try (Jedis redis = DbManager.getJedis()) {
@@ -108,5 +112,34 @@ public class DataService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // 4. 加载敏感词
+    public static void loadSensitiveWords() {
+        String sql = "SELECT word FROM sensitive_words";
+        Collection<String> words = new ArrayList<>();
+        try (Connection conn = DbManager.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            var rs = ps.executeQuery();
+            while (rs.next()) {
+                words.add(rs.getString("word"));
+            }
+            SensitiveWordFilter filter = getWordFilter();
+            filter.addWords(words);
+            filter.buildFailPointers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static SensitiveWordFilter getWordFilter() {
+        if (wordFilter == null) {
+            synchronized (DataService.class) {
+                if (wordFilter == null) {
+                    wordFilter = SpringContext.getBean(SensitiveWordFilter.class);
+                }
+            }
+        }
+        return wordFilter;
     }
 }
