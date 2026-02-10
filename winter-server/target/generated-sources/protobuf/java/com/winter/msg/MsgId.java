@@ -267,6 +267,22 @@ public final class MsgId {
      * <code>BRD_PRIVATE_CHAT = 10002;</code>
      */
     BRD_PRIVATE_CHAT(10002),
+    /**
+     * <pre>
+     * 广播聊天消息
+     * </pre>
+     *
+     * <code>REQ_BROADCAST_CHAT = 10003;</code>
+     */
+    REQ_BROADCAST_CHAT(10003),
+    /**
+     * <pre>
+     * 接收广播聊天消息
+     * </pre>
+     *
+     * <code>BRD_BROADCAST_CHAT = 10004;</code>
+     */
+    BRD_BROADCAST_CHAT(10004),
     UNRECOGNIZED(-1),
     ;
 
@@ -518,6 +534,22 @@ public final class MsgId {
      * <code>BRD_PRIVATE_CHAT = 10002;</code>
      */
     public static final int BRD_PRIVATE_CHAT_VALUE = 10002;
+    /**
+     * <pre>
+     * 广播聊天消息
+     * </pre>
+     *
+     * <code>REQ_BROADCAST_CHAT = 10003;</code>
+     */
+    public static final int REQ_BROADCAST_CHAT_VALUE = 10003;
+    /**
+     * <pre>
+     * 接收广播聊天消息
+     * </pre>
+     *
+     * <code>BRD_BROADCAST_CHAT = 10004;</code>
+     */
+    public static final int BRD_BROADCAST_CHAT_VALUE = 10004;
 
 
     public final int getNumber() {
@@ -576,6 +608,8 @@ public final class MsgId {
         case 9007: return BRD_FRIEND_REQUEST;
         case 10001: return REQ_SEND_PRIVATE_CHAT;
         case 10002: return BRD_PRIVATE_CHAT;
+        case 10003: return REQ_BROADCAST_CHAT;
+        case 10004: return BRD_BROADCAST_CHAT;
         default: return null;
       }
     }
@@ -641,7 +675,7 @@ public final class MsgId {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\010id.proto\022\020com.winter.proto*\326\005\n\005CmdId\022\014" +
+      "\n\010id.proto\022\020com.winter.proto*\210\006\n\005CmdId\022\014" +
       "\n\010CMD_NONE\020\000\022\016\n\tREQ_LOGIN\020\351\007\022\017\n\nRESP_LOG" +
       "IN\020\352\007\022\031\n\024REQ_BUILDING_UPGRADE\020\321\017\022\032\n\025RESP" +
       "_BUILDING_UPGRADE\020\322\017\022\032\n\025PUSH_BUILDING_UP" +
@@ -659,8 +693,9 @@ public final class MsgId {
       "IEND\020\253F\022\027\n\022RESP_HANDLE_FRIEND\020\254F\022\030\n\023REQ_" +
       "GET_FRIEND_LIST\020\255F\022\025\n\020RESP_FRIEND_LIST\020\256" +
       "F\022\027\n\022BRD_FRIEND_REQUEST\020\257F\022\032\n\025REQ_SEND_P" +
-      "RIVATE_CHAT\020\221N\022\025\n\020BRD_PRIVATE_CHAT\020\222NB\027\n" +
-      "\016com.winter.msgB\005MsgIdb\006proto3"
+      "RIVATE_CHAT\020\221N\022\025\n\020BRD_PRIVATE_CHAT\020\222N\022\027\n" +
+      "\022REQ_BROADCAST_CHAT\020\223N\022\027\n\022BRD_BROADCAST_" +
+      "CHAT\020\224NB\027\n\016com.winter.msgB\005MsgIdb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -44,4 +44,17 @@ public class PlayerManager {
     public static boolean isOnline(long playerId) {
         return onlinePlayers.containsKey(playerId);
     }
+
+    public static void broadcast(GeneratedMessageV3 message, CmdId cmd) {
+        GamePacket packet = GamePacket.newBuilder()
+                .setCmd(cmd)
+                .setContent(message.toByteString())
+                .build();
+        for (Channel channel : onlinePlayers.values()) {
+            if (channel.isActive()) {
+                channel.writeAndFlush(packet);
+            }
+        }
+        System.out.println("广播消息: " + cmd + " 给 " + onlinePlayers.size() + " 个玩家");
+    }
 }

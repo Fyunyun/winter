@@ -7,7 +7,9 @@ import com.winter.msg.BuildingMsg.ReqBuildCreate;
 import com.winter.msg.BuildingMsg.ReqBuildUpgrade;
 import com.winter.msg.BuildingMsg.RespBuildCreate;
 import com.winter.msg.BuildingMsg.RespBuildUpgrade;
+import com.winter.msg.ChatMsg.BrdGroupChat;
 import com.winter.msg.ChatMsg.BrdPrivateChat;
+import com.winter.msg.ChatMsg.ReqSendGroupChat;
 import com.winter.msg.ChatMsg.ReqSendPrivateChat;
 import com.winter.msg.CollectMsg.ReqCollect;
 import com.winter.msg.CollectMsg.RespCollect;
@@ -120,6 +122,12 @@ public class ConsoleTestClient {
                             break;
                         case "chat":
                             handlePrivateChat(channel, parts);
+                            break;
+                        case "broadcast":
+                            handleBroadcastChat(channel, parts);
+                            break;
+                        case "broadcast_loop":
+                            handleBroadcastLoop(channel, reader, parts);
                             break;
                         case "chat_loop":
                             handleChatLoop(channel, reader, parts);
@@ -313,6 +321,42 @@ public class ConsoleTestClient {
         }
     }
 
+    private static void handleBroadcastChat(Channel channel, String[] parts) {
+        if (parts.length < 2) {
+            System.out.println("格式错误，请使用: broadcast <message>");
+            return;
+        }
+        StringBuilder contentBuilder = new StringBuilder();
+        for (int i = 1; i < parts.length; i++) {
+            if (i > 1) {
+                contentBuilder.append(' ');
+            }
+            contentBuilder.append(parts[i]);
+        }
+
+        sendBroadcastChat(channel, contentBuilder.toString());
+    }
+
+    private static void handleBroadcastLoop(Channel channel, BufferedReader reader, String[] parts) throws Exception {
+        System.out.println("进入持续群发模式，输入 exit 退出。");
+
+        while (true) {
+            System.out.print("broadcast > ");
+            String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            String trimmed = line.trim();
+            if (trimmed.equalsIgnoreCase("exit") || trimmed.equalsIgnoreCase("quit")) {
+                break;
+            }
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            sendBroadcastChat(channel, trimmed);
+        }
+    }
+
     private static void sendPrivateChat(Channel channel, long targetId, String content) {
         ReqSendPrivateChat req = ReqSendPrivateChat.newBuilder()
                 .setTargetId(targetId)
@@ -321,6 +365,15 @@ public class ConsoleTestClient {
                 .build();
         sendPacket(channel, CmdId.REQ_SEND_PRIVATE_CHAT, req.toByteString());
         System.out.println("[发送] 私聊消息: targetId=" + targetId + ", content=" + content);
+    }
+
+    private static void sendBroadcastChat(Channel channel, String content) {
+        ReqSendGroupChat req = ReqSendGroupChat.newBuilder()
+                .setContent(content)
+                .setMsgType(0)
+                .build();
+        sendPacket(channel, CmdId.REQ_BROADCAST_CHAT, req.toByteString());
+        System.out.println("[发送] 群发消息: content=" + content);
     }
 
     private static void handleBuildingCreate(Channel channel, String[] parts) {
@@ -437,6 +490,8 @@ public class ConsoleTestClient {
         System.out.println("collect <coal|wood|food> [amount]     采集资源");
         System.out.println("chat <targetId> <message>             发送私聊消息");
         System.out.println("chat_loop <targetId>                  持续私聊输入模式");
+        System.out.println("broadcast <message>                   发送群发消息");
+        System.out.println("broadcast_loop                        持续群发输入模式");
         System.out.println("building_create <buildingType>        创建建筑");
         System.out.println("building_upgrade <buildingType>       升级建筑");
         System.out.println("all <username> <password>             一键测试全流程");
@@ -516,6 +571,14 @@ public class ConsoleTestClient {
                             + ", msgType=" + privateChat.getMsgType()
                             + ", content=" + privateChat.getContent()
                             + ", timestamp=" + privateChat.getTimestamp());
+                    break;
+                case BRD_BROADCAST_CHAT:
+                    BrdGroupChat groupChat = BrdGroupChat.parseFrom(msg.getContent());
+                    System.out.println("  群发消息: fromId=" + groupChat.getFromId()
+                        + ", fromName=" + groupChat.getFromName()
+                        + ", msgType=" + groupChat.getMsgType()
+                        + ", content=" + groupChat.getContent()
+                        + ", timestamp=" + groupChat.getTimestamp());
                     break;
                 case PUSH_PLAYER_POSITION:
                     NotificationMsg.BrdPlayerMove brd = NotificationMsg.BrdPlayerMove.parseFrom(msg.getContent());

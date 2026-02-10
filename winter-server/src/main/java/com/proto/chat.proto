@@ -19,3 +19,18 @@ message BrdPrivateChat {
   int32  msg_type  = 4;
   int64  timestamp = 5; // 发送时间戳
 }
+
+// 3. 发送群聊消息 (客户端 -> 服务器)
+message ReqSendGroupChat {
+  string content  = 1; // 内容
+  int32  msg_type = 2; // 0:纯文本, 1:表情ID, 2:语音连接
+}
+
+// 4. 接收群聊消息 (服务器 -> 客户端)
+message BrdGroupChat {
+  int64  from_id   = 1; // 谁发的
+  string from_name = 2; // 发送者名字 (省得客户端再去查)
+  string content   = 3;
+  int32  msg_type  = 4;
+  int64  timestamp = 5; // 发送时间戳
+}

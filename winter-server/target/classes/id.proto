@@ -64,4 +64,6 @@ enum CmdId {
     // 聊天
     REQ_SEND_PRIVATE_CHAT = 10001; // 发送私聊消息
     BRD_PRIVATE_CHAT = 10002; // 接收私聊消息
+    REQ_BROADCAST_CHAT = 10003; // 广播聊天消息
+    BRD_BROADCAST_CHAT = 10004; // 接收广播聊天消息
 }

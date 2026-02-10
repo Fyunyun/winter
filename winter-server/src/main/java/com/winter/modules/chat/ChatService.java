@@ -5,12 +5,10 @@ import com.winter.common.model.PlayerModel;
 import com.winter.core.db.DbManager;
 import com.winter.modules.chat.util.SensitiveWordFilter;
 import com.winter.modules.player.PlayerManager;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.winter.msg.ChatMsg;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.winter.msg.ChatMsg.BrdPrivateChat;
-import com.winter.msg.PacketMsg.GamePacket;
+import com.winter.msg.MsgId.CmdId;
 
 import redis.clients.jedis.Jedis;
 
@@ -62,5 +60,16 @@ public class ChatService {
             // 设置过期时间，比如离线消息只保留 7 天
             redis.expire(key.getBytes(), 60 * 60 * 24 * 7);
         }
+    }
+
+    public void broadcastToAll(PlayerModel sender, String message) {
+        String cleanMessage = wordFilterService.filter(message);
+        ChatMsg.BrdGroupChat chatMsg = ChatMsg.BrdGroupChat.newBuilder()
+                .setFromId(sender.getPlayerId())
+                .setFromName(sender.getName())
+                .setContent(cleanMessage)
+                .setTimestamp(System.currentTimeMillis())
+                .build();
+        PlayerManager.broadcast(chatMsg, CmdId.BRD_BROADCAST_CHAT);
     }
 }
