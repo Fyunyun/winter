@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package com.winter.proto;
+
+option java_package = "com.winter.msg";
+option java_outer_classname = "BattleMsg";
+
+// 战斗回放总结构
+message BattleRecord {
+  int64                 seed     = 1;
+  BattleGroupInfo       attacker = 2; // 进攻方初始快照
+  BattleGroupInfo       defender = 3; // 防守方初始快照
+  repeated BattleAction actions  = 4;
+}
+
+// 阵营初始信息
+message BattleGroupInfo {
+  string                group_name = 1;
+  repeated UnitSnapshot units      = 2; // 该阵营所有的初始单位
+}
+
+// 单位初始状态快照
+message UnitSnapshot {
+  int32 unit_id   = 1; // 唯一ID (对应Action里的actor_id)
+  int32 config_id = 2; // 配置表ID (决定是步兵还是骑兵，显示什么模型)
+  int32 hp        = 3; // 初始生命值
+  int32 max_hp    = 4; // 最大生命值
+  int32 level     = 5; // 等级
+    // 可以根据需要添加：英雄ID、皮肤ID等
+}
+
+// 之前定义的 Action
+message BattleAction {
+  int32 round     = 1;
+  int32 actor_id  = 2;
+  int32 target_id = 3;
+  int32 damage    = 4;
+  bool  is_crit   = 5;
+  int32 skill_id  = 6;
+}
