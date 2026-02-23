@@ -1,4 +1,4 @@
-package com.winter.modules.battle.model;
+package com.winter.modules.battle.model.skill;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +20,14 @@ public enum BuffType {
     BURN(15); // 燃烧 (回合结束扣血)
 
     private final int id;
+
+    public static BuffType fromId(int id) {
+        for (BuffType type : values()) {
+            if (type.id == id) {
+                return type;
+            }
+        }
+        return null;
+    }
 
 }

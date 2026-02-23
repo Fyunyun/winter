@@ -1,7 +1,6 @@
 package com.winter.modules.battle.core; // 注意包名，建议放在 core
 
 import com.winter.modules.battle.model.BattleUnit;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,5 +29,15 @@ public class BattleContext {
         this.target = target;
         this.random = random;
         this.round = round;
+    }
+
+    /**
+     * 记录技能释放（用于回放）
+     */
+    public void recordSkillCast(int skillId) {
+        // 这里可以扩展成记录更多信息，比如目标、伤害等
+        // 但目前先简单记录技能 ID 就行了
+        // 这个方法会被 GeneralSkill 调用，告诉 Context “我释放了技能 ID xxx”
+        System.out.println("Skill cast: " + skillId);
     }
 }

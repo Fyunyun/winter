@@ -1,4 +1,4 @@
-package com.winter.modules.battle.model;
+package com.winter.modules.battle.model.skill;
 
 import com.winter.modules.battle.core.BattleContext;
 

@@ -1,0 +1,482 @@
+﻿[
+  {
+    "skillId": 1001,
+    "name": "战前鼓舞",
+    "description": "战斗开始时，全军伤害增加20%",
+    "trigger": 0,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [],
+    "effects": [
+      { "type": 1, "param1": 20, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1002,
+    "name": "先发制人",
+    "description": "战斗开始时，若自身血量高于80%，暴击率提升30%",
+    "trigger": 0,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 2, "param": 80 }
+    ],
+    "effects": [
+      { "type": 2, "param1": 30, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1003,
+    "name": "开战祝福",
+    "description": "战斗开始时，给自身施加攻击强化Buff，持续3回合",
+    "trigger": 0,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [],
+    "effects": [
+      { "type": 3, "param1": 1, "param2": 3 }
+    ]
+  },
+
+  {
+    "skillId": 1101,
+    "name": "战场急救",
+    "description": "回合开始时，若自身血量低于30%，恢复20%最大生命值",
+    "trigger": 1,
+    "probability": 1.0,
+    "cooldown": 4,
+    "conditions": [
+      { "type": 1, "param": 30 }
+    ],
+    "effects": [
+      { "type": 4, "param1": 20, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1102,
+    "name": "坚韧意志",
+    "description": "回合开始时，如果自身Buff数量>=1，降低所有技能1回合冷却",
+    "trigger": 1,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 10, "param": 1 }
+    ],
+    "effects": [
+      { "type": 6, "param1": 1, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1103,
+    "name": "铁壁防御",
+    "description": "回合开始时，50%概率给自身施加护盾Buff，持续2回合",
+    "trigger": 1,
+    "probability": 0.5,
+    "cooldown": 3,
+    "conditions": [],
+    "effects": [
+      { "type": 3, "param1": 4, "param2": 2 }
+    ]
+  },
+  {
+    "skillId": 1104,
+    "name": "持久作战",
+    "description": "第5回合起，回合开始时恢复10%最大生命值并增加15%伤害",
+    "trigger": 1,
+    "probability": 1.0,
+    "cooldown": 2,
+    "conditions": [
+      { "type": 5, "param": 5 }
+    ],
+    "effects": [
+      { "type": 4, "param1": 10, "param2": 0 },
+      { "type": 1, "param1": 15, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1105,
+    "name": "早期攻势",
+    "description": "前3回合，回合开始时伤害增加40%",
+    "trigger": 1,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 6, "param": 3 }
+    ],
+    "effects": [
+      { "type": 1, "param1": 40, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1106,
+    "name": "自愈术",
+    "description": "回合开始时，若自身拥有再生Buff(id=5)，恢复15%生命值",
+    "trigger": 1,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 8, "param": 5 }
+    ],
+    "effects": [
+      { "type": 4, "param1": 15, "param2": 0 }
+    ]
+  },
+
+  {
+    "skillId": 1201,
+    "name": "猛力一击",
+    "description": "攻击前有30%概率增加50%伤害",
+    "trigger": 2,
+    "probability": 0.3,
+    "cooldown": 3,
+    "conditions": [],
+    "effects": [
+      { "type": 1, "param1": 50, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1202,
+    "name": "雷霆一击",
+    "description": "攻击前有25%概率眩晕目标2回合",
+    "trigger": 2,
+    "probability": 0.25,
+    "cooldown": 5,
+    "conditions": [],
+    "effects": [
+      { "type": 3, "param1": 14, "param2": 2 }
+    ]
+  },
+  {
+    "skillId": 1203,
+    "name": "致命暴击",
+    "description": "攻击前有20%概率将暴击率提升至100%",
+    "trigger": 2,
+    "probability": 0.2,
+    "cooldown": 4,
+    "conditions": [],
+    "effects": [
+      { "type": 2, "param1": 100, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1204,
+    "name": "克敌制胜",
+    "description": "攻击目标为骑兵(兵种2)时，伤害增加80%",
+    "trigger": 2,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 9, "param": 2 }
+    ],
+    "effects": [
+      { "type": 1, "param1": 80, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1205,
+    "name": "浴血奋战",
+    "description": "自身血量低于50%时，攻击附带吸血40%且伤害增加30%",
+    "trigger": 2,
+    "probability": 1.0,
+    "cooldown": 3,
+    "conditions": [
+      { "type": 1, "param": 50 }
+    ],
+    "effects": [
+      { "type": 1, "param1": 30, "param2": 0 },
+      { "type": 5, "param1": 40, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1206,
+    "name": "斩杀",
+    "description": "目标血量低于20%时，伤害增加200%",
+    "trigger": 2,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 3, "param": 20 }
+    ],
+    "effects": [
+      { "type": 1, "param1": 200, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1207,
+    "name": "乘胜追击",
+    "description": "目标血量高于70%时，攻击附带破甲Buff(id=6)，持续2回合",
+    "trigger": 2,
+    "probability": 0.5,
+    "cooldown": 3,
+    "conditions": [
+      { "type": 4, "param": 70 }
+    ],
+    "effects": [
+      { "type": 3, "param1": 6, "param2": 2 }
+    ]
+  },
+  {
+    "skillId": 1208,
+    "name": "弱点打击",
+    "description": "攻击带有中毒Buff(id=13)的目标时，暴击率+50%，伤害+60%",
+    "trigger": 2,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 7, "param": 13 }
+    ],
+    "effects": [
+      { "type": 2, "param1": 50, "param2": 0 },
+      { "type": 1, "param1": 60, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1209,
+    "name": "步兵克星",
+    "description": "攻击步兵(兵种1)时，伤害增加60%并施加减速Buff(id=7)2回合",
+    "trigger": 2,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 9, "param": 1 }
+    ],
+    "effects": [
+      { "type": 1, "param1": 60, "param2": 0 },
+      { "type": 3, "param1": 7, "param2": 2 }
+    ]
+  },
+
+  {
+    "skillId": 1301,
+    "name": "嗜血本能",
+    "description": "攻击后有40%概率吸取造成伤害的30%为自身生命值",
+    "trigger": 3,
+    "probability": 0.4,
+    "cooldown": 2,
+    "conditions": [],
+    "effects": [
+      { "type": 5, "param1": 30, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1302,
+    "name": "毒箭",
+    "description": "攻击后有35%概率给目标施加中毒(id=13)，持续3回合",
+    "trigger": 3,
+    "probability": 0.35,
+    "cooldown": 4,
+    "conditions": [],
+    "effects": [
+      { "type": 3, "param1": 13, "param2": 3 }
+    ]
+  },
+  {
+    "skillId": 1303,
+    "name": "战意高昂",
+    "description": "攻击后，若自身血量高于60%，降低所有技能2回合冷却",
+    "trigger": 3,
+    "probability": 1.0,
+    "cooldown": 3,
+    "conditions": [
+      { "type": 2, "param": 60 }
+    ],
+    "effects": [
+      { "type": 6, "param1": 2, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1304,
+    "name": "连击",
+    "description": "攻击后有15%概率给自身施加攻速Buff(id=2)，持续1回合",
+    "trigger": 3,
+    "probability": 0.15,
+    "cooldown": 2,
+    "conditions": [],
+    "effects": [
+      { "type": 3, "param1": 2, "param2": 1 }
+    ]
+  },
+
+  {
+    "skillId": 1401,
+    "name": "荆棘护甲",
+    "description": "被攻击时有30%概率反弹25%伤害",
+    "trigger": 4,
+    "probability": 0.3,
+    "cooldown": 2,
+    "conditions": [],
+    "effects": [
+      { "type": 1, "param1": 25, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1402,
+    "name": "绝境反击",
+    "description": "被攻击时，若自身血量低于20%，恢复30%最大生命值并获得攻击强化Buff(id=1)2回合",
+    "trigger": 4,
+    "probability": 1.0,
+    "cooldown": 5,
+    "conditions": [
+      { "type": 1, "param": 20 }
+    ],
+    "effects": [
+      { "type": 4, "param1": 30, "param2": 0 },
+      { "type": 3, "param1": 1, "param2": 2 }
+    ]
+  },
+  {
+    "skillId": 1403,
+    "name": "强化护盾",
+    "description": "被攻击时，若自身血量高于50%，50%概率获得护盾Buff(id=4)持续1回合",
+    "trigger": 4,
+    "probability": 0.5,
+    "cooldown": 3,
+    "conditions": [
+      { "type": 2, "param": 50 }
+    ],
+    "effects": [
+      { "type": 3, "param1": 4, "param2": 1 }
+    ]
+  },
+  {
+    "skillId": 1404,
+    "name": "以牙还牙",
+    "description": "被攻击时，给攻击者施加虚弱Buff(id=8)，持续2回合",
+    "trigger": 4,
+    "probability": 0.4,
+    "cooldown": 3,
+    "conditions": [],
+    "effects": [
+      { "type": 3, "param1": 8, "param2": 2 }
+    ]
+  },
+
+  {
+    "skillId": 1501,
+    "name": "同归于尽",
+    "description": "死亡时对敌方造成100%伤害",
+    "trigger": 5,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [],
+    "effects": [
+      { "type": 1, "param1": 100, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1502,
+    "name": "亡者诅咒",
+    "description": "死亡时给击杀者施加中毒(id=13)和虚弱(id=8)各3回合",
+    "trigger": 5,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [],
+    "effects": [
+      { "type": 3, "param1": 13, "param2": 3 },
+      { "type": 3, "param1": 8, "param2": 3 }
+    ]
+  },
+  {
+    "skillId": 1503,
+    "name": "英灵庇护",
+    "description": "死亡时恢复友军25%最大生命值",
+    "trigger": 5,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [],
+    "effects": [
+      { "type": 4, "param1": 25, "param2": 0 }
+    ]
+  },
+
+  {
+    "skillId": 1601,
+    "name": "回合恢复",
+    "description": "回合结束时，若自身血量低于50%，恢复10%最大生命值",
+    "trigger": 6,
+    "probability": 1.0,
+    "cooldown": 2,
+    "conditions": [
+      { "type": 1, "param": 50 }
+    ],
+    "effects": [
+      { "type": 4, "param1": 10, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1602,
+    "name": "蓄势待发",
+    "description": "回合结束时，降低所有技能1回合冷却并增加下回合10%暴击率",
+    "trigger": 6,
+    "probability": 0.4,
+    "cooldown": 3,
+    "conditions": [],
+    "effects": [
+      { "type": 6, "param1": 1, "param2": 0 },
+      { "type": 2, "param1": 10, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1603,
+    "name": "持续毒雾",
+    "description": "第3回合起，回合结束时给目标施加中毒(id=13)持续2回合",
+    "trigger": 6,
+    "probability": 0.6,
+    "cooldown": 3,
+    "conditions": [
+      { "type": 5, "param": 3 }
+    ],
+    "effects": [
+      { "type": 3, "param1": 13, "param2": 2 }
+    ]
+  },
+
+  {
+    "skillId": 1701,
+    "name": "逆境爆发",
+    "description": "自身血量低于30%且第4回合起时，攻击伤害增加120%并吸血50%",
+    "trigger": 2,
+    "probability": 1.0,
+    "cooldown": 4,
+    "conditions": [
+      { "type": 1, "param": 30 },
+      { "type": 5, "param": 4 }
+    ],
+    "effects": [
+      { "type": 1, "param1": 120, "param2": 0 },
+      { "type": 5, "param1": 50, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1702,
+    "name": "精准处刑",
+    "description": "目标血量低于25%且目标带有虚弱Buff(id=8)时，伤害+150%，暴击率+80%",
+    "trigger": 2,
+    "probability": 1.0,
+    "cooldown": 0,
+    "conditions": [
+      { "type": 3, "param": 25 },
+      { "type": 7, "param": 8 }
+    ],
+    "effects": [
+      { "type": 1, "param1": 150, "param2": 0 },
+      { "type": 2, "param1": 80, "param2": 0 }
+    ]
+  },
+  {
+    "skillId": 1703,
+    "name": "全面反击",
+    "description": "被攻击时，自身拥有护盾Buff(id=4)且血量高于40%，反弹伤害50%并眩晕敌人(id=14)1回合",
+    "trigger": 4,
+    "probability": 1.0,
+    "cooldown": 4,
+    "conditions": [
+      { "type": 8, "param": 4 },
+      { "type": 2, "param": 40 }
+    ],
+    "effects": [
+      { "type": 1, "param1": 50, "param2": 0 },
+      { "type": 3, "param1": 14, "param2": 1 }
+    ]
+  }
+]

@@ -1,0 +1,1942 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⚔️ 战斗模拟器</title>
+    <style>
+      /* ═══════════ Reset & Base ═══════════ */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #0f0e17;
+        --surface: #1a1a2e;
+        --card: #16213e;
+        --border: #0f3460;
+        --accent: #e94560;
+        --accent2: #533483;
+        --gold: #f5c518;
+        --heal: #22c55e;
+        --text: #eee;
+        --muted: #8892b0;
+        --blue: #0ea5e9;
+        --purple: #a855f7;
+        --font-pixel: "Courier New", monospace;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Segoe UI", system-ui, sans-serif;
+        overflow-x: hidden;
+      }
+      .app {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      header {
+        text-align: center;
+        padding: 20px 0 10px;
+      }
+      header h1 {
+        font-size: 28px;
+        background: linear-gradient(90deg, var(--accent), var(--gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+      }
+      header p {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 4px;
+      }
+
+      /* ═══════════ Config Panel ═══════════ */
+      .config-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin: 16px 0;
+      }
+      .config-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .config-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+      }
+      .config-card.atk-card::before {
+        background: linear-gradient(90deg, var(--accent), #ff6b6b);
+      }
+      .config-card.def-card::before {
+        background: linear-gradient(90deg, var(--blue), #38bdf8);
+      }
+      .card-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .card-title .icon {
+        font-size: 20px;
+      }
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .field label {
+        display: block;
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .field input,
+      .field select {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 7px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        outline: none;
+        transition: border 0.2s;
+      }
+      .field input:focus,
+      .field select:focus {
+        border-color: var(--accent);
+      }
+      .field select option {
+        background: var(--surface);
+      }
+      .section-label {
+        font-size: 11px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 10px 0 6px;
+        border-top: 1px solid var(--border);
+        padding-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* ═══════════ Skill Selector ═══════════ */
+      .skill-selector {
+        max-height: 260px;
+        overflow-y: auto;
+        margin-top: 4px;
+      }
+      .skill-selector::-webkit-scrollbar {
+        width: 5px;
+      }
+      .skill-selector::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      .skill-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 6px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.15s;
+        margin-bottom: 2px;
+        border: 1px solid transparent;
+      }
+      .skill-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .skill-item.selected {
+        background: rgba(233, 69, 96, 0.12);
+        border-color: rgba(233, 69, 96, 0.3);
+      }
+      .def-card .skill-item.selected {
+        background: rgba(14, 165, 233, 0.12);
+        border-color: rgba(14, 165, 233, 0.3);
+      }
+      .skill-item input[type="checkbox"] {
+        margin-top: 3px;
+        accent-color: var(--accent);
+      }
+      .def-card .skill-item input[type="checkbox"] {
+        accent-color: var(--blue);
+      }
+      .skill-info {
+        flex: 1;
+      }
+      .skill-name {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .skill-desc {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+        line-height: 1.4;
+      }
+      .skill-tags {
+        display: flex;
+        gap: 4px;
+        margin-top: 3px;
+        flex-wrap: wrap;
+      }
+      .skill-tag {
+        font-size: 10px;
+        padding: 1px 6px;
+        border-radius: 3px;
+      }
+      .tag-trigger {
+        background: rgba(245, 197, 24, 0.15);
+        color: var(--gold);
+      }
+      .tag-prob {
+        background: rgba(168, 85, 247, 0.15);
+        color: var(--purple);
+      }
+      .tag-cd {
+        background: rgba(14, 165, 233, 0.15);
+        color: var(--blue);
+      }
+
+      /* ═══════════ Skill Filter ═══════════ */
+      .skill-filter {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+      }
+      .filter-btn {
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .filter-btn.active {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: rgba(245, 197, 24, 0.1);
+      }
+      .selected-count {
+        font-size: 11px;
+        color: var(--gold);
+      }
+
+      /* ═══════════ Global Controls ═══════════ */
+      .global-bar {
+        display: flex;
+        gap: 12px;
+        align-items: end;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .global-bar .field {
+        flex: 1;
+        min-width: 140px;
+      }
+      .run-btn {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        border: none;
+        color: #fff;
+        padding: 10px 28px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 1px;
+        transition:
+          transform 0.15s,
+          box-shadow 0.2s;
+        flex-shrink: 0;
+      }
+      .run-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+      }
+      .run-btn:active {
+        transform: scale(0.97);
+      }
+      .run-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .speed-btn {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+      }
+      .speed-btn.active {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      /* ═══════════ Battle Arena ═══════════ */
+      .arena {
+        position: relative;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+      .arena canvas {
+        display: block;
+        width: 100%;
+        image-rendering: pixelated;
+      }
+      .hp-overlay {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        display: flex;
+        gap: 20px;
+        pointer-events: none;
+      }
+      .hp-group {
+        flex: 1;
+      }
+      .hp-label {
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 3px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .hp-label.atk {
+        color: #ff6b6b;
+      }
+      .hp-label.def {
+        color: #38bdf8;
+      }
+      .hp-bar-bg {
+        height: 16px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .hp-bar-fill {
+        height: 100%;
+        border-radius: 8px;
+        transition: width 0.5s ease;
+      }
+      .hp-bar-fill.atk {
+        background: linear-gradient(90deg, #ef4444, #f97316);
+      }
+      .hp-bar-fill.def {
+        background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+      }
+      .buff-bar {
+        display: flex;
+        gap: 4px;
+        margin-top: 4px;
+        flex-wrap: wrap;
+        min-height: 22px;
+      }
+      .buff-icon {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+        white-space: nowrap;
+        animation: fadeIn 0.3s ease;
+      }
+      .buff-positive {
+        background: rgba(34, 197, 94, 0.2);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+      }
+      .buff-negative {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+      .action-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px 16px;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        pointer-events: none;
+        min-height: 48px;
+        display: flex;
+        align-items: flex-end;
+      }
+      .action-text {
+        font-size: 13px;
+        color: var(--text);
+        font-family: var(--font-pixel);
+        text-shadow: 0 1px 3px #000;
+        opacity: 0;
+        transform: translateY(6px);
+        animation: slideUp 0.3s ease forwards;
+      }
+      @keyframes slideUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ═══════════ Result Panel ═══════════ */
+      .result-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .result-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .result-card h3 {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        margin: 4px 0;
+      }
+      .stat-val {
+        font-weight: 700;
+      }
+      .winner-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .winner-badge.atk {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+      .winner-badge.def {
+        background: rgba(14, 165, 233, 0.2);
+        color: #0ea5e9;
+      }
+      .buff-summary {
+        margin-top: 8px;
+      }
+      .buff-summary-title {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+      .buff-summary-list {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+
+      /* ═══════════ Battle Log ═══════════ */
+      .log-panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .log-panel h3 {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .log-list {
+        max-height: 300px;
+        overflow-y: auto;
+        font-family: var(--font-pixel);
+        font-size: 12px;
+        line-height: 1.7;
+      }
+      .log-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .log-list::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      .log-item {
+        padding: 2px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        opacity: 0;
+        animation: fadeIn 0.25s ease forwards;
+      }
+      .log-item .round-tag {
+        color: var(--gold);
+        font-weight: 700;
+      }
+      .log-item .dmg {
+        color: var(--accent);
+      }
+      .log-item .heal-text {
+        color: var(--heal);
+      }
+      .log-item .skill-tag {
+        color: var(--purple);
+      }
+
+      @media (max-width: 700px) {
+        .config-panel,
+        .result-panel {
+          grid-template-columns: 1fr;
+        }
+        .global-bar {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1>⚔️ BATTLE SIMULATOR</h1>
+        <p>回合制战斗可视化测试 · 支持技能配置与Buff展示 · 技能可手动选择</p>
+      </header>
+
+      <!-- ═══════════ Config ═══════════ -->
+      <div class="config-panel">
+        <!-- Attacker -->
+        <div class="config-card atk-card">
+          <div class="card-title"><span class="icon">🗡️</span> 攻击方</div>
+          <div class="field-row">
+            <div class="field">
+              <label>ID</label><input id="atkId" type="number" value="101" />
+            </div>
+            <div class="field">
+              <label>兵种</label
+              ><select id="atkType">
+                <option value="INFANTRY">🛡️ 步兵</option>
+                <option value="CAVALRY">🐴 骑兵</option>
+                <option value="ARCHER">🏹 弓兵</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>HP</label><input id="atkHp" type="number" value="1500" />
+            </div>
+            <div class="field">
+              <label>ATK</label><input id="atkAtk" type="number" value="220" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>DEF</label><input id="atkDef" type="number" value="60" />
+            </div>
+            <div class="field"><label></label></div>
+          </div>
+          <div class="section-label">
+            ⚡ 技能选择
+            <span class="selected-count" id="atkSkillCount">已选 0 个</span>
+          </div>
+          <div class="skill-filter" id="atkFilter"></div>
+          <div class="skill-selector" id="atkSkillList"></div>
+        </div>
+
+        <!-- Defender -->
+        <div class="config-card def-card">
+          <div class="card-title"><span class="icon">🛡️</span> 防守方</div>
+          <div class="field-row">
+            <div class="field">
+              <label>ID</label><input id="defId" type="number" value="201" />
+            </div>
+            <div class="field">
+              <label>兵种</label
+              ><select id="defType">
+                <option value="INFANTRY">🛡️ 步兵</option>
+                <option value="CAVALRY" selected>🐴 骑兵</option>
+                <option value="ARCHER">🏹 弓兵</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>HP</label><input id="defHp" type="number" value="1600" />
+            </div>
+            <div class="field">
+              <label>ATK</label><input id="defAtk" type="number" value="200" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>DEF</label><input id="defDef" type="number" value="70" />
+            </div>
+            <div class="field"><label></label></div>
+          </div>
+          <div class="section-label">
+            ⚡ 技能选择
+            <span class="selected-count" id="defSkillCount">已选 0 个</span>
+          </div>
+          <div class="skill-filter" id="defFilter"></div>
+          <div class="skill-selector" id="defSkillList"></div>
+        </div>
+      </div>
+
+      <div class="global-bar">
+        <div class="field">
+          <label>随机种子</label
+          ><input id="seed" type="number" value="20260214" />
+        </div>
+        <div class="field">
+          <label>最大回合</label
+          ><input id="maxRounds" type="number" value="100" />
+        </div>
+        <div class="field">
+          <label>后端接口</label
+          ><input
+            id="apiUrl"
+            type="text"
+            value="http://localhost:18088/api/battle/simulate"
+          />
+        </div>
+        <button class="run-btn" id="runBtn">⚔️ 开始战斗</button>
+        <button class="speed-btn active" id="speedBtn" title="切换回放速度">
+          1x
+        </button>
+      </div>
+
+      <!-- ═══════════ Arena Canvas ═══════════ -->
+      <div class="arena">
+        <canvas id="battleCanvas" width="1100" height="420"></canvas>
+        <div class="hp-overlay">
+          <div class="hp-group">
+            <div class="hp-label atk">
+              <span>🗡️ 攻击方</span><span id="atkHpVal">-</span>
+            </div>
+            <div class="hp-bar-bg">
+              <div
+                class="hp-bar-fill atk"
+                id="atkHpBar"
+                style="width: 100%"
+              ></div>
+            </div>
+            <div class="buff-bar" id="atkBuffBar"></div>
+          </div>
+          <div class="hp-group">
+            <div class="hp-label def">
+              <span>🛡️ 防守方</span><span id="defHpVal">-</span>
+            </div>
+            <div class="hp-bar-bg">
+              <div
+                class="hp-bar-fill def"
+                id="defHpBar"
+                style="width: 100%"
+              ></div>
+            </div>
+            <div class="buff-bar" id="defBuffBar"></div>
+          </div>
+        </div>
+        <div class="action-overlay">
+          <div class="action-text" id="actionText"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════ Results ═══════════ -->
+      <div class="result-panel">
+        <div class="result-card" id="resultCard">
+          <h3>战斗结果</h3>
+          <div id="resultContent">
+            <p style="color: var(--muted)">尚未开始战斗</p>
+          </div>
+        </div>
+        <div class="log-panel">
+          <h3>战斗日志</h3>
+          <div class="log-list" id="logList"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ═══════════════════════════════════════════════════
+      //              SKILL & BUFF CONFIG DATA
+      // ═══════════════════════════════════════════════════
+      const SKILL_CONFIG = [
+        {
+          skillId: 1001,
+          name: "战前鼓舞",
+          description: "战斗开始时，全军伤害增加20%",
+          trigger: 0,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1002,
+          name: "先发制人",
+          description: "战斗开始时，若自身血量高于80%，暴击率提升30%",
+          trigger: 0,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1003,
+          name: "开战祝福",
+          description: "战斗开始时，给自身施加攻击强化Buff，持续3回合",
+          trigger: 0,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1101,
+          name: "战场急救",
+          description: "回合开始时，若自身血量低于30%，恢复20%最大生命值",
+          trigger: 1,
+          probability: 1.0,
+          cooldown: 4,
+        },
+        {
+          skillId: 1102,
+          name: "坚韧意志",
+          description: "回合开始时，如果自身Buff数量>=1，降低所有技能1回合冷却",
+          trigger: 1,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1103,
+          name: "铁壁防御",
+          description: "回合开始时，50%概率给自身施加护盾Buff，持续2回合",
+          trigger: 1,
+          probability: 0.5,
+          cooldown: 3,
+        },
+        {
+          skillId: 1104,
+          name: "持久作战",
+          description: "第5回合起，回合开始时恢复10%最大生命值并增加15%伤害",
+          trigger: 1,
+          probability: 1.0,
+          cooldown: 2,
+        },
+        {
+          skillId: 1105,
+          name: "早期攻势",
+          description: "前3回合，回合开始时伤害增加40%",
+          trigger: 1,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1106,
+          name: "自愈术",
+          description: "回合开始时，若自身拥有再生Buff(id=5)，恢复15%生命值",
+          trigger: 1,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1201,
+          name: "猛力一击",
+          description: "攻击前有30%概率增加50%伤害",
+          trigger: 2,
+          probability: 0.3,
+          cooldown: 3,
+        },
+        {
+          skillId: 1202,
+          name: "雷霆一击",
+          description: "攻击前有25%概率眩晕目标2回合",
+          trigger: 2,
+          probability: 0.25,
+          cooldown: 5,
+        },
+        {
+          skillId: 1203,
+          name: "致命暴击",
+          description: "攻击前有20%概率将暴击率提升至100%",
+          trigger: 2,
+          probability: 0.2,
+          cooldown: 4,
+        },
+        {
+          skillId: 1204,
+          name: "克敌制胜",
+          description: "攻击目标为骑兵(兵种2)时，伤害增加80%",
+          trigger: 2,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1205,
+          name: "浴血奋战",
+          description: "自身血量低于50%时，攻击附带吸血40%且伤害增加30%",
+          trigger: 2,
+          probability: 1.0,
+          cooldown: 3,
+        },
+        {
+          skillId: 1206,
+          name: "斩杀",
+          description: "目标血量低于20%时，伤害增加200%",
+          trigger: 2,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1207,
+          name: "乘胜追击",
+          description: "目标血量高于70%时，攻击附带破甲Buff(id=6)，持续2回合",
+          trigger: 2,
+          probability: 0.5,
+          cooldown: 3,
+        },
+        {
+          skillId: 1208,
+          name: "弱点打击",
+          description: "攻击带有中毒Buff的目标时，暴击率+50%，伤害+60%",
+          trigger: 2,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1209,
+          name: "步兵克星",
+          description: "攻击步兵时，伤害增加60%并施加减速Buff 2回合",
+          trigger: 2,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1301,
+          name: "嗜血本能",
+          description: "攻击后有40%概率吸取造成伤害的30%为自身生命值",
+          trigger: 3,
+          probability: 0.4,
+          cooldown: 2,
+        },
+        {
+          skillId: 1302,
+          name: "毒箭",
+          description: "攻击后有35%概率给目标施加中毒，持续3回合",
+          trigger: 3,
+          probability: 0.35,
+          cooldown: 4,
+        },
+        {
+          skillId: 1303,
+          name: "战意高昂",
+          description: "攻击后，若自身血量高于60%，降低所有技能2回合冷却",
+          trigger: 3,
+          probability: 1.0,
+          cooldown: 3,
+        },
+        {
+          skillId: 1304,
+          name: "连击",
+          description: "攻击后有15%概率给自身施加攻速Buff，持续1回合",
+          trigger: 3,
+          probability: 0.15,
+          cooldown: 2,
+        },
+        {
+          skillId: 1401,
+          name: "荆棘护甲",
+          description: "被攻击时有30%概率反弹25%伤害",
+          trigger: 4,
+          probability: 0.3,
+          cooldown: 2,
+        },
+        {
+          skillId: 1402,
+          name: "绝境反击",
+          description:
+            "被攻击时，若自身血量低于20%，恢复30%最大生命值并获得攻击强化Buff 2回合",
+          trigger: 4,
+          probability: 1.0,
+          cooldown: 5,
+        },
+        {
+          skillId: 1403,
+          name: "强化护盾",
+          description: "被攻击时，若自身血量高于50%，50%概率获得护盾Buff 1回合",
+          trigger: 4,
+          probability: 0.5,
+          cooldown: 3,
+        },
+        {
+          skillId: 1404,
+          name: "以牙还牙",
+          description: "被攻击时，给攻击者施加虚弱Buff，持续2回合",
+          trigger: 4,
+          probability: 0.4,
+          cooldown: 3,
+        },
+        {
+          skillId: 1501,
+          name: "同归于尽",
+          description: "死亡时对敌方造成100%伤害",
+          trigger: 5,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1502,
+          name: "亡者诅咒",
+          description: "死亡时给击杀者施加中毒和虚弱各3回合",
+          trigger: 5,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1503,
+          name: "英灵庇护",
+          description: "死亡时恢复友军25%最大生命值",
+          trigger: 5,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1601,
+          name: "回合恢复",
+          description: "回合结束时，若自身血量低于50%，恢复10%最大生命值",
+          trigger: 6,
+          probability: 1.0,
+          cooldown: 2,
+        },
+        {
+          skillId: 1602,
+          name: "蓄势待发",
+          description: "回合结束时，降低所有技能1回合冷却并增加下回合10%暴击率",
+          trigger: 6,
+          probability: 0.4,
+          cooldown: 3,
+        },
+        {
+          skillId: 1603,
+          name: "持续毒雾",
+          description: "第3回合起，回合结束时给目标施加中毒持续2回合",
+          trigger: 6,
+          probability: 0.6,
+          cooldown: 3,
+        },
+        {
+          skillId: 1701,
+          name: "逆境爆发",
+          description:
+            "自身血量低于30%且第4回合起时，攻击伤害增加120%并吸血50%",
+          trigger: 2,
+          probability: 1.0,
+          cooldown: 4,
+        },
+        {
+          skillId: 1702,
+          name: "精准处刑",
+          description:
+            "目标血量低于25%且目标带有虚弱Buff时，伤害+150%，暴击率+80%",
+          trigger: 2,
+          probability: 1.0,
+          cooldown: 0,
+        },
+        {
+          skillId: 1703,
+          name: "全面反击",
+          description:
+            "被攻击时，自身拥有护盾Buff且血量高于40%，反弹伤害50%并眩晕敌人1回合",
+          trigger: 4,
+          probability: 1.0,
+          cooldown: 4,
+        },
+      ];
+
+      const TRIGGER_NAMES = {
+        0: "战斗开始",
+        1: "回合开始",
+        2: "攻击前",
+        3: "攻击后",
+        4: "被攻击时",
+        5: "死亡时",
+        6: "回合结束",
+      };
+      const TRIGGER_COLORS = {
+        0: "#f5c518",
+        1: "#22c55e",
+        2: "#e94560",
+        3: "#f97316",
+        4: "#0ea5e9",
+        5: "#8b5cf6",
+        6: "#64748b",
+      };
+
+      const BUFF_CONFIG = [
+        { buffId: 1, name: "攻击强化", positive: true },
+        { buffId: 2, name: "防御强化", positive: true },
+        { buffId: 3, name: "速度提升", positive: true },
+        { buffId: 4, name: "护盾", positive: true },
+        { buffId: 5, name: "再生", positive: true },
+        { buffId: 6, name: "破甲", positive: false },
+        { buffId: 7, name: "减速", positive: false },
+        { buffId: 8, name: "虚弱", positive: false },
+        { buffId: 11, name: "攻击下降", positive: false },
+        { buffId: 12, name: "防御下降", positive: false },
+        { buffId: 13, name: "中毒", positive: false },
+        { buffId: 14, name: "眩晕", positive: false },
+        { buffId: 15, name: "燃烧", positive: false },
+      ];
+      const BUFF_MAP = {};
+      BUFF_CONFIG.forEach((b) => (BUFF_MAP[b.buffId] = b));
+      const SKILL_NAMES = { 0: "普通攻击" };
+      SKILL_CONFIG.forEach((s) => (SKILL_NAMES[s.skillId] = s.name));
+
+      // ═══════════════════════════════════════════════════
+      //              SKILL SELECTOR UI
+      // ═══════════════════════════════════════════════════
+      const atkSelectedSkills = new Set();
+      const defSelectedSkills = new Set();
+
+      function renderSkillSelector(
+        containerId,
+        filterId,
+        countId,
+        selectedSet,
+        defaultSkills,
+      ) {
+        defaultSkills.forEach((id) => selectedSet.add(id));
+        const container = document.getElementById(containerId);
+        const filterEl = document.getElementById(filterId);
+        let activeFilter = -1;
+        const triggers = [
+          ...new Set(SKILL_CONFIG.map((s) => s.trigger)),
+        ].sort();
+        filterEl.innerHTML =
+          `<button class="filter-btn active" data-trigger="-1">全部</button>` +
+          triggers
+            .map(
+              (t) =>
+                `<button class="filter-btn" data-trigger="${t}">${TRIGGER_NAMES[t]}</button>`,
+            )
+            .join("");
+        filterEl.addEventListener("click", (e) => {
+          const btn = e.target.closest(".filter-btn");
+          if (!btn) return;
+          activeFilter = parseInt(btn.dataset.trigger);
+          filterEl
+            .querySelectorAll(".filter-btn")
+            .forEach((b) =>
+              b.classList.toggle(
+                "active",
+                parseInt(b.dataset.trigger) === activeFilter,
+              ),
+            );
+          renderList();
+        });
+        function renderList() {
+          const filtered =
+            activeFilter === -1
+              ? SKILL_CONFIG
+              : SKILL_CONFIG.filter((s) => s.trigger === activeFilter);
+          container.innerHTML = filtered
+            .map((s) => {
+              const checked = selectedSet.has(s.skillId);
+              const probText =
+                s.probability < 1
+                  ? `${Math.round(s.probability * 100)}%`
+                  : "100%";
+              const cdText = s.cooldown > 0 ? `${s.cooldown}CD` : "";
+              return `<div class="skill-item ${checked ? "selected" : ""}" data-sid="${s.skillId}">
+            <input type="checkbox" ${checked ? "checked" : ""} />
+            <div class="skill-info">
+              <div class="skill-name">${s.name} <span style="color:var(--muted);font-size:11px">#${s.skillId}</span></div>
+              <div class="skill-desc">${s.description}</div>
+              <div class="skill-tags">
+                <span class="skill-tag tag-trigger" style="color:${TRIGGER_COLORS[s.trigger]};background:${TRIGGER_COLORS[s.trigger]}22">${TRIGGER_NAMES[s.trigger]}</span>
+                <span class="skill-tag tag-prob">概率 ${probText}</span>
+                ${cdText ? `<span class="skill-tag tag-cd">${cdText}</span>` : ""}
+              </div>
+            </div>
+          </div>`;
+            })
+            .join("");
+          container.querySelectorAll(".skill-item").forEach((el) => {
+            el.addEventListener("click", (e) => {
+              if (e.target.tagName === "INPUT") return;
+              const cb = el.querySelector('input[type="checkbox"]');
+              cb.checked = !cb.checked;
+              cb.dispatchEvent(new Event("change"));
+            });
+            el.querySelector('input[type="checkbox"]').addEventListener(
+              "change",
+              (e) => {
+                const sid = parseInt(el.dataset.sid);
+                if (e.target.checked) {
+                  selectedSet.add(sid);
+                  el.classList.add("selected");
+                } else {
+                  selectedSet.delete(sid);
+                  el.classList.remove("selected");
+                }
+                document.getElementById(countId).textContent =
+                  `已选 ${selectedSet.size} 个`;
+              },
+            );
+          });
+        }
+        renderList();
+        document.getElementById(countId).textContent =
+          `已选 ${selectedSet.size} 个`;
+      }
+      renderSkillSelector(
+        "atkSkillList",
+        "atkFilter",
+        "atkSkillCount",
+        atkSelectedSkills,
+        [1001, 1201, 1301],
+      );
+      renderSkillSelector(
+        "defSkillList",
+        "defFilter",
+        "defSkillCount",
+        defSelectedSkills,
+        [1103, 1401, 1601],
+      );
+
+      // ═══════════════════════════════════════════════════
+      //                  SPRITE RENDERER
+      // ═══════════════════════════════════════════════════
+      const UNIT_SPRITES = {
+        INFANTRY: {
+          color: "#e94560",
+          shadow: "#b91c3a",
+          body: [
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 1, 0, 0, 0, 0, 1, 0],
+          ],
+          weapon: "🗡️",
+          label: "步兵",
+        },
+        CAVALRY: {
+          color: "#f59e0b",
+          shadow: "#d97706",
+          body: [
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 1, 1, 1, 1, 0, 1],
+            [1, 0, 1, 0, 0, 1, 0, 1],
+            [0, 0, 1, 0, 0, 1, 0, 0],
+          ],
+          weapon: "🐴",
+          label: "骑兵",
+        },
+        ARCHER: {
+          color: "#22c55e",
+          shadow: "#16a34a",
+          body: [
+            [0, 0, 0, 1, 1, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0],
+            [0, 0, 1, 0, 0, 1, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 1, 1, 0, 0, 1],
+            [0, 0, 1, 1, 1, 1, 0, 1],
+            [0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 1, 0, 0, 0, 0, 1, 0],
+          ],
+          weapon: "🏹",
+          label: "弓兵",
+        },
+      };
+
+      // ═══════════════════════════════════════════════════
+      //              PARTICLE & FLOATING TEXT
+      // ═══════════════════════════════════════════════════
+      class Particle {
+        constructor(x, y, type) {
+          this.x = x;
+          this.y = y;
+          this.type = type;
+          this.life = 1.0;
+          const a = Math.random() * Math.PI * 2;
+          const spd = 1 + Math.random() * 3;
+          this.vx = Math.cos(a) * spd;
+          this.vy = Math.sin(a) * spd - 2;
+          this.size = 2 + Math.random() * 4;
+          this.gravity = 0.08;
+        }
+        update(dt) {
+          this.vy += this.gravity;
+          this.x += this.vx * dt;
+          this.y += this.vy * dt;
+          this.life -= dt * 0.025;
+        }
+        draw(ctx) {
+          const alpha = Math.max(0, this.life);
+          ctx.globalAlpha = alpha;
+          const colors = {
+            hit: "#ff4444",
+            crit: "#ffdd00",
+            heal: "#22ff88",
+            vampire: "#cc44ff",
+            buff: "#4488ff",
+            shield: "#66ccff",
+            stun: "#ffaa00",
+            poison: "#88ff00",
+            fire: "#ff6600",
+            debuff: "#ff6666",
+          };
+          ctx.fillStyle = colors[this.type] || "#fff";
+          if (this.type === "crit") {
+            this.drawStar(ctx, this.x, this.y, 5, this.size, this.size / 2);
+          } else {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size * alpha, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+        }
+        drawStar(ctx, cx, cy, spikes, outerR, innerR) {
+          let rot = (Math.PI / 2) * 3,
+            step = Math.PI / spikes;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy - outerR);
+          for (let i = 0; i < spikes; i++) {
+            ctx.lineTo(
+              cx + Math.cos(rot) * outerR,
+              cy + Math.sin(rot) * outerR,
+            );
+            rot += step;
+            ctx.lineTo(
+              cx + Math.cos(rot) * innerR,
+              cy + Math.sin(rot) * innerR,
+            );
+            rot += step;
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+        isDead() {
+          return this.life <= 0;
+        }
+      }
+      class FloatingText {
+        constructor(x, y, text, color, size = 18) {
+          this.x = x;
+          this.y = y;
+          this.text = text;
+          this.color = color;
+          this.size = size;
+          this.life = 1.0;
+          this.vy = -1.5;
+        }
+        update(dt) {
+          this.y += this.vy * dt;
+          this.life -= dt * 0.02;
+        }
+        draw(ctx) {
+          const a = Math.max(0, this.life);
+          ctx.globalAlpha = a;
+          ctx.font = `bold ${this.size}px ${getComputedStyle(document.body).getPropertyValue("--font-pixel")}`;
+          ctx.fillStyle = this.color;
+          ctx.textAlign = "center";
+          ctx.shadowColor = "#000";
+          ctx.shadowBlur = 4;
+          ctx.fillText(this.text, this.x, this.y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1;
+        }
+        isDead() {
+          return this.life <= 0;
+        }
+      }
+
+      // ═══════════════════════════════════════════════════
+      //                  BATTLE RENDERER
+      // ═══════════════════════════════════════════════════
+      class BattleRenderer {
+        constructor(canvas) {
+          this.canvas = canvas;
+          this.ctx = canvas.getContext("2d");
+          this.W = canvas.width;
+          this.H = canvas.height;
+          this.atkPos = { x: 200, y: 260, baseX: 200 };
+          this.defPos = { x: 900, y: 260, baseX: 900 };
+          this.atkShake = 0;
+          this.defShake = 0;
+          this.atkFlash = 0;
+          this.defFlash = 0;
+          this.atkScale = 1;
+          this.defScale = 1;
+          this.particles = [];
+          this.floatingTexts = [];
+          this.stars = [];
+          for (let i = 0; i < 60; i++) {
+            this.stars.push({
+              x: Math.random() * this.W,
+              y: Math.random() * this.H,
+              r: 0.5 + Math.random() * 1.5,
+              twinkle: Math.random() * Math.PI * 2,
+              speed: 0.5 + Math.random() * 2,
+            });
+          }
+          this.groundY = 340;
+          this.skillOverlay = null;
+          this.animFrame = null;
+          this.lastTime = 0;
+          this.running = false;
+        }
+        start() {
+          if (this.running) return;
+          this.running = true;
+          this.lastTime = performance.now();
+          this.loop();
+        }
+        stop() {
+          this.running = false;
+          if (this.animFrame) cancelAnimationFrame(this.animFrame);
+        }
+        loop() {
+          if (!this.running) return;
+          const now = performance.now();
+          const dt = Math.min((now - this.lastTime) / 16.67, 3);
+          this.lastTime = now;
+          this.update(dt);
+          this.render();
+          this.animFrame = requestAnimationFrame(() => this.loop());
+        }
+        update(dt) {
+          this.atkShake *= 0.9;
+          this.defShake *= 0.9;
+          this.atkFlash = Math.max(0, this.atkFlash - dt * 0.05);
+          this.defFlash = Math.max(0, this.defFlash - dt * 0.05);
+          this.atkScale += (1 - this.atkScale) * 0.1;
+          this.defScale += (1 - this.defScale) * 0.1;
+          this.atkPos.x += (this.atkPos.baseX - this.atkPos.x) * 0.08;
+          this.defPos.x += (this.defPos.baseX - this.defPos.x) * 0.08;
+          this.particles.forEach((p) => p.update(dt));
+          this.particles = this.particles.filter((p) => !p.isDead());
+          this.floatingTexts.forEach((t) => t.update(dt));
+          this.floatingTexts = this.floatingTexts.filter((t) => !t.isDead());
+          this.stars.forEach((s) => {
+            s.twinkle += s.speed * dt * 0.02;
+          });
+          if (this.skillOverlay) {
+            this.skillOverlay.timer -= dt * 0.02;
+            if (this.skillOverlay.timer <= 0) this.skillOverlay = null;
+          }
+        }
+        render() {
+          const { ctx, W, H } = this;
+          const grad = ctx.createLinearGradient(0, 0, 0, H);
+          grad.addColorStop(0, "#0a0a1a");
+          grad.addColorStop(0.6, "#141428");
+          grad.addColorStop(1, "#1a1a30");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, W, H);
+          this.stars.forEach((s) => {
+            const alpha = 0.3 + 0.4 * Math.sin(s.twinkle);
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = "#1e293b";
+          ctx.fillRect(0, this.groundY, W, H - this.groundY);
+          const gGrad = ctx.createLinearGradient(
+            0,
+            this.groundY,
+            0,
+            this.groundY + 4,
+          );
+          gGrad.addColorStop(0, "#334155");
+          gGrad.addColorStop(1, "transparent");
+          ctx.fillStyle = gGrad;
+          ctx.fillRect(0, this.groundY, W, 4);
+          ctx.strokeStyle = "rgba(100,116,139,0.1)";
+          ctx.lineWidth = 1;
+          for (let x = 0; x < W; x += 40) {
+            ctx.beginPath();
+            ctx.moveTo(x, this.groundY);
+            ctx.lineTo(x, H);
+            ctx.stroke();
+          }
+          ctx.font = "bold 36px sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,0.06)";
+          ctx.textAlign = "center";
+          ctx.fillText("V  S", W / 2, 290);
+          if (this.atkSprite)
+            this.drawUnit(
+              this.atkSprite,
+              this.atkPos.x,
+              this.atkPos.y,
+              this.atkShake,
+              this.atkFlash,
+              this.atkScale,
+              false,
+            );
+          if (this.defSprite)
+            this.drawUnit(
+              this.defSprite,
+              this.defPos.x,
+              this.defPos.y,
+              this.defShake,
+              this.defFlash,
+              this.defScale,
+              true,
+            );
+          this.particles.forEach((p) => p.draw(ctx));
+          this.floatingTexts.forEach((t) => t.draw(ctx));
+          if (this.skillOverlay) this.drawSkillOverlay(this.skillOverlay);
+        }
+        drawUnit(sprite, x, y, shake, flash, scale, flipped) {
+          const { ctx } = this;
+          const px = 8;
+          const sx = (Math.random() - 0.5) * shake;
+          const sy = (Math.random() - 0.5) * shake * 0.5;
+          ctx.save();
+          ctx.translate(x + sx, y + sy);
+          ctx.scale(flipped ? -scale : scale, scale);
+          ctx.fillStyle = "rgba(0,0,0,0.3)";
+          ctx.beginPath();
+          ctx.ellipse(
+            0,
+            this.groundY - y + 10,
+            30 * scale,
+            6,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+          const half = sprite.body.length / 2;
+          for (let r = 0; r < sprite.body.length; r++) {
+            for (let c = 0; c < sprite.body[r].length; c++) {
+              if (!sprite.body[r][c]) continue;
+              const bx = (c - half) * px;
+              const by = (r - sprite.body.length) * px;
+              ctx.fillStyle = flash > 0.3 ? "#fff" : sprite.color;
+              ctx.fillRect(bx, by, px - 1, px - 1);
+              ctx.fillStyle = flash > 0.3 ? "#fff" : "rgba(255,255,255,0.15)";
+              ctx.fillRect(bx, by, px - 1, 1);
+              ctx.fillRect(bx, by, 1, px - 1);
+              ctx.fillStyle = "rgba(0,0,0,0.2)";
+              ctx.fillRect(bx, by + px - 2, px - 1, 1);
+            }
+          }
+          ctx.scale(flipped ? -1 : 1, 1);
+          ctx.font = "bold 12px sans-serif";
+          ctx.fillStyle = sprite.color;
+          ctx.textAlign = "center";
+          ctx.fillText(sprite.label, 0, 16);
+          ctx.restore();
+        }
+        drawSkillOverlay(overlay) {
+          const { ctx } = this;
+          const alpha = Math.min(1, overlay.timer * 2);
+          ctx.globalAlpha = alpha;
+          switch (overlay.type) {
+            case "slash": {
+              ctx.strokeStyle = "#ff4444";
+              ctx.lineWidth = 3;
+              ctx.shadowColor = "#ff0000";
+              ctx.shadowBlur = 10;
+              for (let i = 0; i < 3; i++) {
+                const ox = (i - 1) * 15;
+                ctx.beginPath();
+                ctx.moveTo(overlay.x + ox - 20, overlay.y - 30);
+                ctx.lineTo(overlay.x + ox + 20, overlay.y + 30);
+                ctx.stroke();
+              }
+              ctx.shadowBlur = 0;
+              break;
+            }
+            case "heal": {
+              ctx.fillStyle = "#22ff88";
+              ctx.font = "28px sans-serif";
+              ctx.textAlign = "center";
+              ctx.fillText("✚", overlay.x, overlay.y - 20);
+              break;
+            }
+            case "buff": {
+              ctx.strokeStyle = "#4488ff";
+              ctx.lineWidth = 2;
+              ctx.shadowColor = "#4488ff";
+              ctx.shadowBlur = 15;
+              ctx.beginPath();
+              ctx.arc(
+                overlay.x,
+                overlay.y - 20,
+                30 * (1 - overlay.timer * 0.5),
+                0,
+                Math.PI * 2,
+              );
+              ctx.stroke();
+              ctx.shadowBlur = 0;
+              break;
+            }
+            case "debuff": {
+              ctx.strokeStyle = "#ff4466";
+              ctx.lineWidth = 2;
+              ctx.shadowColor = "#ff4466";
+              ctx.shadowBlur = 15;
+              ctx.beginPath();
+              ctx.arc(
+                overlay.x,
+                overlay.y - 20,
+                30 * (1 - overlay.timer * 0.5),
+                0,
+                Math.PI * 2,
+              );
+              ctx.stroke();
+              ctx.shadowBlur = 0;
+              break;
+            }
+            case "vampire": {
+              ctx.fillStyle = "#cc44ff";
+              ctx.shadowColor = "#cc44ff";
+              ctx.shadowBlur = 12;
+              for (let i = 0; i < 5; i++) {
+                const angle = (i / 5) * Math.PI * 2 + overlay.timer * 5;
+                const r = 25;
+                ctx.beginPath();
+                ctx.arc(
+                  overlay.x + Math.cos(angle) * r,
+                  overlay.y - 20 + Math.sin(angle) * r,
+                  3,
+                  0,
+                  Math.PI * 2,
+                );
+                ctx.fill();
+              }
+              ctx.shadowBlur = 0;
+              break;
+            }
+          }
+          ctx.globalAlpha = 1;
+        }
+        triggerAttack(isAttacker) {
+          if (isAttacker) {
+            this.atkPos.x = this.atkPos.baseX + 120;
+            this.atkScale = 1.15;
+          } else {
+            this.defPos.x = this.defPos.baseX - 120;
+            this.defScale = 1.15;
+          }
+        }
+        triggerHit(isAttacker, damage, isCrit) {
+          const pos = isAttacker ? this.atkPos : this.defPos;
+          if (isAttacker) {
+            this.atkShake = 12 + (isCrit ? 8 : 0);
+            this.atkFlash = 1;
+          } else {
+            this.defShake = 12 + (isCrit ? 8 : 0);
+            this.defFlash = 1;
+          }
+          const type = isCrit ? "crit" : "hit";
+          for (let i = 0; i < (isCrit ? 20 : 10); i++)
+            this.particles.push(new Particle(pos.x, pos.y - 30, type));
+          const txt = isCrit ? `💥 ${damage}` : `-${damage}`;
+          const col = isCrit ? "#ffdd00" : "#ff4444";
+          this.floatingTexts.push(
+            new FloatingText(pos.x, pos.y - 50, txt, col, isCrit ? 24 : 18),
+          );
+          this.skillOverlay = { type: "slash", timer: 1, x: pos.x, y: pos.y };
+        }
+        triggerHeal(isAttacker, amount) {
+          const pos = isAttacker ? this.atkPos : this.defPos;
+          for (let i = 0; i < 8; i++)
+            this.particles.push(new Particle(pos.x, pos.y - 20, "heal"));
+          this.floatingTexts.push(
+            new FloatingText(pos.x, pos.y - 60, `+${amount} HP`, "#22ff88", 16),
+          );
+          this.skillOverlay = { type: "heal", timer: 1, x: pos.x, y: pos.y };
+        }
+        triggerVampire(isAttacker, amount) {
+          const pos = isAttacker ? this.atkPos : this.defPos;
+          for (let i = 0; i < 8; i++)
+            this.particles.push(new Particle(pos.x, pos.y - 20, "vampire"));
+          this.floatingTexts.push(
+            new FloatingText(pos.x, pos.y - 60, `🩸+${amount}`, "#cc44ff", 16),
+          );
+          this.skillOverlay = { type: "vampire", timer: 1, x: pos.x, y: pos.y };
+        }
+        triggerBuff(isAttacker, text, positive = true) {
+          const pos = isAttacker ? this.atkPos : this.defPos;
+          const pType = positive ? "buff" : "debuff";
+          for (let i = 0; i < 6; i++)
+            this.particles.push(new Particle(pos.x, pos.y - 20, pType));
+          const col = positive ? "#4488ff" : "#ff6666";
+          this.floatingTexts.push(
+            new FloatingText(pos.x, pos.y - 70, text, col, 14),
+          );
+          this.skillOverlay = { type: pType, timer: 1, x: pos.x, y: pos.y };
+        }
+        triggerSkillText(isAttacker, skillName) {
+          const pos = isAttacker ? this.atkPos : this.defPos;
+          this.floatingTexts.push(
+            new FloatingText(
+              pos.x,
+              pos.y - 85,
+              `✨ ${skillName}`,
+              "#f5c518",
+              15,
+            ),
+          );
+        }
+        setSprites(atkType, defType) {
+          this.atkSprite = UNIT_SPRITES[atkType] || UNIT_SPRITES.INFANTRY;
+          this.defSprite = UNIT_SPRITES[defType] || UNIT_SPRITES.INFANTRY;
+        }
+        reset() {
+          this.atkPos.x = this.atkPos.baseX;
+          this.defPos.x = this.defPos.baseX;
+          this.atkShake = 0;
+          this.defShake = 0;
+          this.atkFlash = 0;
+          this.defFlash = 0;
+          this.atkScale = 1;
+          this.defScale = 1;
+          this.particles = [];
+          this.floatingTexts = [];
+          this.skillOverlay = null;
+        }
+      }
+
+      // ═══════════════════════════════════════════════════
+      //              BUFF DISPLAY HELPERS
+      // ═══════════════════════════════════════════════════
+      function updateBuffDisplay(atkBuffs, defBuffs) {
+        renderBuffBar("atkBuffBar", atkBuffs);
+        renderBuffBar("defBuffBar", defBuffs);
+      }
+      function renderBuffBar(elementId, buffs) {
+        const el = document.getElementById(elementId);
+        if (!buffs || buffs.length === 0) {
+          el.innerHTML = "";
+          return;
+        }
+        el.innerHTML = buffs
+          .map((b) => {
+            const cfg = BUFF_MAP[b.buffId];
+            const name = b.name || (cfg ? cfg.name : `#${b.buffId}`);
+            const positive =
+              b.positive !== undefined ? b.positive : cfg ? cfg.positive : true;
+            const cls = positive ? "buff-positive" : "buff-negative";
+            return `<span class="buff-icon ${cls}" title="${name}: ${b.value} (${b.rounds}回合)">${name}${b.rounds > 0 ? `(${b.rounds})` : ""}</span>`;
+          })
+          .join("");
+      }
+
+      // ═══════════════════════════════════════════════════
+      //                  PLAYBACK ENGINE
+      // ═══════════════════════════════════════════════════
+      class BattlePlayback {
+        constructor(renderer) {
+          this.renderer = renderer;
+          this.actions = [];
+          this.currentIdx = 0;
+          this.playing = false;
+          this.speed = 1;
+          this.atkMaxHp = 1;
+          this.defMaxHp = 1;
+          this.atkHp = 1;
+          this.defHp = 1;
+          this.atkId = 0;
+          this.defId = 0;
+        }
+        async play(actions, atkId, defId, atkMaxHp, defMaxHp) {
+          this.actions = actions || [];
+          this.currentIdx = 0;
+          this.atkId = atkId;
+          this.defId = defId;
+          this.atkMaxHp = atkMaxHp;
+          this.defMaxHp = defMaxHp;
+          this.atkHp = atkMaxHp;
+          this.defHp = defMaxHp;
+          this.playing = true;
+          updateHpDisplay(atkMaxHp, atkMaxHp, defMaxHp, defMaxHp);
+          updateBuffDisplay([], []);
+          this.renderer.reset();
+          for (let i = 0; i < this.actions.length; i++) {
+            if (!this.playing) break;
+            await this.playAction(this.actions[i], i);
+          }
+          this.playing = false;
+        }
+        stop() {
+          this.playing = false;
+        }
+        async playAction(action, idx) {
+          const isAtkAttacking = action.actorId === this.atkId;
+          const isTargetAtk = action.targetId === this.atkId;
+          const actionEl = document.getElementById("actionText");
+          const skillName =
+            SKILL_NAMES[action.skillId] ||
+            (action.skillId > 0 ? `技能#${action.skillId}` : "普通攻击");
+          actionEl.innerHTML = `<b>第${action.round}回合</b> · ${isAtkAttacking ? "攻击方" : "防守方"} 使用 <span style="color:var(--gold)">${skillName}</span> → 造成 <span style="color:var(--accent)">${action.damage}</span> 伤害`;
+          actionEl.style.animation = "none";
+          actionEl.offsetHeight;
+          actionEl.style.animation = "slideUp .3s ease forwards";
+          if (action.skillId > 0) {
+            this.renderer.triggerSkillText(isAtkAttacking, skillName);
+            await this.wait(200);
+          }
+          this.renderer.triggerAttack(isAtkAttacking);
+          await this.wait(250);
+          const isCrit = action.damage > 200;
+          this.renderer.triggerHit(!isAtkAttacking, action.damage, isCrit);
+          if (isTargetAtk) {
+            this.atkHp = Math.max(0, this.atkHp - action.damage);
+          } else {
+            this.defHp = Math.max(0, this.defHp - action.damage);
+          }
+          updateHpDisplay(this.atkHp, this.atkMaxHp, this.defHp, this.defMaxHp);
+          await this.wait(300);
+          addLogEntry(action);
+        }
+        wait(ms) {
+          return new Promise((r) => setTimeout(r, ms / this.speed));
+        }
+      }
+
+      // ═══════════════════════════════════════════════════
+      //                  UI HELPERS
+      // ═══════════════════════════════════════════════════
+      function updateHpDisplay(atkHp, atkMax, defHp, defMax) {
+        const atkPct = atkMax > 0 ? Math.max(0, (atkHp / atkMax) * 100) : 0;
+        const defPct = defMax > 0 ? Math.max(0, (defHp / defMax) * 100) : 0;
+        document.getElementById("atkHpBar").style.width = atkPct + "%";
+        document.getElementById("defHpBar").style.width = defPct + "%";
+        document.getElementById("atkHpVal").textContent =
+          `${Math.max(0, Math.floor(atkHp))} / ${atkMax}`;
+        document.getElementById("defHpVal").textContent =
+          `${Math.max(0, Math.floor(defHp))} / ${defMax}`;
+      }
+      function addLogEntry(action) {
+        const list = document.getElementById("logList");
+        const skillName =
+          SKILL_NAMES[action.skillId] ||
+          (action.skillId > 0 ? `技能#${action.skillId}` : "");
+        const div = document.createElement("div");
+        div.className = "log-item";
+        div.style.animationDelay = "0ms";
+        div.innerHTML = `<span class="round-tag">R${action.round}</span> [${action.actorId}] → [${action.targetId}] <span class="dmg">-${action.damage}</span>${skillName ? ` <span class="skill-tag">${skillName}</span>` : ""}`;
+        list.appendChild(div);
+        list.scrollTop = list.scrollHeight;
+      }
+      function showResult(data, req) {
+        const card = document.getElementById("resultContent");
+        const winner = data.win ? "🗡️ 攻击方" : "🛡️ 防守方";
+        const cls = data.win ? "atk" : "def";
+        let buffHtml = "";
+        if (data.attackerBuffs && data.attackerBuffs.length > 0) {
+          buffHtml += `<div class="buff-summary"><div class="buff-summary-title">攻击方剩余Buff</div><div class="buff-summary-list">`;
+          buffHtml += data.attackerBuffs
+            .map((b) => {
+              const cfg = BUFF_MAP[b.buffId];
+              const positive =
+                b.positive !== undefined
+                  ? b.positive
+                  : cfg
+                    ? cfg.positive
+                    : true;
+              const name = b.name || (cfg ? cfg.name : `#${b.buffId}`);
+              return `<span class="buff-icon ${positive ? "buff-positive" : "buff-negative"}">${name}(${b.rounds})</span>`;
+            })
+            .join("");
+          buffHtml += `</div></div>`;
+        }
+        if (data.defenderBuffs && data.defenderBuffs.length > 0) {
+          buffHtml += `<div class="buff-summary"><div class="buff-summary-title">防守方剩余Buff</div><div class="buff-summary-list">`;
+          buffHtml += data.defenderBuffs
+            .map((b) => {
+              const cfg = BUFF_MAP[b.buffId];
+              const positive =
+                b.positive !== undefined
+                  ? b.positive
+                  : cfg
+                    ? cfg.positive
+                    : true;
+              const name = b.name || (cfg ? cfg.name : `#${b.buffId}`);
+              return `<span class="buff-icon ${positive ? "buff-positive" : "buff-negative"}">${name}(${b.rounds})</span>`;
+            })
+            .join("");
+          buffHtml += `</div></div>`;
+        }
+        let skillHtml = "";
+        if (data.attackerSkills && data.attackerSkills.length > 0) {
+          skillHtml +=
+            `<div class="buff-summary"><div class="buff-summary-title">攻击方技能</div><div class="buff-summary-list">` +
+            data.attackerSkills
+              .map(
+                (s) => `<span class="buff-icon buff-positive">${s.name}</span>`,
+              )
+              .join("") +
+            `</div></div>`;
+        }
+        if (data.defenderSkills && data.defenderSkills.length > 0) {
+          skillHtml +=
+            `<div class="buff-summary"><div class="buff-summary-title">防守方技能</div><div class="buff-summary-list">` +
+            data.defenderSkills
+              .map(
+                (s) => `<span class="buff-icon buff-positive">${s.name}</span>`,
+              )
+              .join("") +
+            `</div></div>`;
+        }
+        card.innerHTML = `
+        <div class="stat-row"><span>胜方</span><span class="stat-val"><span class="winner-badge ${cls}">${winner}</span></span></div>
+        <div class="stat-row"><span>回合数</span><span class="stat-val">${data.rounds || "-"}</span></div>
+        <div class="stat-row"><span>攻击方 HP</span><span class="stat-val">${data.attackerHp ?? "-"} / ${req.attacker.hp}</span></div>
+        <div class="stat-row"><span>防守方 HP</span><span class="stat-val">${data.defenderHp ?? "-"} / ${req.defender.hp}</span></div>
+        <div class="stat-row"><span>种子</span><span class="stat-val" style="font-size:11px">${data.seed}</span></div>
+        ${skillHtml}${buffHtml}`;
+        updateBuffDisplay(data.attackerBuffs || [], data.defenderBuffs || []);
+      }
+
+      // ═══════════════════════════════════════════════════
+      //                  MAIN LOGIC
+      // ═══════════════════════════════════════════════════
+      const canvas = document.getElementById("battleCanvas");
+      const renderer = new BattleRenderer(canvas);
+      const playback = new BattlePlayback(renderer);
+
+      let speedIdx = 0;
+      const speeds = [1, 2, 4];
+      const speedBtn = document.getElementById("speedBtn");
+      speedBtn.addEventListener("click", () => {
+        speedIdx = (speedIdx + 1) % speeds.length;
+        playback.speed = speeds[speedIdx];
+        speedBtn.textContent = speeds[speedIdx] + "x";
+        speedBtn.classList.toggle("active", speedIdx > 0);
+      });
+
+      function buildRequest() {
+        return {
+          seed: Number(document.getElementById("seed").value),
+          maxRounds: Number(document.getElementById("maxRounds").value) || 100,
+          attacker: {
+            id: Number(document.getElementById("atkId").value),
+            type: document.getElementById("atkType").value,
+            hp: Number(document.getElementById("atkHp").value),
+            atk: Number(document.getElementById("atkAtk").value),
+            def: Number(document.getElementById("atkDef").value),
+            skillIds: [...atkSelectedSkills],
+          },
+          defender: {
+            id: Number(document.getElementById("defId").value),
+            type: document.getElementById("defType").value,
+            hp: Number(document.getElementById("defHp").value),
+            atk: Number(document.getElementById("defAtk").value),
+            def: Number(document.getElementById("defDef").value),
+            skillIds: [...defSelectedSkills],
+          },
+        };
+      }
+
+      async function runBattle() {
+        const btn = document.getElementById("runBtn");
+        btn.disabled = true;
+        btn.textContent = "⚔️ 战斗中...";
+        playback.stop();
+        document.getElementById("logList").innerHTML = "";
+        updateBuffDisplay([], []);
+        const apiUrl = document.getElementById("apiUrl").value.trim();
+        const req = buildRequest();
+        renderer.setSprites(req.attacker.type, req.defender.type);
+        renderer.reset();
+        renderer.start();
+        updateHpDisplay(
+          req.attacker.hp,
+          req.attacker.hp,
+          req.defender.hp,
+          req.defender.hp,
+        );
+        try {
+          const resp = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(req),
+          });
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const data = await resp.json();
+          showResult(data, req);
+          if (data.actions && data.actions.length > 0) {
+            await playback.play(
+              data.actions,
+              req.attacker.id,
+              req.defender.id,
+              req.attacker.hp,
+              req.defender.hp,
+            );
+          }
+          updateHpDisplay(
+            data.attackerHp || 0,
+            req.attacker.hp,
+            data.defenderHp || 0,
+            req.defender.hp,
+          );
+          updateBuffDisplay(data.attackerBuffs || [], data.defenderBuffs || []);
+        } catch (e) {
+          document.getElementById("resultContent").innerHTML =
+            `<p style="color:var(--accent)">调用后端失败: ${e.message}<br>请先启动 BattleHttpTestServer</p>`;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "⚔️ 开始战斗";
+        }
+      }
+
+      document.getElementById("runBtn").addEventListener("click", runBattle);
+      renderer.setSprites("INFANTRY", "CAVALRY");
+      renderer.start();
+      function resizeCanvas() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const scale = rect.width / canvas.width;
+        canvas.style.height = canvas.height * scale + "px";
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+    </script>
+  </body>
+</html>

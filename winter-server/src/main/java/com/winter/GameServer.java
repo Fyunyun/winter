@@ -22,6 +22,9 @@ import com.winter.core.router.MessageDispatcher;
 import com.winter.core.spring.SpringContext;
 import com.winter.msg.PacketMsg.GamePacket;
 import com.winter.core.net.handler.AuthenticationHandler;
+import com.winter.modules.battle.core.BattleHttpTestServer;
+import com.winter.modules.battle.config.BuffConfigTable;
+import com.winter.modules.battle.config.SkillConfigTable;
 
 // 使用 Telnet 测试服务器：telnet localhost 8088
 
@@ -107,6 +110,9 @@ public class GameServer {
      * @throws InterruptedException 如果线程被中断
      */
     public static void main(String[] args) throws InterruptedException {
+        boolean battleApiEnabled = getBooleanConfig("battle.test.http.enabled", "BATTLE_TEST_HTTP_ENABLED", true);
+        int battleApiPort = getIntConfig("battle.test.http.port", "BATTLE_TEST_HTTP_PORT", 18088);
+        BattleHttpTestServer battleHttpTestServer = null;
 
         SpringContext.init();
 
@@ -120,10 +126,59 @@ public class GameServer {
 
         MessageDispatcher.init(); // 初始化消息分发器
 
+        // 加载战斗配置表
+        BuffConfigTable.getInstance().load("config/buff_config.json");
+        SkillConfigTable.getInstance().load("config/skill_config.json");
+
         // 加载敏感词到内存
         DataService.loadSensitiveWords();
+
+        if (battleApiEnabled) {
+            try {
+                battleHttpTestServer = new BattleHttpTestServer(battleApiPort);
+                battleHttpTestServer.start();
+            } catch (Exception e) {
+                System.err.println(">>> ⚠️ 战斗测试HTTP接口启动失败，继续启动游戏服。原因: " + e.getMessage());
+                battleHttpTestServer = null;
+            }
+        } else {
+            System.out.println(">>> 已关闭战斗测试HTTP接口 (battle.test.http.enabled=false)");
+        }
+
         // 创建服务器实例并启动，监听端口 8088
         System.out.println(">>> 正在启动冬日游戏服务器...");
-        new GameServer(8088).start();
+        try {
+            new GameServer(8088).start();
+        } finally {
+            if (battleHttpTestServer != null) {
+                battleHttpTestServer.stop();
+            }
+        }
+    }
+
+    private static boolean getBooleanConfig(String propertyName, String envName, boolean defaultValue) {
+        String value = System.getProperty(propertyName);
+        if (value == null || value.isBlank()) {
+            value = System.getenv(envName);
+        }
+        if (value == null || value.isBlank()) {
+            return defaultValue;
+        }
+        return Boolean.parseBoolean(value);
+    }
+
+    private static int getIntConfig(String propertyName, String envName, int defaultValue) {
+        String value = System.getProperty(propertyName);
+        if (value == null || value.isBlank()) {
+            value = System.getenv(envName);
+        }
+        if (value == null || value.isBlank()) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 }

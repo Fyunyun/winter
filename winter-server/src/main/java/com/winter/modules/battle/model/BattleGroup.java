@@ -34,11 +34,11 @@ public class BattleGroup {
         List<BattleUnit> aliveUnits = units.stream()
                 .filter(u -> !u.isDead())
                 .collect(Collectors.toList());
-        
+
         if (aliveUnits.isEmpty()) {
             return null;
         }
-        
+
         // 使用种子随机数选择一个目标
         int index = random.nextInt(aliveUnits.size());
         return aliveUnits.get(index);
@@ -62,7 +62,20 @@ public class BattleGroup {
         }
     }
 
+    public void tickSkillCooldowns() {
+        for (BattleUnit unit : units) {
+            if (!unit.isDead()) {
+                unit.tickSkillCooldowns();
+            }
+        }
+    }
+
     // Getters
-    public List<BattleUnit> getUnits() { return units; }
-    public String getGroupName() { return groupName; }
+    public List<BattleUnit> getUnits() {
+        return units;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
 }

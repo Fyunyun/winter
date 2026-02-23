@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @AllArgsConstructor
 public class BattleResult {
     private boolean win; // 是否胜利 (true=攻击方赢, false=防守方赢)

@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.Iterator;
 import com.winter.modules.battle.core.BattleContext;
+import com.winter.modules.battle.config.BuffConfig;
+import com.winter.modules.battle.model.skill.Buff;
+import com.winter.modules.battle.model.skill.GeneralSkill;
+import com.winter.modules.battle.model.skill.SkillTrigger;
 
 // BattleUnit.java
 /**
@@ -50,7 +54,7 @@ public class BattleUnit {
     private List<Buff> buffs = new ArrayList<>();
 
     // 英雄技能 (如果是英雄单位)
-    private List<BattleSkill> skills = new ArrayList<>();
+    private List<GeneralSkill> skills = new ArrayList<>();
 
     public boolean isDead() {
         return hp <= 0;
@@ -65,8 +69,8 @@ public class BattleUnit {
             Iterator<Buff> it = buffs.iterator();
             while (it.hasNext() && remaining > 0) {
                 Buff b = it.next();
-                // 只有 SHIELD 类型的 Buff 能抵挡伤害 不是 SHIELD 的 Buff 不处理
-                if (b.getType() != BuffType.SHIELD) {
+                // 只有 SHIELD 类型的 Buff 能抵挡伤害
+                if (!b.isShield()) {
                     continue;
                 }
 
@@ -79,7 +83,7 @@ public class BattleUnit {
 
                 int absorbed = Math.min(shield, remaining);
                 remaining -= absorbed;
-                
+
                 // 更新 SHIELD 的剩余吸收值
                 shield -= absorbed;
                 b.setValue(shield);
@@ -89,63 +93,75 @@ public class BattleUnit {
                 }
             }
         }
-
         this.hp -= remaining;
         if (this.hp < 0)
             this.hp = 0;
     }
 
     /**
-     * 回合开始结算：例如中毒（POISON）
-     * 注意：这里默认持续伤害会被护盾吸收（因为复用 takeDamage）。
+     * 回合开始结算：处理所有 tickTiming=ROUND_START 的 DOT/HOT
      */
     public void applyRoundStartBuffEffects() {
-        int dotDamage = 0;
-        for (Buff b : this.buffs) {
-            if (b.getType() == BuffType.POISON) {
-                dotDamage += Math.max(0, b.getValue());
-            }
-        }
-        if (dotDamage > 0) {
-            takeDamage(dotDamage);
-        }
+        applyTimingBuffEffects("ROUND_START");
     }
 
     /**
-     * 回合结束结算：例如燃烧（BURN）
+     * 回合结束结算：处理所有 tickTiming=ROUND_END 的 DOT/HOT
      */
     public void applyRoundEndBuffEffects() {
+        applyTimingBuffEffects("ROUND_END");
+    }
+
+    /**
+     * 根据结算时机统一处理 DOT（持续伤害）和 HOT（持续恢复）
+     */
+    private void applyTimingBuffEffects(String timing) {
         int dotDamage = 0;
+        int hotHeal = 0;
         for (Buff b : this.buffs) {
-            if (b.getType() == BuffType.BURN) {
+            BuffConfig cfg = b.getConfig();
+            if (cfg == null || !cfg.matchTiming(timing)) continue;
+
+            if (cfg.isDot()) {
                 dotDamage += Math.max(0, b.getValue());
+            } else if (cfg.getBuffCategory() == com.winter.modules.battle.config.BuffCategory.HOT) {
+                hotHeal += Math.max(0, b.getValue());
             }
         }
         if (dotDamage > 0) {
             takeDamage(dotDamage);
+        }
+        if (hotHeal > 0) {
+            this.hp = Math.min(this.maxHp, this.hp + hotHeal);
         }
     }
 
     // --- 核心：添加 Buff ---
     public void addBuff(Buff buff) {
-        // 同类型合并（叠层）
         if (buff == null) {
             return;
         }
 
-        // 先检查是否已有同类型 Buff 有的话直接修改然后返回
+        BuffConfig cfg = buff.getConfig();
+
+        // 先检查是否已有同 buffId 的 Buff
         for (Buff existing : this.buffs) {
-            if (existing.getType() == buff.getType()) {
-                existing.setValue(existing.getValue() + buff.getValue());
-                existing.setRounds(existing.getRounds() + buff.getRounds());
-                // 使用最新一次施加的配置/来源信息
-                existing.setConfigId(buff.getConfigId());
+            if (existing.getBuffId() == buff.getBuffId()) {
+                if (cfg != null && cfg.isStackable()) {
+                    // 可叠加：数值累加，回合取较大值
+                    existing.setValue(existing.getValue() + buff.getValue());
+                    existing.setRounds(Math.max(existing.getRounds(), buff.getRounds()));
+                } else {
+                    // 不可叠加：刷新持续时间和数值
+                    existing.setValue(buff.getValue());
+                    existing.setRounds(buff.getRounds());
+                }
                 existing.setSourceId(buff.getSourceId());
                 return;
             }
         }
 
-        // 没有同类型 Buff，直接添加
+        // 没有同 buffId，直接添加
         this.buffs.add(buff);
     }
 
@@ -167,72 +183,77 @@ public class BattleUnit {
 
     // --- 核心：动态获取攻击力 ---
     public int getAtk() {
-        double modifier = 1.0;
-
-        for (Buff b : buffs) {
-            switch (b.getType()) {
-                case ATK_UP:
-                    modifier += (b.getValue() / 100.0);
-                    break;
-                case ATK_DOWN:
-                    modifier -= (b.getValue() / 100.0);
-                    break;
-                default:
-                    break; // 其他 Buff 不影响攻击力
-            }
-        }
-
-        // 简单公式：基础 * 倍率
-        return (int) (this.baseAtk * Math.max(0.1, modifier)); // 至少保留10%攻击力
+        double modifier = getAttrModifier("ATK");
+        return (int) (this.baseAtk * Math.max(0.1, modifier));
     }
 
-    // 同样的方法写 getDef()...
+    // --- 核心：动态获取防御力 ---
     public int getDef() {
-        double modifier = 1.0;
+        double modifier = getAttrModifier("DEF");
+        return (int) (this.baseDef * Math.max(0.1, modifier));
+    }
 
+    /**
+     * 通用属性倍率计算：遍历所有 ATTR_MOD 类 Buff，
+     * 按 attrType 匹配，positive=true 加，false 减
+     */
+    private double getAttrModifier(String attrType) {
+        double modifier = 1.0;
         for (Buff b : buffs) {
-            switch (b.getType()) {
-                case DEF_UP:
-                    modifier += (b.getValue() / 100.0);
-                    break;
-                case DEF_DOWN:
-                    modifier -= (b.getValue() / 100.0);
-                    break;
-                default:
-                    break; // 其他 Buff 不影响防御力
+            if (!b.isAttrMod()) continue;
+            BuffConfig cfg = b.getConfig();
+            if (cfg == null || !attrType.equalsIgnoreCase(cfg.getAttrType())) continue;
+
+            if (cfg.isPositive()) {
+                modifier += (b.getValue() / 100.0);
+            } else {
+                modifier -= (b.getValue() / 100.0);
             }
         }
-
-        return (int) (this.baseDef * Math.max(0.1, modifier));
+        return modifier;
     }
 
     // 判断是否被控制
     public boolean canAct() {
         for (Buff b : buffs) {
-            if (b.getType() == BuffType.STUN)
-                return false;
+            if (b.isControl()) return false;
         }
         return true;
     }
 
-    public void addSkill(BattleSkill skill) {
+    public void addSkill(GeneralSkill skill) {
         this.skills.add(skill);
+    }
+
+    // 技能冷却时间减1
+    public void tickSkillCooldowns() {
+        for (GeneralSkill skill : skills) {
+            skill.tickCooldown();
+        }
+    }
+
+    // 主动减少技能冷却时间（例如某些技能可以缩短其他技能的CD）
+    public void reduceSkillCooldowns(int rounds) {
+        for (GeneralSkill skill : skills) {
+            skill.reduceCooldown(rounds);
+        }
     }
 
     /**
      * 核心：触发所有技能
-     * 
-     * @return 如果有技能修改了伤害，返回修改后的值；否则返回原值
+     *
+     * @return 本次触发到的第一个技能ID；未触发返回0
      */
-    public void triggerSkills(SkillTrigger trigger, BattleContext ctx) {
-        for (BattleSkill skill : skills) {
+    public int triggerSkills(SkillTrigger trigger, BattleContext ctx) {
+        int firstTriggeredSkillId = 0;
+        for (GeneralSkill skill : skills) {
             if (skill.canTrigger(trigger, ctx)) {
-                // 执行技能
                 skill.execute(ctx);
-
-                // 记录日志 (可选，用于回放)
-                // System.out.println("Unit " + id + " triggered skill " + skill.getSkillId());
+                if (firstTriggeredSkillId == 0) {
+                    firstTriggeredSkillId = skill.getSkillId();
+                }
             }
         }
+        return firstTriggeredSkillId;
     }
 }

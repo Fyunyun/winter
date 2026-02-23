@@ -1,4 +1,4 @@
-package com.winter.modules.battle.model;
+package com.winter.modules.battle.model.skill;
 
 public enum SkillTrigger {
     BATTLE_START, // 战斗开始时 (如：全军攻击+10%)
