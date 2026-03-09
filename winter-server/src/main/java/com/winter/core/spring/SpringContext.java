@@ -1,27 +1,26 @@
 package com.winter.core.spring;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 
-public final class SpringContext {
+/**
+ * Spring 上下文持有者，方便在非 Spring 管理的类中获取 Bean。
+ * 通过 ApplicationContextAware 自动获取 Spring Boot 启动时创建的 ApplicationContext。
+ */
+@Component
+public class SpringContext implements ApplicationContextAware {
 
-    private static volatile AnnotationConfigApplicationContext context;
+    private static ApplicationContext context;
 
-    private SpringContext() {
-    }
-
-    public static void init() {
-        if (context != null) {
-            return;
-        }
-        synchronized (SpringContext.class) {
-            if (context == null) {
-                context = new AnnotationConfigApplicationContext(AppConfig.class);
-            }
-        }
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        context = applicationContext;
     }
 
     public static <T> T getBean(Class<T> type) {
-        init();
         return context.getBean(type);
     }
 }

@@ -1,52 +1,47 @@
 package com.winter.modules.battle.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
+import com.winter.msg.BattleMsg;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class BattleResult {
-    private boolean win; // 是否胜利 (true=攻击方赢, false=防守方赢)
-    private long seed; // 本次战斗使用的随机种子
-    private List<String> battleLogs; // 战斗过程日志 (简易版)
-    private List<BattleAction> actions = new ArrayList<>(); // 进阶版：Protobuf定义的行为序列，用于真回放
+    private boolean win;               // 是否胜利 (true=攻击方赢, false=防守方赢)
+    private long seed;                 // 本次战斗使用的随机种子
+    private List<String> battleLogs;   // 战斗过程日志 (简易版)
+    private BattleMsg.BattleRecord record; // Protobuf 战斗回放记录
 
     // 统计数据
-    private int totalRounds; // 总回合数
-    private int attackerLoss; // 攻击方损失兵力
-    private int defenderLoss; // 防守方损失兵力
+    private int totalRounds;   // 总回合数
+    private int attackerLoss;  // 攻击方损失兵力
+    private int defenderLoss;  // 防守方损失兵力
 
     public BattleResult(boolean win, long seed, List<String> battleLogs) {
         this.win = win;
         this.seed = seed;
         this.battleLogs = battleLogs;
-        this.actions = new ArrayList<>();
     }
 
-    public BattleResult(boolean win, long seed, List<String> battleLogs, List<BattleAction> actions) {
+    public BattleResult(boolean win, long seed, List<String> battleLogs, BattleMsg.BattleRecord record) {
         this.win = win;
         this.seed = seed;
         this.battleLogs = battleLogs;
-        this.actions = (actions != null) ? actions : new ArrayList<>();
+        this.record = record;
     }
 
-    public void addAction(BattleAction action) {
-        if (this.actions == null) {
-            this.actions = new ArrayList<>();
-        }
-        this.actions.add(action);
+    /** 获取 Protobuf Action 列表 (兼容旧接口) */
+    public List<BattleMsg.BattleAction> getActions() {
+        return record != null ? record.getActionsList() : List.of();
     }
 
-    public List<BattleAction> getActions() {
-        return actions;
+    /** 将整个战斗回放序列化为 Protobuf 字节数组，用于网络传输 */
+    public byte[] toBytes() {
+        return record != null ? record.toByteArray() : new byte[0];
     }
 
-    // Getters 和 Setters
     public boolean isWin() {
         return win;
     }
@@ -64,5 +59,4 @@ public class BattleResult {
         this.attackerLoss = atkLoss;
         this.defenderLoss = defLoss;
     }
-
 }

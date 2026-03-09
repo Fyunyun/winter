@@ -20,13 +20,23 @@ public final class FriendMsg {
 
     /**
      * <pre>
-     * 对方ID
+     * 对方名称
      * </pre>
      *
-     * <code>int64 target_id = 1;</code>
-     * @return The targetId.
+     * <code>string target_name = 1;</code>
+     * @return The targetName.
      */
-    long getTargetId();
+    java.lang.String getTargetName();
+    /**
+     * <pre>
+     * 对方名称
+     * </pre>
+     *
+     * <code>string target_name = 1;</code>
+     * @return The bytes for targetName.
+     */
+    com.google.protobuf.ByteString
+        getTargetNameBytes();
   }
   /**
    * <pre>
@@ -45,6 +55,7 @@ public final class FriendMsg {
       super(builder);
     }
     private ReqAddFriend() {
+      targetName_ = "";
     }
 
     @java.lang.Override
@@ -72,19 +83,50 @@ public final class FriendMsg {
               com.winter.msg.FriendMsg.ReqAddFriend.class, com.winter.msg.FriendMsg.ReqAddFriend.Builder.class);
     }
 
-    public static final int TARGET_ID_FIELD_NUMBER = 1;
-    private long targetId_;
+    public static final int TARGET_NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object targetName_;
     /**
      * <pre>
-     * 对方ID
+     * 对方名称
      * </pre>
      *
-     * <code>int64 target_id = 1;</code>
-     * @return The targetId.
+     * <code>string target_name = 1;</code>
+     * @return The targetName.
      */
     @java.lang.Override
-    public long getTargetId() {
-      return targetId_;
+    public java.lang.String getTargetName() {
+      java.lang.Object ref = targetName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        targetName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * 对方名称
+     * </pre>
+     *
+     * <code>string target_name = 1;</code>
+     * @return The bytes for targetName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTargetNameBytes() {
+      java.lang.Object ref = targetName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        targetName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -101,8 +143,8 @@ public final class FriendMsg {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (targetId_ != 0L) {
-        output.writeInt64(1, targetId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, targetName_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -113,9 +155,8 @@ public final class FriendMsg {
       if (size != -1) return size;
 
       size = 0;
-      if (targetId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, targetId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, targetName_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -132,8 +173,8 @@ public final class FriendMsg {
       }
       com.winter.msg.FriendMsg.ReqAddFriend other = (com.winter.msg.FriendMsg.ReqAddFriend) obj;
 
-      if (getTargetId()
-          != other.getTargetId()) return false;
+      if (!getTargetName()
+          .equals(other.getTargetName())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -145,9 +186,8 @@ public final class FriendMsg {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getTargetId());
+      hash = (37 * hash) + TARGET_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getTargetName().hashCode();
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -280,7 +320,7 @@ public final class FriendMsg {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        targetId_ = 0L;
+        targetName_ = "";
 
         return this;
       }
@@ -308,7 +348,7 @@ public final class FriendMsg {
       @java.lang.Override
       public com.winter.msg.FriendMsg.ReqAddFriend buildPartial() {
         com.winter.msg.FriendMsg.ReqAddFriend result = new com.winter.msg.FriendMsg.ReqAddFriend(this);
-        result.targetId_ = targetId_;
+        result.targetName_ = targetName_;
         onBuilt();
         return result;
       }
@@ -357,8 +397,9 @@ public final class FriendMsg {
 
       public Builder mergeFrom(com.winter.msg.FriendMsg.ReqAddFriend other) {
         if (other == com.winter.msg.FriendMsg.ReqAddFriend.getDefaultInstance()) return this;
-        if (other.getTargetId() != 0L) {
-          setTargetId(other.getTargetId());
+        if (!other.getTargetName().isEmpty()) {
+          targetName_ = other.targetName_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -386,11 +427,11 @@ public final class FriendMsg {
               case 0:
                 done = true;
                 break;
-              case 8: {
-                targetId_ = input.readInt64();
+              case 10: {
+                targetName_ = input.readStringRequireUtf8();
 
                 break;
-              } // case 8
+              } // case 10
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -407,45 +448,98 @@ public final class FriendMsg {
         return this;
       }
 
-      private long targetId_ ;
+      private java.lang.Object targetName_ = "";
       /**
        * <pre>
-       * 对方ID
+       * 对方名称
        * </pre>
        *
-       * <code>int64 target_id = 1;</code>
-       * @return The targetId.
+       * <code>string target_name = 1;</code>
+       * @return The targetName.
        */
-      @java.lang.Override
-      public long getTargetId() {
-        return targetId_;
+      public java.lang.String getTargetName() {
+        java.lang.Object ref = targetName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          targetName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
-       * 对方ID
+       * 对方名称
        * </pre>
        *
-       * <code>int64 target_id = 1;</code>
-       * @param value The targetId to set.
+       * <code>string target_name = 1;</code>
+       * @return The bytes for targetName.
+       */
+      public com.google.protobuf.ByteString
+          getTargetNameBytes() {
+        java.lang.Object ref = targetName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          targetName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * 对方名称
+       * </pre>
+       *
+       * <code>string target_name = 1;</code>
+       * @param value The targetName to set.
        * @return This builder for chaining.
        */
-      public Builder setTargetId(long value) {
-        
-        targetId_ = value;
+      public Builder setTargetName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        targetName_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * 对方ID
+       * 对方名称
        * </pre>
        *
-       * <code>int64 target_id = 1;</code>
+       * <code>string target_name = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearTargetId() {
+      public Builder clearTargetName() {
         
-        targetId_ = 0L;
+        targetName_ = getDefaultInstance().getTargetName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 对方名称
+       * </pre>
+       *
+       * <code>string target_name = 1;</code>
+       * @param value The bytes for targetName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTargetNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        targetName_ = value;
         onChanged();
         return this;
       }
@@ -518,10 +612,16 @@ public final class FriendMsg {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 target_id = 1;</code>
-     * @return The targetId.
+     * <code>string target_name = 1;</code>
+     * @return The targetName.
      */
-    long getTargetId();
+    java.lang.String getTargetName();
+    /**
+     * <code>string target_name = 1;</code>
+     * @return The bytes for targetName.
+     */
+    com.google.protobuf.ByteString
+        getTargetNameBytes();
 
     /**
      * <code>string message = 2;</code>
@@ -552,6 +652,7 @@ public final class FriendMsg {
       super(builder);
     }
     private RespAddFriend() {
+      targetName_ = "";
       message_ = "";
     }
 
@@ -580,15 +681,42 @@ public final class FriendMsg {
               com.winter.msg.FriendMsg.RespAddFriend.class, com.winter.msg.FriendMsg.RespAddFriend.Builder.class);
     }
 
-    public static final int TARGET_ID_FIELD_NUMBER = 1;
-    private long targetId_;
+    public static final int TARGET_NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object targetName_;
     /**
-     * <code>int64 target_id = 1;</code>
-     * @return The targetId.
+     * <code>string target_name = 1;</code>
+     * @return The targetName.
      */
     @java.lang.Override
-    public long getTargetId() {
-      return targetId_;
+    public java.lang.String getTargetName() {
+      java.lang.Object ref = targetName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        targetName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string target_name = 1;</code>
+     * @return The bytes for targetName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTargetNameBytes() {
+      java.lang.Object ref = targetName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        targetName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int MESSAGE_FIELD_NUMBER = 2;
@@ -643,8 +771,8 @@ public final class FriendMsg {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (targetId_ != 0L) {
-        output.writeInt64(1, targetId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, targetName_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
@@ -658,9 +786,8 @@ public final class FriendMsg {
       if (size != -1) return size;
 
       size = 0;
-      if (targetId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, targetId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, targetName_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
@@ -680,8 +807,8 @@ public final class FriendMsg {
       }
       com.winter.msg.FriendMsg.RespAddFriend other = (com.winter.msg.FriendMsg.RespAddFriend) obj;
 
-      if (getTargetId()
-          != other.getTargetId()) return false;
+      if (!getTargetName()
+          .equals(other.getTargetName())) return false;
       if (!getMessage()
           .equals(other.getMessage())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -695,9 +822,8 @@ public final class FriendMsg {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getTargetId());
+      hash = (37 * hash) + TARGET_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getTargetName().hashCode();
       hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getMessage().hashCode();
       hash = (29 * hash) + getUnknownFields().hashCode();
@@ -832,7 +958,7 @@ public final class FriendMsg {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        targetId_ = 0L;
+        targetName_ = "";
 
         message_ = "";
 
@@ -862,7 +988,7 @@ public final class FriendMsg {
       @java.lang.Override
       public com.winter.msg.FriendMsg.RespAddFriend buildPartial() {
         com.winter.msg.FriendMsg.RespAddFriend result = new com.winter.msg.FriendMsg.RespAddFriend(this);
-        result.targetId_ = targetId_;
+        result.targetName_ = targetName_;
         result.message_ = message_;
         onBuilt();
         return result;
@@ -912,8 +1038,9 @@ public final class FriendMsg {
 
       public Builder mergeFrom(com.winter.msg.FriendMsg.RespAddFriend other) {
         if (other == com.winter.msg.FriendMsg.RespAddFriend.getDefaultInstance()) return this;
-        if (other.getTargetId() != 0L) {
-          setTargetId(other.getTargetId());
+        if (!other.getTargetName().isEmpty()) {
+          targetName_ = other.targetName_;
+          onChanged();
         }
         if (!other.getMessage().isEmpty()) {
           message_ = other.message_;
@@ -945,11 +1072,11 @@ public final class FriendMsg {
               case 0:
                 done = true;
                 break;
-              case 8: {
-                targetId_ = input.readInt64();
+              case 10: {
+                targetName_ = input.readStringRequireUtf8();
 
                 break;
-              } // case 8
+              } // case 10
               case 18: {
                 message_ = input.readStringRequireUtf8();
 
@@ -971,33 +1098,78 @@ public final class FriendMsg {
         return this;
       }
 
-      private long targetId_ ;
+      private java.lang.Object targetName_ = "";
       /**
-       * <code>int64 target_id = 1;</code>
-       * @return The targetId.
+       * <code>string target_name = 1;</code>
+       * @return The targetName.
        */
-      @java.lang.Override
-      public long getTargetId() {
-        return targetId_;
+      public java.lang.String getTargetName() {
+        java.lang.Object ref = targetName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          targetName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 target_id = 1;</code>
-       * @param value The targetId to set.
+       * <code>string target_name = 1;</code>
+       * @return The bytes for targetName.
+       */
+      public com.google.protobuf.ByteString
+          getTargetNameBytes() {
+        java.lang.Object ref = targetName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          targetName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string target_name = 1;</code>
+       * @param value The targetName to set.
        * @return This builder for chaining.
        */
-      public Builder setTargetId(long value) {
-        
-        targetId_ = value;
+      public Builder setTargetName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        targetName_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 target_id = 1;</code>
+       * <code>string target_name = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearTargetId() {
+      public Builder clearTargetName() {
         
-        targetId_ = 0L;
+        targetName_ = getDefaultInstance().getTargetName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string target_name = 1;</code>
+       * @param value The bytes for targetName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTargetNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        targetName_ = value;
         onChanged();
         return this;
       }
@@ -1146,10 +1318,24 @@ public final class FriendMsg {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 target_id = 1;</code>
-     * @return The targetId.
+     * <pre>
+     * 对方名称
+     * </pre>
+     *
+     * <code>string target_name = 1;</code>
+     * @return The targetName.
      */
-    long getTargetId();
+    java.lang.String getTargetName();
+    /**
+     * <pre>
+     * 对方名称
+     * </pre>
+     *
+     * <code>string target_name = 1;</code>
+     * @return The bytes for targetName.
+     */
+    com.google.protobuf.ByteString
+        getTargetNameBytes();
 
     /**
      * <pre>
@@ -1178,6 +1364,7 @@ public final class FriendMsg {
       super(builder);
     }
     private ReqHandleFriend() {
+      targetName_ = "";
     }
 
     @java.lang.Override
@@ -1205,15 +1392,50 @@ public final class FriendMsg {
               com.winter.msg.FriendMsg.ReqHandleFriend.class, com.winter.msg.FriendMsg.ReqHandleFriend.Builder.class);
     }
 
-    public static final int TARGET_ID_FIELD_NUMBER = 1;
-    private long targetId_;
+    public static final int TARGET_NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object targetName_;
     /**
-     * <code>int64 target_id = 1;</code>
-     * @return The targetId.
+     * <pre>
+     * 对方名称
+     * </pre>
+     *
+     * <code>string target_name = 1;</code>
+     * @return The targetName.
      */
     @java.lang.Override
-    public long getTargetId() {
-      return targetId_;
+    public java.lang.String getTargetName() {
+      java.lang.Object ref = targetName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        targetName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * 对方名称
+     * </pre>
+     *
+     * <code>string target_name = 1;</code>
+     * @return The bytes for targetName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTargetNameBytes() {
+      java.lang.Object ref = targetName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        targetName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int AGREE_FIELD_NUMBER = 2;
@@ -1245,8 +1467,8 @@ public final class FriendMsg {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (targetId_ != 0L) {
-        output.writeInt64(1, targetId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, targetName_);
       }
       if (agree_ != false) {
         output.writeBool(2, agree_);
@@ -1260,9 +1482,8 @@ public final class FriendMsg {
       if (size != -1) return size;
 
       size = 0;
-      if (targetId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, targetId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, targetName_);
       }
       if (agree_ != false) {
         size += com.google.protobuf.CodedOutputStream
@@ -1283,8 +1504,8 @@ public final class FriendMsg {
       }
       com.winter.msg.FriendMsg.ReqHandleFriend other = (com.winter.msg.FriendMsg.ReqHandleFriend) obj;
 
-      if (getTargetId()
-          != other.getTargetId()) return false;
+      if (!getTargetName()
+          .equals(other.getTargetName())) return false;
       if (getAgree()
           != other.getAgree()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -1298,9 +1519,8 @@ public final class FriendMsg {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getTargetId());
+      hash = (37 * hash) + TARGET_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getTargetName().hashCode();
       hash = (37 * hash) + AGREE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getAgree());
@@ -1436,7 +1656,7 @@ public final class FriendMsg {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        targetId_ = 0L;
+        targetName_ = "";
 
         agree_ = false;
 
@@ -1466,7 +1686,7 @@ public final class FriendMsg {
       @java.lang.Override
       public com.winter.msg.FriendMsg.ReqHandleFriend buildPartial() {
         com.winter.msg.FriendMsg.ReqHandleFriend result = new com.winter.msg.FriendMsg.ReqHandleFriend(this);
-        result.targetId_ = targetId_;
+        result.targetName_ = targetName_;
         result.agree_ = agree_;
         onBuilt();
         return result;
@@ -1516,8 +1736,9 @@ public final class FriendMsg {
 
       public Builder mergeFrom(com.winter.msg.FriendMsg.ReqHandleFriend other) {
         if (other == com.winter.msg.FriendMsg.ReqHandleFriend.getDefaultInstance()) return this;
-        if (other.getTargetId() != 0L) {
-          setTargetId(other.getTargetId());
+        if (!other.getTargetName().isEmpty()) {
+          targetName_ = other.targetName_;
+          onChanged();
         }
         if (other.getAgree() != false) {
           setAgree(other.getAgree());
@@ -1548,11 +1769,11 @@ public final class FriendMsg {
               case 0:
                 done = true;
                 break;
-              case 8: {
-                targetId_ = input.readInt64();
+              case 10: {
+                targetName_ = input.readStringRequireUtf8();
 
                 break;
-              } // case 8
+              } // case 10
               case 16: {
                 agree_ = input.readBool();
 
@@ -1574,33 +1795,98 @@ public final class FriendMsg {
         return this;
       }
 
-      private long targetId_ ;
+      private java.lang.Object targetName_ = "";
       /**
-       * <code>int64 target_id = 1;</code>
-       * @return The targetId.
+       * <pre>
+       * 对方名称
+       * </pre>
+       *
+       * <code>string target_name = 1;</code>
+       * @return The targetName.
        */
-      @java.lang.Override
-      public long getTargetId() {
-        return targetId_;
+      public java.lang.String getTargetName() {
+        java.lang.Object ref = targetName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          targetName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 target_id = 1;</code>
-       * @param value The targetId to set.
+       * <pre>
+       * 对方名称
+       * </pre>
+       *
+       * <code>string target_name = 1;</code>
+       * @return The bytes for targetName.
+       */
+      public com.google.protobuf.ByteString
+          getTargetNameBytes() {
+        java.lang.Object ref = targetName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          targetName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * 对方名称
+       * </pre>
+       *
+       * <code>string target_name = 1;</code>
+       * @param value The targetName to set.
        * @return This builder for chaining.
        */
-      public Builder setTargetId(long value) {
-        
-        targetId_ = value;
+      public Builder setTargetName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        targetName_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 target_id = 1;</code>
+       * <pre>
+       * 对方名称
+       * </pre>
+       *
+       * <code>string target_name = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearTargetId() {
+      public Builder clearTargetName() {
         
-        targetId_ = 0L;
+        targetName_ = getDefaultInstance().getTargetName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 对方名称
+       * </pre>
+       *
+       * <code>string target_name = 1;</code>
+       * @param value The bytes for targetName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTargetNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        targetName_ = value;
         onChanged();
         return this;
       }
@@ -1716,10 +2002,16 @@ public final class FriendMsg {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 target_id = 1;</code>
-     * @return The targetId.
+     * <code>string target_name = 1;</code>
+     * @return The targetName.
      */
-    long getTargetId();
+    java.lang.String getTargetName();
+    /**
+     * <code>string target_name = 1;</code>
+     * @return The bytes for targetName.
+     */
+    com.google.protobuf.ByteString
+        getTargetNameBytes();
 
     /**
      * <code>string message = 2;</code>
@@ -1750,6 +2042,7 @@ public final class FriendMsg {
       super(builder);
     }
     private RespHandleFriend() {
+      targetName_ = "";
       message_ = "";
     }
 
@@ -1778,15 +2071,42 @@ public final class FriendMsg {
               com.winter.msg.FriendMsg.RespHandleFriend.class, com.winter.msg.FriendMsg.RespHandleFriend.Builder.class);
     }
 
-    public static final int TARGET_ID_FIELD_NUMBER = 1;
-    private long targetId_;
+    public static final int TARGET_NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object targetName_;
     /**
-     * <code>int64 target_id = 1;</code>
-     * @return The targetId.
+     * <code>string target_name = 1;</code>
+     * @return The targetName.
      */
     @java.lang.Override
-    public long getTargetId() {
-      return targetId_;
+    public java.lang.String getTargetName() {
+      java.lang.Object ref = targetName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        targetName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string target_name = 1;</code>
+     * @return The bytes for targetName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTargetNameBytes() {
+      java.lang.Object ref = targetName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        targetName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int MESSAGE_FIELD_NUMBER = 2;
@@ -1841,8 +2161,8 @@ public final class FriendMsg {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (targetId_ != 0L) {
-        output.writeInt64(1, targetId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, targetName_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
@@ -1856,9 +2176,8 @@ public final class FriendMsg {
       if (size != -1) return size;
 
       size = 0;
-      if (targetId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, targetId_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(targetName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, targetName_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
@@ -1878,8 +2197,8 @@ public final class FriendMsg {
       }
       com.winter.msg.FriendMsg.RespHandleFriend other = (com.winter.msg.FriendMsg.RespHandleFriend) obj;
 
-      if (getTargetId()
-          != other.getTargetId()) return false;
+      if (!getTargetName()
+          .equals(other.getTargetName())) return false;
       if (!getMessage()
           .equals(other.getMessage())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -1893,9 +2212,8 @@ public final class FriendMsg {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TARGET_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getTargetId());
+      hash = (37 * hash) + TARGET_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getTargetName().hashCode();
       hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getMessage().hashCode();
       hash = (29 * hash) + getUnknownFields().hashCode();
@@ -2030,7 +2348,7 @@ public final class FriendMsg {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        targetId_ = 0L;
+        targetName_ = "";
 
         message_ = "";
 
@@ -2060,7 +2378,7 @@ public final class FriendMsg {
       @java.lang.Override
       public com.winter.msg.FriendMsg.RespHandleFriend buildPartial() {
         com.winter.msg.FriendMsg.RespHandleFriend result = new com.winter.msg.FriendMsg.RespHandleFriend(this);
-        result.targetId_ = targetId_;
+        result.targetName_ = targetName_;
         result.message_ = message_;
         onBuilt();
         return result;
@@ -2110,8 +2428,9 @@ public final class FriendMsg {
 
       public Builder mergeFrom(com.winter.msg.FriendMsg.RespHandleFriend other) {
         if (other == com.winter.msg.FriendMsg.RespHandleFriend.getDefaultInstance()) return this;
-        if (other.getTargetId() != 0L) {
-          setTargetId(other.getTargetId());
+        if (!other.getTargetName().isEmpty()) {
+          targetName_ = other.targetName_;
+          onChanged();
         }
         if (!other.getMessage().isEmpty()) {
           message_ = other.message_;
@@ -2143,11 +2462,11 @@ public final class FriendMsg {
               case 0:
                 done = true;
                 break;
-              case 8: {
-                targetId_ = input.readInt64();
+              case 10: {
+                targetName_ = input.readStringRequireUtf8();
 
                 break;
-              } // case 8
+              } // case 10
               case 18: {
                 message_ = input.readStringRequireUtf8();
 
@@ -2169,33 +2488,78 @@ public final class FriendMsg {
         return this;
       }
 
-      private long targetId_ ;
+      private java.lang.Object targetName_ = "";
       /**
-       * <code>int64 target_id = 1;</code>
-       * @return The targetId.
+       * <code>string target_name = 1;</code>
+       * @return The targetName.
        */
-      @java.lang.Override
-      public long getTargetId() {
-        return targetId_;
+      public java.lang.String getTargetName() {
+        java.lang.Object ref = targetName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          targetName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 target_id = 1;</code>
-       * @param value The targetId to set.
+       * <code>string target_name = 1;</code>
+       * @return The bytes for targetName.
+       */
+      public com.google.protobuf.ByteString
+          getTargetNameBytes() {
+        java.lang.Object ref = targetName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          targetName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string target_name = 1;</code>
+       * @param value The targetName to set.
        * @return This builder for chaining.
        */
-      public Builder setTargetId(long value) {
-        
-        targetId_ = value;
+      public Builder setTargetName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        targetName_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 target_id = 1;</code>
+       * <code>string target_name = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearTargetId() {
+      public Builder clearTargetName() {
         
-        targetId_ = 0L;
+        targetName_ = getDefaultInstance().getTargetName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string target_name = 1;</code>
+       * @param value The bytes for targetName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTargetNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        targetName_ = value;
         onChanged();
         return this;
       }
@@ -5070,19 +5434,20 @@ public final class FriendMsg {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014friend.proto\022\020com.winter.proto\"!\n\014ReqA" +
-      "ddFriend\022\021\n\ttarget_id\030\001 \001(\003\"3\n\rRespAddFr" +
-      "iend\022\021\n\ttarget_id\030\001 \001(\003\022\017\n\007message\030\002 \001(\t" +
-      "\"3\n\017ReqHandleFriend\022\021\n\ttarget_id\030\001 \001(\003\022\r" +
-      "\n\005agree\030\002 \001(\010\"6\n\020RespHandleFriend\022\021\n\ttar" +
-      "get_id\030\001 \001(\003\022\017\n\007message\030\002 \001(\t\"\022\n\020ReqGetF" +
-      "riendList\"m\n\nFriendInfo\022\021\n\tfriend_id\030\001 \001" +
-      "(\003\022\023\n\013friend_name\030\002 \001(\t\022\024\n\014friend_level\030" +
-      "\003 \001(\005\022\021\n\tis_online\030\004 \001(\010\022\016\n\006status\030\005 \001(\005" +
-      "\"?\n\016RespFriendList\022-\n\007friends\030\001 \003(\0132\034.co" +
-      "m.winter.proto.FriendInfo\"6\n\020BrdFriendRe" +
-      "quest\022\017\n\007from_id\030\001 \001(\003\022\021\n\tfrom_name\030\002 \001(" +
-      "\tB\033\n\016com.winter.msgB\tFriendMsgb\006proto3"
+      "\n\014friend.proto\022\020com.winter.proto\"#\n\014ReqA" +
+      "ddFriend\022\023\n\013target_name\030\001 \001(\t\"5\n\rRespAdd" +
+      "Friend\022\023\n\013target_name\030\001 \001(\t\022\017\n\007message\030\002" +
+      " \001(\t\"5\n\017ReqHandleFriend\022\023\n\013target_name\030\001" +
+      " \001(\t\022\r\n\005agree\030\002 \001(\010\"8\n\020RespHandleFriend\022" +
+      "\023\n\013target_name\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\"\022\n" +
+      "\020ReqGetFriendList\"m\n\nFriendInfo\022\021\n\tfrien" +
+      "d_id\030\001 \001(\003\022\023\n\013friend_name\030\002 \001(\t\022\024\n\014frien" +
+      "d_level\030\003 \001(\005\022\021\n\tis_online\030\004 \001(\010\022\016\n\006stat" +
+      "us\030\005 \001(\005\"?\n\016RespFriendList\022-\n\007friends\030\001 " +
+      "\003(\0132\034.com.winter.proto.FriendInfo\"6\n\020Brd" +
+      "FriendRequest\022\017\n\007from_id\030\001 \001(\003\022\021\n\tfrom_n" +
+      "ame\030\002 \001(\tB\033\n\016com.winter.msgB\tFriendMsgb\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5093,25 +5458,25 @@ public final class FriendMsg {
     internal_static_com_winter_proto_ReqAddFriend_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_ReqAddFriend_descriptor,
-        new java.lang.String[] { "TargetId", });
+        new java.lang.String[] { "TargetName", });
     internal_static_com_winter_proto_RespAddFriend_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_com_winter_proto_RespAddFriend_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_RespAddFriend_descriptor,
-        new java.lang.String[] { "TargetId", "Message", });
+        new java.lang.String[] { "TargetName", "Message", });
     internal_static_com_winter_proto_ReqHandleFriend_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_com_winter_proto_ReqHandleFriend_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_ReqHandleFriend_descriptor,
-        new java.lang.String[] { "TargetId", "Agree", });
+        new java.lang.String[] { "TargetName", "Agree", });
     internal_static_com_winter_proto_RespHandleFriend_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_com_winter_proto_RespHandleFriend_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_winter_proto_RespHandleFriend_descriptor,
-        new java.lang.String[] { "TargetId", "Message", });
+        new java.lang.String[] { "TargetName", "Message", });
     internal_static_com_winter_proto_ReqGetFriendList_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_com_winter_proto_ReqGetFriendList_fieldAccessorTable = new

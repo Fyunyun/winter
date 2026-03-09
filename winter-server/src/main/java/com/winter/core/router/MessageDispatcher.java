@@ -10,6 +10,7 @@ import com.winter.modules.friend.FriendController;
 import com.winter.modules.chat.ChatController;
 
 import com.winter.core.spring.SpringContext;
+import com.winter.core.util.GameExecutor;
 
 import com.winter.msg.MsgId.CmdId;
 import com.winter.msg.PacketMsg.GamePacket;
@@ -80,6 +81,10 @@ public class MessageDispatcher {
 
     /**
      * 2. 分发：Netty 收到包后调用这个方法
+     * 
+     * 优化：将业务逻辑提交到独立的业务线程池执行，
+     * 避免阻塞 Netty I/O 线程（敏感词过滤、Redis 读写等都是耗时操作）。
+     * 登录和注册仍在 I/O 线程执行（需要即时绑定 Channel 属性）。
      */
     public static void dispatch(ChannelHandlerContext ctx, GamePacket packet) {
         CmdId cmd = packet.getCmd();
@@ -89,19 +94,26 @@ public class MessageDispatcher {
             System.err.println("错误：未找到处理 CmdId=" + cmd + " 的方法");
             return;
         }
+
+        // 登录/注册需要在 I/O 线程同步执行（绑定 Channel Attribute）
+        if (cmd == CmdId.REQ_LOGIN || cmd == CmdId.REQ_REGISTER) {
+            invokeHandler(ctx, packet, cmd, def);
+        } else {
+            // 其他业务逻辑提交到业务线程池，释放 I/O 线程
+            GameExecutor.execute(() -> invokeHandler(ctx, packet, cmd, def));
+        }
+    }
+
+    /**
+     * 实际执行 Handler 反射调用
+     */
+    private static void invokeHandler(ChannelHandlerContext ctx, GamePacket packet, CmdId cmd, HandlerDef def) {
         try {
-            // 获取当前玩家 (在登录时绑定的)
-            // 如果是 REQ_LOGIN 这种不需要登录的包，player 可能为 null，Controller 里要判空
             PlayerModel player = (PlayerModel) ctx.channel().attr(AttributeKey.valueOf("PLAYER")).get();
 
             if (def.method.getParameterCount() == 3) {
-                // === 核心反射调用 ===
-                // 对应 CollectController.collectResource(ctx, player, byte[])
                 def.method.invoke(def.controller, ctx, player, packet.getContent().toByteArray());
-                return;
             } else if (def.method.getParameterCount() == 4) {
-                // === 核心反射调用 ===
-                // 对应 BuildingController.upgrade(ctx, player, byte[], CmdId)
                 def.method.invoke(def.controller, ctx, player, packet.getContent().toByteArray(), cmd);
             }
         } catch (Exception e) {

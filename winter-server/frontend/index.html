@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>❄️ 冬日服务器 - 游戏客户端</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- ═══════════ LOGIN SCREEN ═══════════ -->
+    <div id="login-screen">
+      <div class="login-box">
+        <h1>❄️ 冬日服务器</h1>
+        <p>Winter Game Server — 登录或注册开始游戏</p>
+        <input
+          type="text"
+          id="login-user"
+          placeholder="用户名"
+          maxlength="20"
+          autocomplete="off"
+        />
+        <input
+          type="password"
+          id="login-pass"
+          placeholder="密码"
+          maxlength="32"
+        />
+        <div class="btn-row">
+          <button class="btn-login" onclick="doLogin()">登 录</button>
+          <button class="btn-register" onclick="doRegister()">注 册</button>
+        </div>
+        <div class="login-msg" id="login-msg"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ GAME SCREEN ═══════════ -->
+    <div id="game-screen">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="logo">❄️ 冬日服务器</div>
+        <div class="resource-bar">
+          <div class="res-item">
+            <span class="icon">🪵</span>木材:
+            <span class="val" id="res-wood">0</span>
+          </div>
+          <div class="res-item">
+            <span class="icon">⛏️</span>煤炭:
+            <span class="val" id="res-coal">0</span>
+          </div>
+          <div class="res-item">
+            <span class="icon">🌾</span>食物:
+            <span class="val" id="res-food">0</span>
+          </div>
+        </div>
+        <div class="player-info">
+          <span id="player-name">—</span> | Lv.<span id="player-level">1</span>
+          | ID:<span id="player-id">—</span>
+        </div>
+      </div>
+
+      <!-- Left Panel: Buildings & Resources -->
+      <div class="left-panel">
+        <div class="panel-section">
+          <div class="panel-title">🏗️ 建筑管理</div>
+          <div id="building-list"></div>
+          <div style="margin-top: 8px">
+            <div
+              class="panel-title"
+              style="font-size: 11px; margin-bottom: 4px"
+            >
+              新建建筑
+            </div>
+            <div style="display: flex; gap: 6px">
+              <select
+                id="new-building-type"
+                style="flex: 1; font-size: 11px; padding: 4px"
+              >
+                <option value="1">🏭 熔炉</option>
+                <option value="2">⚔️ 兵营</option>
+                <option value="3">🪓 伐木场</option>
+              </select>
+              <button class="btn-sm btn-build" onclick="createBuilding()">
+                建造
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-title">⛏️ 资源采集</div>
+          <div class="collect-grid">
+            <button class="btn-collect wood" onclick="collectResource('wood')">
+              🪵<br />采集木材
+            </button>
+            <button class="btn-collect coal" onclick="collectResource('coal')">
+              ⛏️<br />采集煤炭
+            </button>
+            <button class="btn-collect food" onclick="collectResource('food')">
+              🌾<br />采集食物
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-section" style="flex: 1">
+          <div class="panel-title">
+            👥 附近玩家 <span class="badge" id="nearby-count">0</span>
+          </div>
+          <div id="nearby-list">
+            <div
+              style="
+                color: #555;
+                font-size: 11px;
+                text-align: center;
+                padding: 20px;
+              "
+            >
+              点击地图移动后<br />将显示附近玩家
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: Game Map Canvas -->
+      <div class="center-area">
+        <canvas id="gameCanvas"></canvas>
+        <div class="canvas-overlay">
+          🖱️ 点击地图移动角色 | 点击附近玩家发起 PK
+        </div>
+        <div class="canvas-coords" id="coords-display">坐标: (0, 0)</div>
+      </div>
+
+      <!-- Right Panel: Friends & Players -->
+      <div class="right-panel">
+        <div class="tab-header">
+          <button class="tab-btn active" onclick="switchTab('friends', this)">
+            👫 好友
+          </button>
+          <button class="tab-btn" onclick="switchTab('requests', this)">
+            📨 申请
+            <span class="badge" id="request-badge" style="display: none"
+              >0</span
+            >
+          </button>
+          <button class="tab-btn" onclick="switchTab('battle-tab', this)">
+            ⚔️ PK
+          </button>
+        </div>
+        <div class="tab-content active" id="tab-friends">
+          <div class="add-friend-row">
+            <input type="number" id="add-friend-id" placeholder="输入玩家 ID" />
+            <button onclick="addFriend()">添加</button>
+          </div>
+          <div id="friend-list">
+            <div
+              style="
+                color: #555;
+                font-size: 11px;
+                text-align: center;
+                padding: 20px;
+              "
+            >
+              暂无好友
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" id="tab-requests">
+          <div id="request-list">
+            <div
+              style="
+                color: #555;
+                font-size: 11px;
+                text-align: center;
+                padding: 20px;
+              "
+            >
+              暂无好友申请
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" id="tab-battle-tab">
+          <div style="padding: 8px; text-align: center">
+            <p
+              style="font-size: 12px; color: var(--muted); margin-bottom: 12px"
+            >
+              选择一名附近玩家或好友发起PK战斗
+            </p>
+            <button
+              class="btn-battle-start"
+              style="width: 100%; font-size: 14px; padding: 10px"
+              onclick="openBattleModal()"
+            >
+              ⚔️ 打开战斗面板
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="chat-area">
+        <div class="chat-tabs">
+          <div class="chat-tab active" onclick="switchChatTab('world', this)">
+            🌍 世界
+          </div>
+          <div class="chat-tab" onclick="switchChatTab('private', this)">
+            💬 私聊
+          </div>
+          <div class="chat-tab" onclick="switchChatTab('system', this)">
+            📢 系统
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input-row">
+          <select id="chat-target-type">
+            <option value="world">世界频道</option>
+            <option value="private">私聊</option>
+          </select>
+          <input
+            type="number"
+            id="chat-target-id"
+            placeholder="对方ID"
+            style="width: 80px; display: none"
+          />
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="输入消息..."
+            maxlength="200"
+          />
+          <button onclick="sendChat()">发送</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ BATTLE MODAL ═══════════ -->
+    <div class="modal-overlay" id="battle-modal">
+      <div class="modal" style="position: relative">
+        <h2>⚔️ <span class="accent">PvP 战斗</span></h2>
+        <button class="modal-close" onclick="closeBattleModal()">✕</button>
+
+        <!-- Setup Phase -->
+        <div id="battle-setup">
+          <div class="battle-setup">
+            <!-- Attacker -->
+            <div class="battle-side atk">
+              <h3>🗡️ 我方 (进攻)</h3>
+              <div class="battle-field">
+                <label>兵种</label>
+                <select id="atk-type">
+                  <option value="INFANTRY">🛡️ 步兵</option>
+                  <option value="CAVALRY">🐴 骑兵</option>
+                  <option value="ARCHER">🏹 弓兵</option>
+                </select>
+              </div>
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px"
+              >
+                <div class="battle-field">
+                  <label>❤️ 血量</label
+                  ><input type="number" id="atk-hp" value="1500" />
+                </div>
+                <div class="battle-field">
+                  <label>⚔️ 攻击</label
+                  ><input type="number" id="atk-atk" value="220" />
+                </div>
+                <div class="battle-field">
+                  <label>🛡️ 防御</label
+                  ><input type="number" id="atk-def" value="60" />
+                </div>
+                <div class="battle-field">
+                  <label>🆔 ID</label
+                  ><input type="number" id="atk-id" value="101" />
+                </div>
+              </div>
+              <div class="skill-select">
+                <label style="font-size: 11px; color: var(--muted)"
+                  >技能选择</label
+                >
+                <div class="skill-filter" id="atk-skill-filter"></div>
+                <div class="skill-chips" id="atk-skills"></div>
+              </div>
+            </div>
+
+            <div class="battle-vs">VS</div>
+
+            <!-- Defender -->
+            <div class="battle-side def">
+              <h3>🛡️ 对手 (防守)</h3>
+              <div class="battle-field">
+                <label>兵种</label>
+                <select id="def-type">
+                  <option value="INFANTRY">🛡️ 步兵</option>
+                  <option value="CAVALRY" selected>🐴 骑兵</option>
+                  <option value="ARCHER">🏹 弓兵</option>
+                </select>
+              </div>
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px"
+              >
+                <div class="battle-field">
+                  <label>❤️ 血量</label
+                  ><input type="number" id="def-hp" value="1600" />
+                </div>
+                <div class="battle-field">
+                  <label>⚔️ 攻击</label
+                  ><input type="number" id="def-atk" value="200" />
+                </div>
+                <div class="battle-field">
+                  <label>🛡️ 防御</label
+                  ><input type="number" id="def-def" value="70" />
+                </div>
+                <div class="battle-field">
+                  <label>🆔 ID</label
+                  ><input type="number" id="def-id" value="201" />
+                </div>
+              </div>
+              <div class="skill-select">
+                <label style="font-size: 11px; color: var(--muted)"
+                  >技能选择</label
+                >
+                <div class="skill-filter" id="def-skill-filter"></div>
+                <div class="skill-chips" id="def-skills"></div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 12px;
+              align-items: center;
+              margin-bottom: 8px;
+            "
+          >
+            <div class="battle-field" style="flex: 1">
+              <label>🎲 随机种子</label
+              ><input
+                type="number"
+                id="battle-seed"
+                value="0"
+                placeholder="0=随机"
+              />
+            </div>
+            <div class="battle-field" style="flex: 1">
+              <label>🔄 最大回合</label
+              ><input type="number" id="battle-max-rounds" value="100" />
+            </div>
+          </div>
+          <button
+            class="btn-battle-start"
+            id="btn-start-battle"
+            onclick="startBattle()"
+          >
+            ⚔️ 开 始 战 斗
+          </button>
+        </div>
+
+        <!-- Arena Phase -->
+        <div class="battle-arena" id="battle-arena">
+          <div class="arena-canvas-wrap">
+            <canvas id="battleCanvas"></canvas>
+          </div>
+          <div class="battle-controls">
+            <button class="btn-replay" onclick="replayBattle()">🔄 重播</button>
+            <div class="speed-btns">
+              <button class="speed-btn active" onclick="setSpeed(1, this)">
+                1x
+              </button>
+              <button class="speed-btn" onclick="setSpeed(2, this)">2x</button>
+              <button class="speed-btn" onclick="setSpeed(4, this)">4x</button>
+            </div>
+            <button
+              class="btn-replay"
+              onclick="backToSetup()"
+              style="margin-left: auto"
+            >
+              ↩ 返回配置
+            </button>
+          </div>
+          <div id="battle-result-box"></div>
+          <div class="battle-log" id="battle-log"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ═══════════ JS Modules（按依赖顺序加载） ═══════════ -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/network.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/players.js"></script>
+    <script src="js/friends.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/battle.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

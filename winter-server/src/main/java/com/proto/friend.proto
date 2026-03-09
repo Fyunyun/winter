@@ -6,24 +6,24 @@ option java_outer_classname = "FriendMsg";
 
 // 1. 申请添加好友
 message ReqAddFriend {
-  int64 target_id = 1; // 对方ID
+  string target_name = 1; // 对方名称
 }
 
 // 返回添加好友结果
 message RespAddFriend {
-  int64  target_id = 1;
+  string target_name = 1;
   string message   = 2;
 }
 
 // 2. 处理好友申请
 message ReqHandleFriend {
-  int64 target_id = 1;
+  string target_name = 1; // 对方名称
   bool  agree     = 2; // true=同意, false=拒绝
 }
 
 // 回应处理好友申请结果
 message RespHandleFriend {
-  int64  target_id = 1;
+  string target_name = 1;
   string message   = 2;
 }
 

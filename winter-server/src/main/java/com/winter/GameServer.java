@@ -3,6 +3,10 @@ package com.winter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -10,16 +14,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.codec.protobuf.*;
-
 import com.winter.common.model.PlayerModel;
 import com.winter.core.db.DataService;
 import com.winter.core.net.handler.IdleDisconnectHandler;
 import com.winter.core.net.handler.ServerHandler;
 import com.winter.core.router.MessageDispatcher;
-import com.winter.core.spring.SpringContext;
 import com.winter.msg.PacketMsg.GamePacket;
 import com.winter.core.net.handler.AuthenticationHandler;
 import com.winter.modules.battle.core.BattleHttpTestServer;
@@ -29,26 +30,74 @@ import com.winter.modules.battle.config.SkillConfigTable;
 // 使用 Telnet 测试服务器：telnet localhost 8088
 
 /**
- * 游戏服务器类，基于 Netty 实现
+ * 游戏服务器类，基于 Netty + Spring Boot 实现
  */
-public class GameServer {
-    private final int port; // 服务器监听的端口号
+@SpringBootApplication
+public class GameServer implements CommandLineRunner {
 
     /**
-     * 构造函数，初始化服务器端口
-     * 
-     * @param port 监听的端口号
+     * Spring Boot 启动入口
      */
-    public GameServer(int port) {
-        this.port = port;
+    public static void main(String[] args) {
+        SpringApplication.run(GameServer.class, args);
     }
 
     /**
-     * 启动服务器
-     * 
+     * Spring Boot 启动完成后执行的回调，初始化游戏服务逻辑
+     */
+    @Override
+    public void run(String... args) throws Exception {
+        boolean battleApiEnabled = getBooleanConfig("battle.test.http.enabled", "BATTLE_TEST_HTTP_ENABLED", true);
+        int battleApiPort = getIntConfig("battle.test.http.port", "BATTLE_TEST_HTTP_PORT", 18088);
+        BattleHttpTestServer battleHttpTestServer = null;
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            System.out.println(">>> 执行全服数据存盘...");
+            for (PlayerModel player : DataService.loadAllPlayersFromRedis().values()) {
+                // 将 Redis/内存中的数据持久化到 MySQL
+                DataService.flushToMysql(player);
+            }
+        }, 5, 5, TimeUnit.MINUTES); // 每5分钟存一次
+
+        MessageDispatcher.init(); // 初始化消息分发器
+
+        // 加载战斗配置表
+        BuffConfigTable.getInstance().load("config/buff_config.json");
+        SkillConfigTable.getInstance().load("config/skill_config.json");
+
+        // 加载敏感词到内存
+        DataService.loadSensitiveWords();
+
+        if (battleApiEnabled) {
+            try {
+                battleHttpTestServer = new BattleHttpTestServer(battleApiPort);
+                battleHttpTestServer.start();
+            } catch (Exception e) {
+                System.err.println(">>> ⚠️ 战斗测试HTTP接口启动失败，继续启动游戏服。原因: " + e.getMessage());
+                battleHttpTestServer = null;
+            }
+        } else {
+            System.out.println(">>> 已关闭战斗测试HTTP接口 (battle.test.http.enabled=false)");
+        }
+
+        // 启动 Netty 游戏服务器
+        System.out.println(">>> 正在启动冬日游戏服务器...");
+        try {
+            startNettyServer(8088);
+        } finally {
+            if (battleHttpTestServer != null) {
+                battleHttpTestServer.stop();
+            }
+        }
+    }
+
+    /**
+     * 启动 Netty 服务器
+     *
+     * @param port 监听的端口号
      * @throws InterruptedException 如果线程被中断
      */
-    public void start() throws InterruptedException {
+    private void startNettyServer(int port) throws InterruptedException {
         // 1. 创建负责接收客户端连接的线程组（bossGroup）
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         // 2. 创建负责处理客户端请求的线程组（workerGroup）
@@ -100,59 +149,6 @@ public class GameServer {
             // 6. 优雅关闭线程组，释放资源
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
-        }
-    }
-
-    /**
-     * 主方法，启动服务器
-     * 
-     * @param args 命令行参数
-     * @throws InterruptedException 如果线程被中断
-     */
-    public static void main(String[] args) throws InterruptedException {
-        boolean battleApiEnabled = getBooleanConfig("battle.test.http.enabled", "BATTLE_TEST_HTTP_ENABLED", true);
-        int battleApiPort = getIntConfig("battle.test.http.port", "BATTLE_TEST_HTTP_PORT", 18088);
-        BattleHttpTestServer battleHttpTestServer = null;
-
-        SpringContext.init();
-
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            System.out.println(">>> 执行全服数据存盘...");
-            for (PlayerModel player : DataService.loadAllPlayersFromRedis().values()) {
-                // 将 Redis/内存中的数据持久化到 MySQL
-                DataService.flushToMysql(player);
-            }
-        }, 5, 5, TimeUnit.MINUTES); // 每10000毫秒存一次
-
-        MessageDispatcher.init(); // 初始化消息分发器
-
-        // 加载战斗配置表
-        BuffConfigTable.getInstance().load("config/buff_config.json");
-        SkillConfigTable.getInstance().load("config/skill_config.json");
-
-        // 加载敏感词到内存
-        DataService.loadSensitiveWords();
-
-        if (battleApiEnabled) {
-            try {
-                battleHttpTestServer = new BattleHttpTestServer(battleApiPort);
-                battleHttpTestServer.start();
-            } catch (Exception e) {
-                System.err.println(">>> ⚠️ 战斗测试HTTP接口启动失败，继续启动游戏服。原因: " + e.getMessage());
-                battleHttpTestServer = null;
-            }
-        } else {
-            System.out.println(">>> 已关闭战斗测试HTTP接口 (battle.test.http.enabled=false)");
-        }
-
-        // 创建服务器实例并启动，监听端口 8088
-        System.out.println(">>> 正在启动冬日游戏服务器...");
-        try {
-            new GameServer(8088).start();
-        } finally {
-            if (battleHttpTestServer != null) {
-                battleHttpTestServer.stop();
-            }
         }
     }
 

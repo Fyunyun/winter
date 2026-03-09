@@ -12,6 +12,34 @@ import java.util.Collection;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * 敏感词过滤器 - 基于Aho-Corasick（AC）自动机算法实现
+ * 
+ * AC自动机是一种多模式字符串匹配算法，用于在文本中快速查找多个关键词。
+ * 它结合了Trie树和KMP算法的思想，具有线性时间复杂度O(n+m+z)，其中：
+ * - n: 文本长度
+ * - m: 所有模式的总长度
+ * - z: 匹配结果个数
+ * 
+ * 核心数据结构：
+ * - Trie树：存储所有敏感词前缀，节点包含字符转移映射
+ * - 失败指针（fail）：KMP算法中失败函数的推广，用于在匹配失败时快速跳转
+ * - 输出链接（output）：标记某节点对应的所有模式词，支持重叠匹配
+ * 
+ * 算法三个阶段：
+ * 1. 构建Trie树：addWord()逐词插入
+ * 2. 构建失败指针：buildFailPointers()用BFS计算每个节点的fail转移
+ * 3. 模式搜索：search()遍历文本，利用fail指针处理不匹配情况
+ * 
+ * 优势：
+ * - 支持多关键词同时匹配
+ * - 支持重叠匹配（如"ab"和"bc"在"abc"中都能匹配）
+ * - 线性时间复杂度，性能优于朴素的多次substring查找
+ * - 适合词库大、文本频繁匹配的场景（如内容审核、垃圾词过滤）
+ * 
+ * @author Winter Server
+ * @since 1.0
+ */
 @Service
 public class SensitiveWordFilter {
 
@@ -151,6 +179,15 @@ public class SensitiveWordFilter {
 
         int lastEnd = 0;
         for (Match match : matches) {
+            // 跳过被前一个匹配已覆盖的重叠匹配
+            if (match.start < lastEnd) {
+                // 如果当前匹配延伸到更远，扩展替换区域
+                if (match.end > lastEnd) {
+                    sb.append("*".repeat(match.end - lastEnd));
+                    lastEnd = match.end;
+                }
+                continue;
+            }
             // 加非敏感部分
             sb.append(text, lastEnd, match.start);
             // 替换敏感词

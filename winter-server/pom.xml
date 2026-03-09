@@ -4,6 +4,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.2.5</version>
+    <relativePath/>
+  </parent>
+
   <groupId>com.winter</groupId>
   <artifactId>winter-server</artifactId>
   <version>1.0-SNAPSHOT</version>
@@ -43,18 +50,10 @@
         <scope>provided</scope>
     </dependency>
 
-    <!-- SLF4J API -->
+    <!-- Spring Boot Starter (包含 Spring Context、SLF4J、Logback 等) -->
     <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-api</artifactId>
-    <version>2.0.12</version>
-    </dependency>
-
-    <!-- 日志实现，例如 Logback -->
-    <dependency>
-    <groupId>ch.qos.logback</groupId>
-    <artifactId>logback-classic</artifactId>
-    <version>1.4.14</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
     </dependency>
 
     <dependency>
@@ -72,14 +71,13 @@
 
     <!-- mysql & redis -->
     <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.28</version>
-    </dependency>
-    <dependency>
-        <groupId>com.zaxxer</groupId>
-        <artifactId>HikariCP</artifactId>
-        <version>5.0.1</version>
     </dependency>
     <dependency>
         <groupId>redis.clients</groupId>
@@ -92,12 +90,6 @@
         <version>2.0.21</version>
     </dependency>
 
-    <!-- Spring (for dependency injection) -->
-    <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>6.1.6</version>
-    </dependency>
 </dependencies>
 
     
@@ -192,6 +184,10 @@
         </execution>
     </executions>
 </plugin>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
     </plugins>
 </build>
 </project>

@@ -1,7 +1,8 @@
 package com.winter.modules.battle.core;
 
-import com.winter.modules.battle.model.BattleAction;
 import com.winter.modules.battle.model.BattleGroup;
+import com.winter.msg.BattleMsg;
+import com.winter.msg.BattleMsg.BattleGroupInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class BattleEngine {
     private BattleGroup defender;
     private final int maxRounds;
     private final List<String> battleLogs = new ArrayList<>(); // 简易战报
-    private final List<BattleAction> actions = new ArrayList<>(); // 动作序列（用于回放/结构化战报）
+    private final List<BattleMsg.BattleAction> actions = new ArrayList<>(); // Protobuf 动作序列（用于回放/结构化战报）
     private int round = 0;
 
     // 所以到时候只需要创建 BattleEngine 实例，传入双方阵营和随机种子，然后调用 simulate() 方法即可
@@ -36,6 +37,10 @@ public class BattleEngine {
     }
 
     public BattleResult simulate() {
+
+        BattleMsg.BattleGroupInfo atk = buildGroupInfo(this.attacker);
+        BattleMsg.BattleGroupInfo def = buildGroupInfo(this.defender);
+
         // 战斗开始：触发 BATTLE_START 技能
         for (BattleUnit unit : attacker.getUnits()) {
             if (!unit.isDead()) {
@@ -53,7 +58,14 @@ public class BattleEngine {
             round++;
             processRound();
         }
-        return new BattleResult(attacker.isAlive(), seed, battleLogs, actions);
+        // 构建 Protobuf BattleRecord
+        BattleMsg.BattleRecord record = BattleMsg.BattleRecord.newBuilder()
+                .setSeed(seed)
+                .setAttacker(atk)
+                .setDefender(def)
+                .addAllActions(actions)
+                .build();
+        return new BattleResult(attacker.isAlive(), seed, battleLogs, record);
     }
 
     private void processRound() {
@@ -122,7 +134,7 @@ public class BattleEngine {
 
         BattleContext attackCtx = new BattleContext(atkUnit, defUnit, this.random, this.round);
 
-        // 计算伤害
+        // 普通攻击伤害计算
         int damage = DamageCalculator.calc(atkUnit, defUnit, this.random);
         attackCtx.rawDamage = damage;
         attackCtx.finalDamage = damage;
@@ -180,12 +192,42 @@ public class BattleEngine {
     // }
 
     private void recordAction(long actorId, long targetId, int damage, int skillId) {
+        recordAction(actorId, targetId, damage, false, skillId);
+    }
+
+    private void recordAction(long actorId, long targetId, int damage, boolean isCrit, int skillId) {
         // 1. 打印到控制台日志（方便开发调试）
-        String log = String.format("第%d回合: [%d] 攻击了 [%d], 造成伤害: %d (技能:%d)",
-                this.round, actorId, targetId, damage, skillId);
+        String log = String.format("第%d回合: [%d] 攻击了 [%d], 造成伤害: %d%s (技能:%d)",
+                this.round, actorId, targetId, damage, isCrit ? " [暴击]" : "", skillId);
         this.battleLogs.add(log);
 
-        this.actions.add(new BattleAction(this.round, actorId, targetId, damage, skillId));
+        // 2. 构建 Protobuf Action
+        BattleMsg.BattleAction action = BattleMsg.BattleAction.newBuilder()
+                .setRound(this.round)
+                .setActorId((int) actorId)
+                .setTargetId((int) targetId)
+                .setDamage(damage)
+                .setIsCrit(isCrit)
+                .setSkillId(skillId)
+                .build();
+        this.actions.add(action);
     }
-    
+
+    /**
+     * 将 BattleGroup 转换为 Protobuf BattleGroupInfo（含初始快照）
+     */
+    private static BattleMsg.BattleGroupInfo buildGroupInfo(BattleGroup group) {
+        BattleMsg.BattleGroupInfo.Builder builder = BattleMsg.BattleGroupInfo.newBuilder()
+                .setGroupName(group.getGroupName());
+        for (BattleUnit unit : group.getUnits()) {
+            builder.addUnits(BattleMsg.UnitSnapshot.newBuilder()
+                    .setUnitId(unit.getId())
+                    .setConfigId(unit.getType() != null ? unit.getType().getValue() : 0)
+                    .setHp(unit.getHp())
+                    .setMaxHp(unit.getMaxHp())
+                    .setLevel(1) // 可扩展
+                    .build());
+        }
+        return builder.build();
+    }
 }

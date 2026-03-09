@@ -21,6 +21,19 @@ import java.util.List;
 @Slf4j
 public class SkillFactory {
 
+    /**
+     * 技能触发器类型数组，存储所有可用的技能触发方式。
+     * 
+     * 该数组通过 {@link SkillTrigger#values()} 方法获取 SkillTrigger 枚举的所有枚举常量，
+     * 用于快速访问和遍历所有支持的技能触发类型。
+     * 
+     * 内部结构：
+     * - 类型：SkillTrigger[] （SkillTrigger 枚举类型的一维数组）
+     * - 内容：包含 SkillTrigger 枚举中定义的所有触发器类型常量
+     * - 用途：在技能系统中遍历、查询和应用各种触发条件
+     * 
+     * 示例：可能包含如 SKILL_TRIGGER_ON_ATTACK、SKILL_TRIGGER_ON_HIT 等触发类型
+     */
     private static final SkillTrigger[] TRIGGERS = SkillTrigger.values();
     private static final EffectType[] EFFECT_TYPES = EffectType.values();
 
@@ -80,19 +93,27 @@ public class SkillFactory {
         return TRIGGERS[triggerOrdinal];
     }
 
+    // 解析条件配置列表，将配置转换为运行时条件检查器
     private static List<ConditionChecker> parseConditions(List<ConditionConfig> configs) {
+        // 如果配置为空或列表为空，返回空列表
         if (configs == null || configs.isEmpty()) {
             return Collections.emptyList();
         }
+        // 创建与配置数量相同容量的检查器列表
         List<ConditionChecker> checkers = new ArrayList<>(configs.size());
+        // 遍历每个条件配置
         for (ConditionConfig cc : configs) {
+            // 根据条件类型 id 查找对应的枚举值
             ConditionType ct = ConditionType.fromId(cc.getType());
+            // 如果找不到对应的条件类型，打印警告并跳过
             if (ct == null) {
                 log.warn("[SkillFactory] 未知条件类型: {}", cc.getType());
                 continue;
             }
+            // 创建通用条件检查器并添加到列表中
             checkers.add(new GeneralConditionChecker(ct, cc.getParam()));
         }
+        // 返回解析后的条件检查器列表
         return checkers;
     }
 

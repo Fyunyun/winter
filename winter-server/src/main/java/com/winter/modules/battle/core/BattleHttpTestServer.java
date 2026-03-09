@@ -7,7 +7,6 @@ import com.sun.net.httpserver.HttpServer;
 import com.winter.modules.battle.config.BuffConfigTable;
 import com.winter.modules.battle.config.SkillConfigTable;
 import com.winter.modules.battle.config.SkillFactory;
-import com.winter.modules.battle.model.BattleAction;
 import com.winter.modules.battle.model.BattleEffectConfig;
 import com.winter.modules.battle.model.BattleGroup;
 import com.winter.modules.battle.model.BattleResult;
@@ -17,6 +16,7 @@ import com.winter.modules.battle.model.SoldiersType;
 import com.winter.modules.battle.model.skill.Buff;
 import com.winter.modules.battle.model.skill.GeneralSkill;
 import com.winter.modules.battle.model.skill.SkillTrigger;
+import com.winter.msg.BattleMsg;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -51,6 +51,7 @@ public class BattleHttpTestServer {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(port), 0);
         httpServer.createContext("/api/battle/simulate", new SimulateHandler());
         httpServer.createContext("/health", exchange -> writeJson(exchange, 200, Map.of("ok", true)));
+        MultiplayerHttpHandler.register(httpServer); // 注册多人交互接口
         httpServer.setExecutor(null);
         httpServer.start();
 
@@ -111,7 +112,7 @@ public class BattleHttpTestServer {
             resp.put("seed", result.getSeed());
             resp.put("win", result.isWin());
             resp.put("logs", result.getBattleLogs());
-            resp.put("actions", result.getActions());
+            resp.put("actions", buildActionList(result.getActions()));
             resp.put("attackerHp", atk.getHp());
             resp.put("defenderHp", def.getHp());
             resp.put("rounds", calcRounds(result.getActions()));
@@ -126,12 +127,28 @@ public class BattleHttpTestServer {
             writeJson(exchange, 200, resp);
         }
 
-        private static int calcRounds(List<BattleAction> actions) {
+        private static int calcRounds(List<BattleMsg.BattleAction> actions) {
             int rounds = 0;
-            for (BattleAction action : actions) {
+            for (BattleMsg.BattleAction action : actions) {
                 rounds = Math.max(rounds, action.getRound());
             }
             return rounds;
+        }
+
+        /** 将 Protobuf Action 转为 JSON 友好的 Map 列表 */
+        private static List<Map<String, Object>> buildActionList(List<BattleMsg.BattleAction> actions) {
+            List<Map<String, Object>> list = new ArrayList<>();
+            for (BattleMsg.BattleAction a : actions) {
+                Map<String, Object> m = new HashMap<>();
+                m.put("round", a.getRound());
+                m.put("actorId", a.getActorId());
+                m.put("targetId", a.getTargetId());
+                m.put("damage", a.getDamage());
+                m.put("isCrit", a.getIsCrit());
+                m.put("skillId", a.getSkillId());
+                list.add(m);
+            }
+            return list;
         }
 
         private static BattleUnit buildUnit(UnitRequest req) {

@@ -41,17 +41,27 @@ public class SkillConfigTable {
      * 从 classpath 资源加载配置（推荐）
      * @param resourcePath classpath 下的路径，例如 "config/skill_config.json"
      */
+    /**
+     * 加载技能配置文件
+     * <p>
+     * 从指定的资源路径读取JSON格式的技能配置文件，解析并存储到内存中。
+     * 如果文件不存在或加载失败，会打印相应的错误信息。
+     * </p>
+     *
+     * @param resourcePath 技能配置文件的资源路径（相对于类路径）
+     *                     例如: "config/skills.json"
+     */
     public void load(String resourcePath) {
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath)) {
             if (is == null) {
-                log.error("[SkillConfigTable] 配置文件未找到: {}", resourcePath);
+                System.out.println("[SkillConfigTable] 配置文件未找到: " + resourcePath);
                 return;
             }
             String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             parseAndStore(json);
-            log.info("[SkillConfigTable] 加载完成, 共 {} 个技能配置", table.size());
+            System.out.println("[SkillConfigTable] 加载完成, 共 " + table.size() + " 个技能配置");
         } catch (IOException e) {
-            log.error("[SkillConfigTable] 加载配置失败: {}", resourcePath, e);
+            System.out.println("[SkillConfigTable] 加载配置失败: " + resourcePath + ", 错误: " + e.getMessage());
         }
     }
 
